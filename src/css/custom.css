@@ -1,0 +1,40 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* Light mode (主色: #ffd460) */
+:root {
+  --ifm-color-primary: #ffd460;        /* 主色（亮黄色） */
+  --ifm-color-primary-dark: #ffcc47;   /* 稍暗 */
+  --ifm-color-primary-darker: #ffc738; /* 更暗 */
+  --ifm-color-primary-darkest: #fcb80e;/* 最深 */
+  --ifm-color-primary-light: #ffdc79;  /* 稍亮 */
+  --ifm-color-primary-lighter: #ffe088;/* 更亮 */
+  --ifm-color-primary-lightest: #ffecb0;/* 最亮 */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode (主色: #d19947) */
+[data-theme='dark'] {
+  --ifm-color-primary: #d19947;
+  --ifm-color-primary-dark: #ca8c32;
+  --ifm-color-primary-darker: #be8430;
+  --ifm-color-primary-darkest: #9d6d27;
+  --ifm-color-primary-light: #d7a55d;
+  --ifm-color-primary-lighter: #d9ac69;
+  --ifm-color-primary-lightest: #e2be8a;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* 自定义页脚样式 - 与网站整体风格一致 */
+.footer {
+  background: linear-gradient(135deg, #0a1929 0%, #1a2f45 100%);
+}
+
+/* 自定义深色模式页脚样式 */
+[data-theme='dark'] .footer {
+  background: linear-gradient(135deg, #1c1a17 0%, #2a2520 100%);
+}

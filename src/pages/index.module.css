@@ -1,0 +1,86 @@
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a1929 0%, #1a2f45 100%);
+  color: white;
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 2rem;
+    min-height: 320px;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Enhanced tech theme styling with brand colors */
+:global(.hero__title) {
+  text-shadow: 0 0 15px rgba(255, 212, 96, 0.7);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ffffff, #ffd460);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+:global(.hero__subtitle) {
+  text-shadow: 0 0 5px rgba(255, 212, 96, 0.4);
+  opacity: 0.95;
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto;
+  letter-spacing: 0.5px;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px rgba(255, 212, 96, 0.3);
+  }
+  to {
+    text-shadow: 0 0 15px rgba(255, 212, 96, 0.7), 0 0 20px rgba(255, 212, 96, 0.5);
+  }
+}
+
+/* Dark mode styling adjustments */
+:global([data-theme='dark']) .heroBanner {
+  background: linear-gradient(135deg, #1c1a17 0%, #2a2520 100%);
+}
+
+:global([data-theme='dark']) :global(.hero__title) {
+  text-shadow: 0 0 15px rgba(209, 153, 71, 0.7);
+  background: linear-gradient(90deg, #ffffff, #d19947);
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: darkGlow 2s ease-in-out infinite alternate;
+}
+
+:global([data-theme='dark']) :global(.hero__subtitle) {
+  text-shadow: 0 0 5px rgba(209, 153, 71, 0.4);
+}
+
+@keyframes darkGlow {
+  from {
+    text-shadow: 0 0 5px rgba(209, 153, 71, 0.3);
+  }
+  to {
+    text-shadow: 0 0 15px rgba(209, 153, 71, 0.7), 0 0 20px rgba(209, 153, 71, 0.5);
+  }
+}

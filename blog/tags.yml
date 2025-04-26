@@ -1,0 +1,19 @@
+ai:
+  label: AI
+  permalink: /ai
+  description: artificial intelligence
+
+front-end:
+  label: 前端
+  permalink: /front-end
+  description: 前端
+
+javascript:
+  label: javascript
+  permalink: /javascript
+  description: javascript
+
+broswer:
+  label: 浏览器
+  permalink: /broswer
+  description: 浏览器
