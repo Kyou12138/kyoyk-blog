@@ -42,11 +42,11 @@ export default function Home(): ReactNode {
                 style={{ height: "100%" }}
               >
                 <div className="card__header">
-                  <h3>🧱 项目展示</h3>
+                  <h3>🧱 资源&工具</h3>
                 </div>
                 <div className="card__body">
                   <p>
-                    本栏目收集和分享一些有趣、实用的项目或代码片段，欢迎交流与补充。
+                    精选的开发资源和工具推荐，以及个人应用服务，欢迎交流与补充。
                   </p>
                 </div>
                 <div className="card__footer">
@@ -54,7 +54,7 @@ export default function Home(): ReactNode {
                     to="/proj"
                     className="button button--primary button--block"
                   >
-                    查看项目
+                    查看资源
                   </Link>
                 </div>
               </div>

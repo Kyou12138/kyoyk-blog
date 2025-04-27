@@ -84,7 +84,7 @@ const config: Config = {
         //   label: "Tutorial",
         // },
         { to: "/blog", label: "笔记", position: "left" },
-        { to: "/proj", label: "项目", position: "left" },
+        { to: "/proj", label: "资源&工具", position: "left" },
         {
           href: "https://github.com/kyou12138/kyoyk-blog",
           label: "GitHub",
