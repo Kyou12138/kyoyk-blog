@@ -126,6 +126,27 @@ export default function Projects(): ReactNode {
                     </Link>
                   </div>
                 </div>
+                <div className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <span className={styles.cardIcon}>💼</span>
+                    <h3 className={styles.cardTitle}>魔方简历</h3>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <p>
+                      一个简历制作工具，提供多种模板和主题，支持在线编辑和实时预览，帮助用户快速创建专业简历，支持导出
+                      PDF 格式。
+                    </p>
+                  </div>
+                  <div className={styles.cardFooter}>
+                    <Link
+                      to="https://magic-resume.kyoyk.top/"
+                      className={styles.cardButton}
+                    >
+                      访问应用
+                      <span className={styles.cardButtonIcon}>→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
