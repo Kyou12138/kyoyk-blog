@@ -90,6 +90,11 @@ const config: Config = {
           label: "GitHub",
           position: "right",
         },
+        {
+          href: "https://myblog.kyoyk.top/",
+          label: "旧笔记网站",
+          position: "right",
+        },
       ],
     },
     footer: {
