@@ -72,10 +72,10 @@ const config: Config = {
     },
     navbar: {
       title: "Kyoyk Blog",
-      // logo: {
-      //   alt: "Kyoyk Blog Logo",
-      //   src: "img/logo.svg",
-      // },
+      logo: {
+        alt: "Kyoyk Blog Logo",
+        src: "img/logo.svg",
+      },
       items: [
         // {
         //   type: "docSidebar",
@@ -93,13 +93,13 @@ const config: Config = {
       ],
     },
     footer: {
-      logo: {
-        alt: "Kyou Fairy tail Logo",
-        src: "img/kyou.ico",
-        href: "/",
-        width: 25,
-        height: 25,
-      },
+      // logo: {
+      //   alt: "Kyou Fairy tail Logo",
+      //   src: "img/kyou.ico",
+      //   href: "/",
+      //   width: 25,
+      //   height: 25,
+      // },
       links: [
         {
           title: "Links",
