@@ -1,7 +1,6 @@
 ---
 title: browser-tools-mcp
 description: 使用browser-tools-mcp，让AI对接浏览器
-slug: browser-tools-mcp
 tags: [front-end, ai]
 hide_table_of_contents: false
 ---

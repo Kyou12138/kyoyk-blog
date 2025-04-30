@@ -1,7 +1,6 @@
 ---
 title: JS用fill([])创建二维数组的坑
 description: JS用fill([])创建二维数组的坑
-slug: js-fill
 tags: [front-end, broswer]
 ---
 

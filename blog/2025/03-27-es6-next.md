@@ -1,7 +1,6 @@
 ---
 title: ES6+ 特性
 description: ES6+ 特性
-slug: es6-next
 tags: [front-end, javascript]
 ---
 本文详细介绍了ES6之后JavaScript的重要更新和新特性。从ES6（ECMAScript 2015）开始，JavaScript语言进入了快速发展期，引入了箭头函数、解构赋值、Promise等革命性特性。文章梳理了从ES7到最新版本的主要变化，帮助前端开发者了解现代JavaScript的强大功能和语法糖，提高开发效率。

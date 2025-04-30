@@ -9,7 +9,7 @@ front-end:
   description: 前端
 
 javascript:
-  label: javascript
+  label: Javascript
   permalink: /javascript
   description: javascript
 
@@ -17,3 +17,68 @@ broswer:
   label: 浏览器
   permalink: /broswer
   description: 浏览器
+
+interview:
+  label: 面试
+  permalink: /interview
+  description: 面试
+
+optimization:
+  label: 性能优化
+  permalink: /optimization
+  description: 性能优化
+
+css:
+  label: CSS
+  permalink: /css
+  description: CSS
+
+html:
+  label: HTML
+  permalink: /html
+  description: HTML
+
+typescript:
+  label: TypeScript
+  permalink: /typescript
+  description: TypeScript
+
+nodejs:
+  label: Node.js
+  permalink: /nodejs
+  description: Node.js
+
+react:
+  label: React
+  permalink: /react
+  description: React
+
+vue:
+  label: Vue
+  permalink: /vue
+  description: Vue
+
+csharp:
+  label: C#
+  permalink: /csharp
+  description: C#
+
+wpf:
+  label: WPF
+  permalink: /wpf
+  description: WPF
+
+other:
+  label: 其他
+  permalink: /other
+  description: 其他
+
+build-tools:
+  label: 构建工具
+  permalink: /build-tools
+  description: 前端构建工具
+
+python:
+  label: Python
+  permalink: /python
+  description: Python
