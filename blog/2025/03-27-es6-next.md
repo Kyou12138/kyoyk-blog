@@ -1,13 +1,24 @@
 ---
-title: ES6 Next
-description: ES6后的更新
+title: ES6+ 特性
+description: ES6+ 特性
 slug: es6-next
 tags: [front-end, javascript]
 ---
 本文详细介绍了ES6之后JavaScript的重要更新和新特性。从ES6（ECMAScript 2015）开始，JavaScript语言进入了快速发展期，引入了箭头函数、解构赋值、Promise等革命性特性。文章梳理了从ES7到最新版本的主要变化，帮助前端开发者了解现代JavaScript的强大功能和语法糖，提高开发效率。
 
 <!--truncate-->
-# ES6 Next
+# ES6+
+
+> - ECMAScript2015：也被称之为 ES6，于 2015 年 6 月发布。[详细笔记](../2019/04-01-es6.md)
+> - ECMAScript2016：也被称之为 ES7，于 2016 年 6 月发布。[详细笔记](../2019/12-25-es7.md)
+> - ECMAScript2017：也被称之为 ES8，于 2017 年 6 月发布。[详细笔记](../2019/12-28-es8.md)
+> - ECMAScript2018：也被称之为 ES9，于 2018 年 6 月发布。[详细笔记](../2020/08-01-es9.md)
+> - ECMAScript2019：也被称之为 ES10，于 2019 年 6 月发布。[详细笔记](../2021/07-27-es10.md)
+> - ECMAScript2020：也被称之为 ES11，于 2020 年 6 月发布。[详细笔记](../2021/08-25-es11.md)
+> - ECMAScript2021：也被称之为 ES12，于 2021 年 6 月发布。[详细笔记](../2023/05-05-es12.md)
+> - ECMAScript2022：也被称之为 ES13，于 2022 年 6 月发布。[详细笔记](../2023/08-08-es13.md)
+> - ECMAScript2023：也被称之为 ES14，于 2023 年 6 月发布。[详细笔记](../2024/04-06-es14.md)
+> - ECMAScript2024：也被称之为 ES15，于 2024 年 6 月发布。[详细笔记](../2024/12-27-es15.md)
 
 ## 本章导读
 

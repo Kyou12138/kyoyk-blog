@@ -42,6 +42,8 @@ const config: Config = {
           editUrl: "https://github.com/kyou12138/kyoyk-blog/",
         },
         blog: {
+          blogSidebarTitle: "笔记列表",
+          blogSidebarCount: "ALL",
           showReadingTime: true,
           feedOptions: {
             type: ["rss", "atom"],
@@ -83,7 +85,13 @@ const config: Config = {
         //   position: "left",
         //   label: "Tutorial",
         // },
-        { to: "/blog", label: "笔记", position: "left" },
+        {
+          activeBaseRegex: "^/blog$",
+          to: "/blog",
+          label: "笔记",
+          position: "left",
+        },
+        { to: "/blog/tags", label: "分类", position: "left" },
         { to: "/proj", label: "资源&工具", position: "left" },
         {
           href: "https://github.com/kyou12138/kyoyk-blog",
