@@ -91,16 +91,22 @@ const config: Config = {
           label: "笔记",
           position: "left",
         },
-        { to: "/blog/tags", label: "分类", position: "left" },
+        {
+          type: "dropdown",
+          label: "分类",
+          position: "left",
+          items: [
+            { to: "/blog/tags", label: "全部分类" },
+            { to: "/blog/tags/ai", label: "AI" },
+            { to: "/blog/tags/front-end", label: "前端" },
+            { to: "/blog/tags/back-end", label: "后端" },
+            { to: "/blog/tags/other", label: "其他" },
+          ],
+        },
         { to: "/proj", label: "资源&工具", position: "left" },
         {
           href: "https://github.com/kyou12138/kyoyk-blog",
           label: "GitHub",
-          position: "right",
-        },
-        {
-          href: "https://myblog.kyoyk.top/",
-          label: "旧笔记网站",
           position: "right",
         },
       ],

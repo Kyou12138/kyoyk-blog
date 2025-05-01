@@ -1,7 +1,7 @@
 ---
 title: WPF笔记
 description: WPF笔记
-tags: [csharp, wpf]
+tags: [front-end, csharp, wpf]
 ---
 本文是关于WPF (Windows Presentation Foundation) 的学习笔记，主要涵盖了WPF的布局系统、命名规则、资源管理、动画效果以及数据绑定等核心概念。通过这些基础知识，可以帮助开发者构建功能丰富、界面美观的Windows桌面应用程序。
 

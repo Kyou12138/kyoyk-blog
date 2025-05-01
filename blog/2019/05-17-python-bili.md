@@ -1,7 +1,7 @@
 ---
 title: Python爬虫流程
 description: Python爬虫流程
-tags: [python]
+tags: [python, back-end]
 ---
 本文介绍Python爬虫的基本流程，以爬取哔哩哔哩(B站)番剧信息为例，展示如何使用requests和BeautifulSoup等库进行网页数据抓取。通过分析网页结构、提取媒体ID和相关信息，实现完整的爬虫功能。
 

@@ -1,7 +1,7 @@
 ---
 title: EFCore笔记
 description: EFCore笔记
-tags: [csharp, optimization]
+tags: [back-end, csharp, optimization]
 ---
 
 本文记录了使用Entity Framework Core时的一些优化技巧和常见问题解决方案。

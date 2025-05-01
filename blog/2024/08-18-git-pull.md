@@ -1,7 +1,7 @@
 ---
 title: git pull为什么默认用merge
 description: git pull为什么默认用merge
-tags: [interview]
+tags: [interview, other]
 ---
 本文详细介绍了Git中pull命令的工作原理和默认行为。Git pull默认使用merge而非rebase的原因涉及到安全性、历史保留和用户友好性等多方面考虑。文章分析了merge和rebase两种策略的优缺点，并提供了在不同场景下如何选择合适的拉取策略的实用建议。
 
