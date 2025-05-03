@@ -63,8 +63,28 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
-
   themeConfig: {
+    algolia: {
+      // The application ID provided by Algolia
+      appId: "DOQQO6NJUR",
+
+      // Public API key: it is safe to commit it
+      apiKey: "1c34cabc141c7228db257f268b87a13d",
+
+      indexName: "kyoyk",
+
+      // Optional: see doc section below
+      contextualSearch: true,
+
+      // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+      externalUrlRegex: "external\\.com|domain\\.com",
+
+      // Optional: Replace parts of the item URLs from Algolia. Useful when using the same search index for multiple deployments using a different baseUrl. You can use regexp or string in the `from` param. For example: localhost:3000 vs myCompany.com/docs
+      replaceSearchResultPathname: {
+        from: "/docs/", // or as RegExp: /\/docs\//
+        to: "/",
+      },
+    },
     // Replace with your project's social card
     image: "img/kyou-social-card.jpg",
     colorMode: {
