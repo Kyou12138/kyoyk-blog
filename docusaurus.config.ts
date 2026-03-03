@@ -144,11 +144,11 @@ const config: Config = {
           title: "Links",
           items: [
             {
-              label: "🤖 AI 笔记本",
+              label: "AI 笔记本",
               href: "https://ai-note-git-main-kyou12138s-projects.vercel.app/",
             },
             {
-              label: "💼 关于 Kyou",
+              label: "关于 Kyou",
               href: "https://kyou12138.github.io/",
             },
           ],
