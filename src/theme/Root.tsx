@@ -10,6 +10,7 @@ type RootProps = {
 
 const EXIT_DURATION_MS = 360;
 const MIN_VISIBLE_MS = 880;
+const NAVBAR_FLOAT_SCROLL_Y = 12;
 
 export default function Root({ children }: RootProps): ReactNode {
   const [phase, setPhase] = useState<BootPhase>("loading");
@@ -64,6 +65,37 @@ export default function Root({ children }: RootProps): ReactNode {
       document.body.classList.remove("ky-boot-lock");
     };
   }, [phase]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    let frameId = 0;
+
+    const syncNavbarState = () => {
+      frameId = 0;
+      root.classList.toggle(
+        "ky-navbar-scrolled",
+        window.scrollY > NAVBAR_FLOAT_SCROLL_Y
+      );
+    };
+
+    const scheduleSync = () => {
+      if (frameId !== 0) return;
+      frameId = window.requestAnimationFrame(syncNavbarState);
+    };
+
+    syncNavbarState();
+    window.addEventListener("scroll", scheduleSync, { passive: true });
+    window.addEventListener("resize", scheduleSync);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleSync);
+      window.removeEventListener("resize", scheduleSync);
+      if (frameId !== 0) {
+        window.cancelAnimationFrame(frameId);
+      }
+      root.classList.remove("ky-navbar-scrolled");
+    };
+  }, []);
 
   return (
     <>

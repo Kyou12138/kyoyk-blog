@@ -53,15 +53,18 @@ export default function BootLoaderCanvas({
 
       ctx.clearRect(0, 0, width, height);
 
+      const haloOuterRadius = baseRadius * 1.5;
       const halo = ctx.createRadialGradient(
         cx,
         cy,
         8,
         cx,
         cy,
-        baseRadius * 2.25
+        haloOuterRadius
       );
       halo.addColorStop(0, darkMode ? "rgba(217, 167, 84, 0.3)" : "rgba(204, 143, 47, 0.3)");
+      halo.addColorStop(0.58, darkMode ? "rgba(217, 167, 84, 0.08)" : "rgba(204, 143, 47, 0.08)");
+      halo.addColorStop(0.78, darkMode ? "rgba(217, 167, 84, 0.02)" : "rgba(204, 143, 47, 0.02)");
       halo.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, width, height);
