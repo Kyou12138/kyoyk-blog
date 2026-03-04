@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: "Kyoyk Blog",
+  title: "Kyou Blog",
   tagline: "持续学习，拥抱变化。",
   favicon: "img/kyou.ico",
 
@@ -93,9 +93,9 @@ const config: Config = {
       respectPrefersColorScheme: false,
     },
     navbar: {
-      title: "Kyoyk Blog",
+      title: "Kyou Blog",
       logo: {
-        alt: "Kyoyk Blog Logo",
+        alt: "Kyou Blog Logo",
         src: "img/logo.svg",
       },
       items: [
@@ -167,7 +167,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kyoyk Blog, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kyou Blog, Inc. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
