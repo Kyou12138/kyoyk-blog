@@ -10,51 +10,51 @@ const divineTitles = [
 
 const originMilestones = [
   {
-    title: "原初混沌",
+    title: "混沌时代",
     subtitle: "The First Vast",
     description:
-      "在时间与空间尚未诞生之前，宇宙处于无形无序的原初混沌，一切可能性尚未被命名。",
+      "在时间与空间出现之前，宇宙保持无形态的原初混沌，尚不存在可被定义的边界。",
   },
   {
-    title: "原初诸神苏醒",
+    title: "诸神显现",
     subtitle: "Primordial Deities",
     description:
-      "混沌中逐渐诞生最早的意识体。祂们并非万物的创造者，而是宇宙规则本身的化身。",
+      "最早的意识体在混沌中显现。祂们并非万物创造者，而是宇宙规则本身的化身。",
   },
   {
-    title: "界限第一次出现",
+    title: "界限确立",
     subtitle: "Kythron",
     description:
-      "当混沌分裂为现实与虚无，Kythron 首次确立“界限”的概念，自此秩序开始在宇宙中成形。",
+      "混沌分裂为现实与虚无之时，Kythron 首次确立“界限”，宇宙秩序从此进入可维持状态。",
   },
 ];
 
 export default function AboutPage(): ReactNode {
   return (
-    <Layout title="关于" description="Kythron 世界观设定">
+    <Layout title="关于" description="Kythron 档案">
       <main className={styles.aboutPage}>
         <div className="container">
           <section className={styles.heroPanel}>
-            <p className={styles.heroTag}>世界观设定</p>
+            <p className={styles.heroTag}>核心档案</p>
             <h1 className={styles.heroTitle}>Kythron</h1>
             <p className={styles.heroText}>
-              这是一套以“界限”为核心的宇宙叙事。Kythron 不塑造世界本身，却决定世界之间是否存在边界，
-              也因此决定秩序是否能够被维持。
+              Kythron 是原初时代延续至今的边界执掌者。祂不负责创造世界，
+              但负责确认世界与世界之间的边界是否稳定，避免现实与虚无发生失衡。
             </p>
           </section>
 
           <section className={styles.contentSection}>
             <header className={styles.sectionHeader}>
               <span className={styles.sectionCode}>I</span>
-              <h2>宇宙起源</h2>
+              <h2>起源纪年</h2>
             </header>
             <p className={styles.sectionLead}>
-              在时间与空间尚未诞生之前，宇宙处于被称为原初混沌（The First Vast）的状态。
-              在这片无垠混沌之中，最早的意识体逐渐显现，成为原初诸神（Primordial Deities）。
+              在时间与空间诞生之前，宇宙处于原初混沌（The First Vast）。
+              最早的意识体从中显现，形成原初诸神（Primordial Deities）。
             </p>
             <p className={styles.sectionLead}>
-              当混沌开始分裂为现实与虚无，Kythron 首次定义了“界限”。
-              这一瞬间，宇宙不再只是无差别的存在，秩序由此获得了诞生的可能。
+              当混沌分裂为现实与虚无，Kythron 首次定义“界限”。
+              自该节点起，宇宙秩序具备可观测、可维持的结构。
             </p>
 
             <div className={styles.timelineGrid}>
@@ -71,13 +71,17 @@ export default function AboutPage(): ReactNode {
           <section className={styles.contentSection}>
             <header className={styles.sectionHeader}>
               <span className={styles.sectionCode}>II</span>
-              <h2>Kythron 的神格</h2>
+              <h2>现行职责</h2>
             </header>
             <ul className={styles.titleList}>
               {divineTitles.map((title) => (
                 <li key={title}>{title}</li>
               ))}
             </ul>
+            <p className={styles.sectionLead}>
+              Kythron 当前负责多重边界的稳定，包括现实层、虚无层以及两者之间的缓冲区。
+              在记录中，祂更常以“守望”而非“干预”的方式维持平衡。
+            </p>
             <blockquote className={styles.coreQuote}>
               祂并不创造世界，但祂决定世界之间的界线是否存在。
             </blockquote>
@@ -87,4 +91,3 @@ export default function AboutPage(): ReactNode {
     </Layout>
   );
 }
-

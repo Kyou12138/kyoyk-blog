@@ -123,8 +123,8 @@ const config: Config = {
             { to: "/blog/tags/other", label: "其他" },
           ],
         },
-        { to: "/about", label: "关于", position: "left" },
         { to: "/proj", label: "资源&工具", position: "left" },
+        { to: "/about", label: "关于", position: "left" },
         {
           href: "https://github.com/kyou12138/kyoyk-blog",
           label: "GitHub",
