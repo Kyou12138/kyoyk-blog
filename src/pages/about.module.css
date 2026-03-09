@@ -1,0 +1,163 @@
+.aboutPage {
+  position: relative;
+  padding: 3.5rem 0 4.5rem;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(91, 149, 255, 0.2), transparent 45%),
+    radial-gradient(circle at 85% 0%, rgba(115, 94, 255, 0.18), transparent 40%),
+    linear-gradient(180deg, rgba(8, 13, 28, 0.85), rgba(8, 13, 28, 0.95));
+}
+
+.heroPanel {
+  margin-bottom: 2rem;
+  border: 1px solid rgba(145, 183, 255, 0.3);
+  border-radius: 20px;
+  padding: 2.2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(23, 36, 72, 0.9),
+    rgba(16, 24, 50, 0.88)
+  );
+  box-shadow: 0 18px 46px rgba(5, 10, 26, 0.38);
+}
+
+.heroTag {
+  margin: 0 0 0.7rem;
+  color: #99bcff;
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(2.1rem, 5vw, 3.3rem);
+  letter-spacing: 0.03em;
+  color: #f3f7ff;
+}
+
+.heroText {
+  margin: 1rem 0 0;
+  max-width: 760px;
+  font-size: 1.03rem;
+  line-height: 1.8;
+  color: #d9e6ff;
+}
+
+.contentSection {
+  border: 1px solid rgba(145, 183, 255, 0.25);
+  border-radius: 18px;
+  margin-top: 1.25rem;
+  padding: 1.6rem;
+  background: rgba(13, 23, 48, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.95rem;
+}
+
+.sectionCode {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #c7dbff;
+  border: 1px solid rgba(177, 201, 255, 0.45);
+  background: rgba(112, 151, 255, 0.15);
+  font-weight: 700;
+  font-size: 0.86rem;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: #eef4ff;
+  font-size: 1.3rem;
+}
+
+.sectionLead {
+  margin: 0.45rem 0;
+  line-height: 1.85;
+  color: #d2e0fb;
+}
+
+.timelineGrid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.timelineCard {
+  border: 1px solid rgba(172, 198, 255, 0.25);
+  border-radius: 14px;
+  padding: 1rem;
+  background: linear-gradient(
+    160deg,
+    rgba(27, 43, 84, 0.72),
+    rgba(16, 27, 56, 0.72)
+  );
+}
+
+.timelineSub {
+  margin: 0;
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9ec1ff;
+}
+
+.timelineCard h3 {
+  margin: 0.35rem 0 0.5rem;
+  font-size: 1.06rem;
+  color: #f2f7ff;
+}
+
+.timelineCard p {
+  margin: 0;
+  line-height: 1.72;
+  color: #d0def8;
+}
+
+.titleList {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #dce8ff;
+}
+
+.titleList li {
+  margin: 0.4rem 0;
+  line-height: 1.75;
+}
+
+.coreQuote {
+  margin: 1rem 0 0;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid rgba(138, 178, 255, 0.8);
+  color: #e5eeff;
+  background: rgba(120, 156, 255, 0.12);
+  border-radius: 8px;
+}
+
+@media (max-width: 996px) {
+  .aboutPage {
+    padding: 2.8rem 0 3.2rem;
+  }
+
+  .heroPanel {
+    padding: 1.5rem;
+  }
+
+  .contentSection {
+    padding: 1.25rem;
+  }
+
+  .timelineGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
