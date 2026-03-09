@@ -1,5 +1,5 @@
 ﻿---
-title: Codex CLI 速查（2026）
+title: Codex CLI 速查
 description: Codex CLI 的安装、登录、快捷键、斜杠命令、启动参数与配置实战速查。
 tags: [ai, other]
 ---
@@ -8,8 +8,6 @@ tags: [ai, other]
 cx 和 cc 定位差不多，但设计思路有不少区别——cx 有内置沙盒、用 TOML 配置、项目指令文件叫 AGENTS.md 而不是 CLAUDE.md。下面把我日常用到的命令和踩过的坑都整理了一下，希望对各位有帮助。
 
 *有错误或遗漏欢迎指出，我会持续更新~*
-
-`2026 版`
 
 > 参考来源：[OpenAI 官方文档](https://developers.openai.com/codex/cli/)、[GitHub 仓库](https://github.com/openai/codex)、[CLI 命令参考](https://developers.openai.com/codex/cli/reference/)、[配置参考](https://developers.openai.com/codex/config-reference/) 等，加上自己使用中的一些总结
 
