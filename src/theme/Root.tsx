@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import clsx from "clsx";
 import BootLoaderCanvas from "../components/BootLoaderCanvas";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 type BootPhase = "loading" | "leaving" | "done";
 
@@ -132,6 +133,8 @@ export default function Root({ children }: RootProps): ReactNode {
           </div>
         </div>
       )}
+
+      <SpeedInsights />
     </>
   );
 }
