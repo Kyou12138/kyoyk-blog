@@ -1,0 +1,40 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.title {
+  font-size: 3rem;
+}
+
+.titleContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titleText {
+  display: inline-block;
+}
+
+.lockIcon {
+  width: 1.1em;
+  height: 1.1em;
+  color: var(--ifm-color-primary);
+  flex: 0 0 auto;
+}
+
+/**
+  Blog post title should be smaller on smaller devices
+**/
+@media (max-width: 576px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .titleContent {
+    gap: 0.4rem;
+  }
+}

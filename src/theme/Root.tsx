@@ -97,6 +97,61 @@ export default function Root({ children }: RootProps): ReactNode {
     };
   }, []);
 
+  useEffect(() => {
+    const navbar = document.querySelector(".navbar");
+    if (!navbar) {
+      return;
+    }
+
+    let rafId = 0;
+    let timeoutId = 0;
+
+    const syncSidebar = () => {
+      const items = document.querySelector(
+        ".navbar-sidebar__items"
+      ) as HTMLElement | null;
+      if (!items) {
+        return;
+      }
+      items.scrollLeft = 0;
+      items.classList.remove("navbar-sidebar__items--show-secondary");
+    };
+
+    const scheduleSync = () => {
+      syncSidebar();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      rafId = window.requestAnimationFrame(syncSidebar);
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+      timeoutId = window.setTimeout(syncSidebar, 140);
+    };
+
+    const observer = new MutationObserver(() => {
+      if (navbar.classList.contains("navbar-sidebar--show")) {
+        scheduleSync();
+      }
+    });
+
+    observer.observe(navbar, { attributes: true, attributeFilter: ["class"] });
+
+    if (navbar.classList.contains("navbar-sidebar--show")) {
+      scheduleSync();
+    }
+
+    return () => {
+      observer.disconnect();
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   return (
     <>
       <noscript>
