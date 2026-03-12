@@ -4,7 +4,11 @@ description: OpenClaw常见命令速查
 tags: [ai]
 ---
 
-## OpenClaw 速查表
+# OpenClaw 速查表
+
+这是一份面向日常使用的 OpenClaw 命令速查，涵盖安装、核心命令、工作区结构与常见排障，便于快速定位需要的命令与路径。
+
+<!-- truncate -->
 
 ### 1) 快速安装（Quick Installation）
 ```bash
