@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
-import BlogPostContent from "@theme-original/BlogPostContent";
-import type { Props } from "@theme/BlogPostContent";
+﻿import type { ReactNode } from "react";
+import BlogPostItemContent from "@theme-original/BlogPostItem/Content";
+import type { Props } from "@theme/BlogPostItem/Content";
 import { useBlogPost } from "@docusaurus/plugin-content-blog/client";
-import EncryptedNoteGate from "../../components/EncryptedNoteGate";
+import EncryptedNoteGate from "../../../components/EncryptedNoteGate";
 
 type EncryptedFrontMatter = {
   encrypted?: boolean;
@@ -13,7 +13,7 @@ type EncryptedFrontMatter = {
   passwordHint?: string;
 };
 
-export default function BlogPostContentWrapper(props: Props): ReactNode {
+export default function BlogPostItemContentWrapper(props: Props): ReactNode {
   const { frontMatter, metadata } = useBlogPost();
   const encryptedFrontMatter = frontMatter as EncryptedFrontMatter;
   const enabled = Boolean(
@@ -38,5 +38,8 @@ export default function BlogPostContentWrapper(props: Props): ReactNode {
     props.children
   );
 
-  return <BlogPostContent {...props}>{gatedChildren}</BlogPostContent>;
+  return (
+    <BlogPostItemContent {...props}>{gatedChildren}</BlogPostItemContent>
+  );
 }
+
