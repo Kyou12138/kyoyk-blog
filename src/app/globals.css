@@ -13,6 +13,10 @@
   --max-ch: 74ch;
   --font-sans: "Avenir Next", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* 从 Docusaurus 主题移植过来的模块仍引用这两个变量 */
+  --ifm-color-primary-darkest: #996a26;
+  --ifm-color-content-secondary: var(--text-muted);
 }
 
 * {
