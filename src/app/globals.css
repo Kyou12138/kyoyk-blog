@@ -1468,6 +1468,23 @@ a.tag:hover {
     padding: 8vh 0.75rem 0.75rem;
   }
 
+  /* 窄屏把搜索钉在品牌右边，导航自己横向滚，别把搜索挤出屏幕 */
+  .site-header__right {
+    order: 2;
+  }
+
+  .nav {
+    order: 3;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
   .search-trigger__text,
   .search-trigger kbd {
     display: none;
