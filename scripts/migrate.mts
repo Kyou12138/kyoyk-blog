@@ -2,7 +2,18 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { createHash } from "node:crypto";
 import { Client } from "pg";
-import { splitStatements } from "../src/lib/migrate.ts";
+
+const splitStatements = (sql: string): string[] =>
+  sql
+    .split(";")
+    .map((statement) =>
+      statement
+        .split("\n")
+        .filter((line) => !line.trimStart().startsWith("--"))
+        .join("\n")
+        .trim(),
+    )
+    .filter((statement) => statement.length > 0);
 
 process.loadEnvFile?.(".env.local");
 
