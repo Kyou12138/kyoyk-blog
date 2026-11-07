@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NAV, SITE_NAME } from "@/lib/site";
 
+const isActive = (pathname: string, href: string): boolean =>
+  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
 export default function SiteHeader() {
+  const pathname = usePathname();
+
   return (
     <header className="site-header">
       <div className="container site-header__inner">
@@ -10,7 +18,12 @@ export default function SiteHeader() {
         </Link>
         <nav className="nav">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href}>
+            <Link
+              key={item.href}
+              href={item.href}
+              className={isActive(pathname, item.href) ? "is-active" : undefined}
+              aria-current={isActive(pathname, item.href) ? "page" : undefined}
+            >
               {item.label}
             </Link>
           ))}

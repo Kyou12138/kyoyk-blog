@@ -8,15 +8,15 @@ export const metadata: Metadata = { title: "写新笔记", robots: { index: fals
 export default async function NewPostPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; uploaded?: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   await requireAdmin();
-  const { error, uploaded } = await searchParams;
+  const { error } = await searchParams;
 
   return (
     <div>
       <h1 style={{ fontSize: "1.5rem", marginTop: 0 }}>写新笔记</h1>
-      <PostEditor post={null} error={error} uploaded={uploaded} />
+      <PostEditor post={null} error={error} />
     </div>
   );
 }

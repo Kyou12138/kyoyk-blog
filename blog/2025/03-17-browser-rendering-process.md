@@ -1,7 +1,7 @@
 ---
 title: 浏览器渲染原理面试题
 description: 本文详细介绍了浏览器的渲染流程，包括HTML解析、样式计算、布局、分层、绘制等关键步骤，以及CSS和JavaScript如何影响渲染过程的面试知识点
-tags: [front-end, broswer]
+tags: [front-end, browser]
 ---
 本文详细介绍了浏览器的渲染流程，包括HTML解析、样式计算、布局、分层、绘制等关键步骤，以及CSS和JavaScript如何影响渲染过程的面试知识点
 

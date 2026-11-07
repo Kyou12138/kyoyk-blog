@@ -1,8 +1,5 @@
 "use server";
 
-import { createHash } from "node:crypto";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { verifyPassword } from "@/lib/auth";
@@ -10,8 +7,6 @@ import { plainExcerpt } from "@/lib/markdown";
 import { deletePost, getPostById, savePost, type PostStatus } from "@/lib/posts";
 import { sealSecret } from "@/lib/secret";
 import { endSession, requireAdmin, startSession } from "@/lib/session";
-
-const DATA_DIR = process.env.DATA_DIR ?? path.join(process.cwd(), "data");
 
 const text = (form: FormData, key: string): string => String(form.get(key) ?? "").trim();
 const optional = (form: FormData, key: string): string | null => text(form, key) || null;
@@ -106,29 +101,4 @@ export async function deletePostAction(formData: FormData) {
   if (id) await deletePost(id);
   revalidatePath("/blog");
   redirect("/admin");
-}
-
-export async function uploadAssetAction(formData: FormData) {
-  await requireAdmin();
-
-  const id = text(formData, "id");
-  const file = formData.get("file");
-  const back = id ? `/admin/posts/${id}` : "/admin/posts/new";
-
-  if (!(file instanceof File) || file.size === 0) {
-    redirect(`${back}?error=file`);
-  }
-  if (!file.type.startsWith("image/") || file.size > 8 * 1024 * 1024) {
-    redirect(`${back}?error=file-type`);
-  }
-
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const sha = createHash("sha256").update(buffer).digest("hex");
-  const ext = (file.name.split(".").pop() ?? "png").toLowerCase().replace(/[^a-z0-9]/g, "");
-  const name = `${sha}.${ext}`;
-
-  await fs.mkdir(path.join(DATA_DIR, "uploads"), { recursive: true });
-  await fs.writeFile(path.join(DATA_DIR, "uploads", name), buffer);
-
-  redirect(`${back}?uploaded=${encodeURIComponent(`/uploads/${name}`)}`);
 }

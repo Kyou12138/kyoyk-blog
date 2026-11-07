@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import CodeCopyButtons from "@/components/CodeCopyButtons";
 import NoteGate from "@/components/NoteGate";
 import { formatDate, readingMinutes } from "@/lib/format";
-import { renderMarkdown } from "@/lib/markdown";
+import { renderPost } from "@/lib/markdown";
 import { readPrivateBody } from "@/lib/noteAccess";
 import { getPostBySlug, permalink } from "@/lib/posts";
 import { isAdmin } from "@/lib/session";
@@ -39,37 +40,58 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   const privateBody =
     post.status === "private" && post.secret ? await readPrivateBody(post.id, post.secret) : null;
+  const locked = post.status === "private" && !privateBody;
+  const source = privateBody ?? post.body ?? "";
+  const { html, headings } = locked ? { html: "", headings: [] } : renderPost(source, post.title);
+
+  // 13 篇旧文的 description 就是 title，重复渲染没有信息量
+  const subtitle =
+    post.description && post.description.trim() !== post.title.trim() ? post.description : null;
 
   return (
     <main className="container">
-      <article className="narrow article">
-        <header className="article__head">
-          <div className="post-card__meta">
-            <time dateTime={post.publishedAt ?? undefined}>
-              {post.publishedAt ? formatDate(post.publishedAt) : "未发布"}
-            </time>
-            {post.status !== "published" && <span className="tag tag--active">{post.status}</span>}
-            {post.tags.map((tag) => (
-              <Link key={tag} className="tag" href={`/blog/tags/${encodeURIComponent(tag)}`}>
-                {tag}
-              </Link>
-            ))}
-            {post.body && <span>{readingMinutes(post.body)} 分钟</span>}
-          </div>
-          <h1>{post.title}</h1>
-          {post.description && <p className="muted">{post.description}</p>}
-        </header>
+      <div className="article-shell">
+        <article className="article">
+          <header className="article__head">
+            <div className="post-card__meta">
+              <time dateTime={post.publishedAt ?? undefined}>
+                {post.publishedAt ? formatDate(post.publishedAt) : "未发布"}
+              </time>
+              {post.status !== "published" && <span className="tag tag--active">{post.status}</span>}
+              {post.tags.map((tag) => (
+                <Link key={tag} className="tag" href={`/blog/tags/${encodeURIComponent(tag)}`}>
+                  {tag}
+                </Link>
+              ))}
+              {post.body && <span>{readingMinutes(post.body)} 分钟</span>}
+            </div>
+            <h1>{post.title}</h1>
+            {subtitle && <p className="muted">{subtitle}</p>}
+          </header>
 
-        {post.status === "private" ? (
-          privateBody ? (
-            <div className="prose" dangerouslySetInnerHTML={{ __html: renderMarkdown(privateBody) }} />
-          ) : (
+          {locked ? (
             <NoteGate postId={post.id} hint={post.secret?.hint ?? null} />
-          )
-        ) : (
-          <div className="prose" dangerouslySetInnerHTML={{ __html: renderMarkdown(post.body ?? "") }} />
+          ) : (
+            <>
+              <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+              <CodeCopyButtons />
+            </>
+          )}
+        </article>
+
+        {headings.length > 1 && (
+          <nav className="toc" aria-label="目录">
+            <p className="toc__title">目录</p>
+            <ol className="toc__list">
+              {headings.map((heading) => (
+                <li key={heading.id} className={`toc__item toc__item--h${heading.level}`}>
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
         )}
-      </article>
+      </div>
     </main>
   );
 }

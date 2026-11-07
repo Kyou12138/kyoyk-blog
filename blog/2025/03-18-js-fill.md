@@ -1,7 +1,7 @@
 ---
 title: JS用fill([])创建二维数组的坑
 description: JS用fill([])创建二维数组的坑
-tags: [front-end, broswer]
+tags: [front-end, browser]
 ---
 
 本文介绍了JavaScript中使用Array.fill([])创建二维数组时的常见陷阱。当使用fill方法传入空数组作为参数时，所有元素会引用同一个数组对象，导致修改一行时其他行也会被意外修改。文章提供了正确的二维数组创建方法，并结合LeetCode实例展示了实际应用场景。

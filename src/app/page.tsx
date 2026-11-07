@@ -1,8 +1,7 @@
 import Link from "next/link";
-import HeroCanvasBackground from "@/components/HeroCanvasBackground";
+import HomeHero from "@/components/HomeHero";
 import { formatDate } from "@/lib/format";
 import { listPosts, permalink } from "@/lib/posts";
-import { SITE_TAGLINE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -11,25 +10,9 @@ export default async function HomePage() {
 
   return (
     <main>
-      <section className="hero">
-        <HeroCanvasBackground className="hero__canvas" />
-        <div className="container hero__body">
-          <span className="eyebrow">Kyou · 全栈手记</span>
-          <h1>{SITE_TAGLINE}</h1>
-          <p>
-            前后端、工程化与 AI 的长期笔记。这个站点本身也是作品：Next.js + PostgreSQL 全栈，
-            自己写的鉴权、搜索、加密笔记，跑在一台自己运维的机器上。
-          </p>
-          <div className="hero__actions">
-            <Link className="button" href="/blog">
-              读笔记 →
-            </Link>
-            <Link className="button button--ghost" href="/colophon">
-              看技术栈
-            </Link>
-          </div>
-        </div>
-      </section>
+      <div className="container">
+        <HomeHero />
+      </div>
 
       <section className="section">
         <div className="container">
