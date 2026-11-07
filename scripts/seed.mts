@@ -6,7 +6,11 @@ import { Client } from "pg";
 import { plainExcerpt } from "../src/lib/markdown.ts";
 import { sealSecret } from "../src/lib/secret.ts";
 
-process.loadEnvFile?.(".env.local");
+try {
+  process.loadEnvFile?.(".env.local");
+} catch {
+  /* 容器内没有 .env.local，环境变量由 compose 注入 */
+}
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {

@@ -15,7 +15,11 @@ const splitStatements = (sql: string): string[] =>
     )
     .filter((statement) => statement.length > 0);
 
-process.loadEnvFile?.(".env.local");
+try {
+  process.loadEnvFile?.(".env.local");
+} catch {
+  /* 容器内没有 .env.local，环境变量由 compose 注入 */
+}
 
 const connectionString = process.env.DATABASE_URL;
 if (!connectionString) {
