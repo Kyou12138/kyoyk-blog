@@ -1,4 +1,7 @@
-export const metadata = { title: "资源&工具" };
+export const metadata = {
+  title: "资源&工具",
+  description: "精选开发提效外设、开源资产与自研 AI 原生应用系统。",
+};
 
 import type { ReactNode } from "react";
 import styles from "./proj.module.css";
@@ -21,7 +24,40 @@ type ProjectSection = {
 const projectSections: ProjectSection[] = [
   {
     code: "01",
-    title: "资源推荐",
+    title: "AI 原生应用与交互工具",
+    cards: [
+      {
+        icon: "chat",
+        title: "AI 对话 (Chat Agent)",
+        badge: "模型接入",
+        description:
+          "基于 NextChat 定制的多模型对话平台，支持流式传输、长上下文压缩与提示词工具扩展。",
+        href: "https://chat.kyoyk.top/",
+        host: "chat.kyoyk.top",
+      },
+      {
+        icon: "resume",
+        title: "魔方简历 (Magic Resume)",
+        badge: "智能排版",
+        description:
+          "基于 AST 结构化渲染的智能简历系统，针对工程师 ATS 匹配机制优化，支持即时预览与 PDF 导出。",
+        href: "https://magic-resume.kyoyk.top/",
+        host: "magic-resume.kyoyk.top",
+      },
+      {
+        icon: "qr",
+        title: "QRGPT",
+        badge: "AI 图像",
+        description:
+          "基于 AI 的二维码艺术化生成工具，支持文本与链接编码，兼顾辨识度与视觉美感。",
+        href: "https://www.qrgpt.io/",
+        host: "qrgpt.io",
+      },
+    ],
+  },
+  {
+    code: "02",
+    title: "开源开发与探索外设",
     cards: [
       {
         icon: "compass",
@@ -37,42 +73,9 @@ const projectSections: ProjectSection[] = [
         title: "Linux.do",
         badge: "极客社区",
         description:
-          "面向 Linux 和开源技术的活跃社区，覆盖日常技术讨论、工具实践与经验分享。",
+          "面向 Linux 和开源技术的活跃社区，覆盖日常技术讨论、工具实践与前沿经验分享。",
         href: "https://linux.do/",
         host: "linux.do",
-      },
-      {
-        icon: "qr",
-        title: "QRGPT",
-        badge: "AI 图像",
-        description:
-          "基于 AI 的二维码艺术化生成工具，支持文本与链接编码，兼顾辨识度与视觉美感。",
-        href: "https://www.qrgpt.io/",
-        host: "qrgpt.io",
-      },
-    ],
-  },
-  {
-    code: "02",
-    title: "在线应用",
-    cards: [
-      {
-        icon: "chat",
-        title: "AI 对话",
-        badge: "模型接入",
-        description:
-          "基于 NextChat 定制的对话界面，支持主流大语言模型，适合快速知识问答与编程辅助。",
-        href: "https://chat.kyoyk.top/",
-        host: "chat.kyoyk.top",
-      },
-      {
-        icon: "resume",
-        title: "魔方简历",
-        badge: "效率工具",
-        description:
-          "在线排版与简历编辑工具，支持实时 Markdown/模板预览与高质量 PDF 一键导出。",
-        href: "https://magic-resume.kyoyk.top/",
-        host: "magic-resume.kyoyk.top",
       },
     ],
   },
@@ -119,14 +122,21 @@ export default function Projects(): ReactNode {
   return (
     <main className={styles.projectsPage}>
       <div className="container">
-        {/* 顶部标题区 */}
-        <section className={styles.heroPanel}>
-          <h1 className={styles.heroTitle}>资源 & 工具</h1>
-        </section>
+        {/* 顶部自解释元信息 */}
+        <header className={styles.pageHeader}>
+          <div className={styles.pageMeta}>
+            <span className={styles.pageDot} />
+            <span className={styles.pageTag}>TOOLBOX & ECOSYSTEM // PERIPHERALS</span>
+          </div>
+          <h1 className={styles.pageTitle}>工程矩阵与 AI 工具箱</h1>
+          <p className={styles.pageDesc}>
+            精选开发提效外设、开源资产与自研 AI 原生应用系统，用工具拓展思考边界。
+          </p>
+        </header>
 
         {/* 分组网格 */}
         <div className={styles.sections}>
-          {projectSections.map((section, sectionIndex) => (
+          {projectSections.map((section) => (
             <section key={section.code} className={styles.sectionBlock}>
               <div className={styles.sectionHeader}>
                 <span className={styles.sectionBadge}>{section.code}</span>
@@ -134,16 +144,13 @@ export default function Projects(): ReactNode {
               </div>
 
               <div className={styles.cardGrid}>
-                {section.cards.map((card, cardIndex) => (
+                {section.cards.map((card) => (
                   <a
                     key={card.title}
                     href={card.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={styles.card}
-                    style={{
-                      animationDelay: `${(sectionIndex * 3 + cardIndex) * 80 + 100}ms`,
-                    }}
                   >
                     <div className={styles.cardTop}>
                       <span className={styles.cardIcon} aria-hidden="true">
@@ -179,11 +186,7 @@ export default function Projects(): ReactNode {
           </span>
           <p>
             有优质开发工具或开源资源推荐？欢迎在{" "}
-            <a
-              href="https://github.com/Kyou12138"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://github.com/Kyou12138" target="_blank" rel="noopener noreferrer">
               GitHub
             </a>{" "}
             提交补充建议或发起讨论。

@@ -1,47 +1,53 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "技术栈",
-  description: "这个站点用了什么，以及为什么。",
+  title: "技术栈与系统架构",
+  description: "个人站点的系统架构、工程选型与权衡决断。",
   alternates: { canonical: "/colophon" },
 };
 
 const stack = [
   {
-    title: "Next.js 15（App Router）",
-    category: "框架",
+    title: "Next.js 15 (App Router Standalone)",
+    category: "CORE RUNTIME",
+    badge: "v15.5",
     href: "https://nextjs.org/docs",
-    why: "内容是数据库里的，不是构建时的文件，所以需要服务端渲染 + 服务端动作。App Router 的 Server Actions 让「保存文章」这件事不需要手写 API。",
+    why: "单机轻量全栈容器化，利用 App Router 与 Server Actions 实现零客户端胶水代码的原子保存，配合 Standalone 输出压缩镜像至 60MB。",
   },
   {
-    title: "PostgreSQL + 裸 SQL",
-    category: "数据",
+    title: "PostgreSQL 17 + 原生纯 SQL",
+    category: "DATA PERSISTENCE",
+    badge: "PG 17",
     href: "https://www.postgresql.org/docs/",
-    why: "文章、标签、修订、上传的图片都在库里。没有用 ORM：查询只有五六条，SQL 比映射层短，而且 explain 的时候能直接看到执行计划。",
+    why: "拒绝臃肿 ORM。全站仅 6 条核心高频查询，裸 SQL 配合连接池与 SSL 自动重试，执行计划一目了然，零无谓抽象层。",
   },
   {
-    title: "自建鉴权",
-    category: "安全",
+    title: "无用户表轻量鉴权 (Scrypt + HMAC)",
+    category: "SECURITY LAYER",
+    badge: "Cookie Auth",
     href: "https://nodejs.org/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback",
-    why: "一个作者，不需要用户表。密码用 scrypt 存哈希，会话是 HMAC 签名的 HttpOnly cookie，没有引入 NextAuth 这类为多租户设计的库。",
+    why: "单作者个人站架构，不需要冗余的多租户 Users 表。密码经 Scrypt (N=16384) 散列，会话由服务端 HMAC-SHA256 签名签发 HttpOnly Cookie。",
   },
   {
-    title: "私有笔记：scrypt + AES-256-GCM",
-    category: "安全",
+    title: "私有笔记封存：Scrypt + AES-256-GCM",
+    category: "ZERO-KNOWLEDGE CIPHER",
+    badge: "AES-GCM",
     href: "https://nodejs.org/api/crypto.html#class-aesgcm",
-    why: "正文在入库前用密码派生的密钥加密，密钥只在解锁时算出来，再封进 cookie。服务端从不保存明文，密码错时 GCM 校验直接失败。",
+    why: "正文入库前客户端/服务端派生密钥加密封存，库中仅存密文与 Tag。服务端无明文泄露风险，解密密钥封入会话 Cookie 保障无感阅读。",
   },
   {
-    title: "markdown-it + highlight.js",
-    category: "渲染",
+    title: "Markdown-it + Highlight.js 静态管线",
+    category: "CONTENT PIPELINE",
+    badge: "Deterministic",
     href: "https://markdown-it.github.io/",
-    why: "写作是 Markdown。没有上 MDX：在线写作让编辑器能执行代码，收益远小于风险。",
+    why: "剔除动态运行代码的 MDX 隐患。纯 Markdown 解析配合服务端语义降级（H1 规整、自动 TOC 提取、Mac 终端代码块高亮）。",
   },
   {
-    title: "华为云 ECS + Cloudflare Tunnel",
-    category: "部署",
+    title: "华为 ECS + Cloudflare Zero Trust 隧道",
+    category: "INFRASTRUCTURE",
+    badge: "Argo Tunnel",
     href: "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/",
-    why: "一台 2 GB 的机器，docker compose 跑应用、数据库和隧道。构建不在机器上做，由 GitHub Actions 构建镜像推到 SWR。没有开放任何入站端口，流量全部经 Cloudflare。",
+    why: "2vCPU / 2GB 轻量云主机，无暴露任何公网入站端口（0-Attack Surface）。流量由 Cloudflare 全球 Anycast 节点经 QUIC 隧道直接回源。",
   },
 ];
 
@@ -57,26 +63,40 @@ export default function ColophonPage() {
   return (
     <main className="section">
       <div className="container">
-        <h1 style={{ fontSize: "1.7rem", margin: "0 0 1.6rem" }}>技术栈</h1>
-        <ul className="stack-grid">
+        <header className="section-block__head" style={{ marginBottom: "2.5rem" }}>
+          <div className="section-block__meta">
+            <span className="section-block__dot section-block__dot--gold" />
+            <span className="section-block__tag">SYSTEM BLUEPRINT // COLOPHON</span>
+          </div>
+          <h1 className="section-block__title">全栈系统拓扑与架构决策</h1>
+          <p className="section-block__desc">
+            轻量单租户全栈站点的技术选型与工程权衡。不依赖庞大框架抽象，用最精简可信的代码解决问题。
+          </p>
+        </header>
+
+        <div className="arch-grid">
           {stack.map((item) => (
-            <li key={item.title} className="post-card stack-card">
-              <div className="post-card__meta">
-                <span className="tag tag--active">{item.category}</span>
-                <a
-                  className="stack-card__link"
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {hostOf(item.href)} ↗
-                </a>
+            <article key={item.title} className="arch-card">
+              <div className="arch-card__top">
+                <span className="arch-card__category">{item.category}</span>
+                <span className="arch-card__badge">{item.badge}</span>
               </div>
-              <h3>{item.title}</h3>
-              <p>{item.why}</p>
-            </li>
+
+              <h2 className="arch-card__title">
+                <a href={item.href} target="_blank" rel="noopener noreferrer">
+                  {item.title}
+                  <span className="arch-card__arrow">↗</span>
+                </a>
+              </h2>
+
+              <p className="arch-card__desc">{item.why}</p>
+
+              <div className="arch-card__foot">
+                <span className="arch-card__host">{hostOf(item.href)}</span>
+              </div>
+            </article>
           ))}
-        </ul>
+        </div>
       </div>
     </main>
   );

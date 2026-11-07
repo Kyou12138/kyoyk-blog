@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import HeroCanvasBackground from "@/components/HeroCanvasBackground";
+import AiSystemCortex from "@/components/AiSystemCortex";
 import styles from "@/components/home-hero.module.css";
 import { SITE_TAGLINE } from "@/lib/site";
 
@@ -14,16 +15,16 @@ const headlineFrames = [
   { lead: "CODE", tail: "PROMPT" },
 ] as const;
 
-const heroFlow = [
-  { code: "01", title: "拆解目标", text: "先定义范围与约束，减少返工。" },
-  { code: "02", title: "快速试验", text: "以小步迭代验证交互与性能。" },
-  { code: "03", title: "沉淀复用", text: "把经验沉淀成文档和工具。" },
+const principles = [
+  { code: "01", title: "架构先行", desc: "定义系统契约与服务边界，杜绝盲目试错" },
+  { code: "02", title: "智能体工程", desc: "LLM as CPU • 上下文压缩 • MCP 协议外设" },
+  { code: "03", title: "知识沉淀", desc: "31+ 篇全栈底层与 AI 原生工程演进账册" },
 ] as const;
 
-const POST_BOOT_TEAR_DELAY_MS = 2000;
-const WORD_FLIP_DURATION_MS = 110;
+const POST_BOOT_TEAR_DELAY_MS = 2400;
+const WORD_FLIP_DURATION_MS = 120;
 const WORD_TEAR_DURATION_MS = 860;
-const LOOP_INTERVAL_MS = 7500;
+const LOOP_INTERVAL_MS = 8500;
 
 export default function HomeHero() {
   const [frameIndex, setFrameIndex] = useState(0);
@@ -41,7 +42,6 @@ export default function HomeHero() {
     };
 
     const runSequence = () => {
-      // 触发撕裂并切换词组
       timers.push(
         window.setTimeout(() => {
           setTearActive(true);
@@ -72,11 +72,13 @@ export default function HomeHero() {
       <HeroCanvasBackground className={styles.heroCanvas} />
       <div className={cx("container", styles.heroInner)}>
         <div className={styles.heroGrid}>
+          {/* 左侧：自我宣言与工程准则 */}
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>
-              <span className={styles.heroEyebrowDot} aria-hidden="true" />
-              KYOU BLOG
-            </p>
+            <div className={styles.heroEyebrow}>
+              <span className={styles.heroEyebrowDot} />
+              <span>KYOU // FULLSTACK & AI AGENT ARCHITECT</span>
+            </div>
+
             <h1 className={styles.heroTitle}>
               <span className={cx(styles.swapSlot, styles.swapSlotLead)}>
                 <span
@@ -99,46 +101,37 @@ export default function HomeHero() {
                 </span>
               </span>
             </h1>
-            <p className={styles.heroSubtitle}>{SITE_TAGLINE}</p>
-            <div className={styles.heroActions}>
-              <Link data-magnetic className={cx("button", styles.heroAction)} href="/blog">
-                开始阅读
-              </Link>
-              <Link
-                data-magnetic
-                className={cx("button", "button--ghost", styles.heroActionGhost)}
-                href="/proj"
-              >
-                资源导航
-              </Link>
-            </div>
-            <div className={styles.heroStats} aria-label="站点速览">
-              <span>专注前后端与 AI 实践</span>
-              <span>持续更新学习记录</span>
-              <span>沉淀可复用资源</span>
-            </div>
-          </div>
 
-          <aside className={styles.heroVisual} aria-label="首页视觉面板">
-            <div className={styles.heroOrbital}>
-              <span className={styles.heroOrbRing} aria-hidden="true" />
-              <span className={styles.heroOrbRingSoft} aria-hidden="true" />
-              <span className={styles.heroOrbCore} aria-hidden="true" />
-              <span className={cx(styles.heroOrbDot, styles.heroOrbDotA)} aria-hidden="true" />
-              <span className={cx(styles.heroOrbDot, styles.heroOrbDotB)} aria-hidden="true" />
-              <span className={cx(styles.heroOrbDot, styles.heroOrbDotC)} aria-hidden="true" />
+            <p className={styles.heroSubtitle}>
+              {SITE_TAGLINE} 专注于复杂全栈架构、LLM 智能体系统与高信噪比技术实践。
+            </p>
+
+            <div className={styles.heroActions}>
+              <Link className={cx("button", styles.heroAction)} href="/blog">
+                探索知识库 ➔
+              </Link>
+              <Link className={cx("button", "button--ghost", styles.heroActionGhost)} href="/proj">
+                工程代表作 ➔
+              </Link>
             </div>
-            <div className={styles.heroFlow}>
-              {heroFlow.map((item) => (
-                <div key={item.code} className={styles.heroFlowItem}>
-                  <span className={styles.heroFlowCode}>{item.code}</span>
-                  <div className={styles.heroFlowContent}>
-                    <div className={styles.heroFlowTitle}>{item.title}</div>
-                    <div className={styles.heroFlowText}>{item.text}</div>
+
+            {/* 精密工程账册清单 */}
+            <div className={styles.heroPrinciples}>
+              {principles.map((p) => (
+                <div key={p.code} className={styles.principleItem}>
+                  <span className={styles.principleCode}>{p.code}</span>
+                  <div className={styles.principleBody}>
+                    <div className={styles.principleTitle}>{p.title}</div>
+                    <div className={styles.principleDesc}>{p.desc}</div>
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* 右侧：AI 智能体系统拓扑交互视窗 */}
+          <aside className={styles.heroVisual} aria-label="AI 智能体系统架构视窗">
+            <AiSystemCortex />
           </aside>
         </div>
       </div>

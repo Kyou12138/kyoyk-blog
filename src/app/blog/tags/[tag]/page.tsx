@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDate } from "@/lib/format";
+import { dateParts } from "@/lib/format";
 import { listPosts, permalink } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
@@ -24,43 +24,63 @@ export default async function TagPage({ params }: PageProps) {
   return (
     <main className="section">
       <div className="container">
-        <div className="section__head">
-          <h1 style={{ margin: 0, fontSize: "1.6rem" }}>
+        <div className="section-block__head">
+          <div className="section-block__meta">
+            <span className="section-block__dot section-block__dot--gold" />
+            <span className="section-block__tag">TAG FILTER // ARCHIVE</span>
+          </div>
+          <h1 className="section-block__title">
             标签：<span style={{ color: "var(--primary)" }}>{name}</span>
           </h1>
-          <Link href="/blog/tags">全部标签 →</Link>
+          <p className="section-block__desc">
+            共归档 {posts.length} 篇相关技术笔记。{" "}
+            <Link href="/blog" style={{ marginLeft: "0.5rem" }}>
+              ← 返回全部笔记账册
+            </Link>
+          </p>
         </div>
 
         {posts.length === 0 ? (
           <p className="empty">这个标签下还没有笔记。</p>
         ) : (
-          <ul className="post-list">
-            {posts.map((post) => (
-              <li key={post.id} className="post-card">
-                <div className="post-card__meta">
-                  <time dateTime={post.publishedAt ?? undefined}>
-                    {post.publishedAt ? formatDate(post.publishedAt) : "未发布"}
-                  </time>
-                  {post.minutes && <span className="post-card__minutes">{post.minutes} 分钟</span>}
-                  {post.tags.map((item) => (
-                    <Link
-                      key={item}
-                      className={item === name ? "tag tag--active" : "tag"}
-                      href={`/blog/tags/${encodeURIComponent(item)}`}
-                    >
-                      {item}
-                    </Link>
-                  ))}
-                </div>
-                <h3>
-                  <Link className="post-card__link" href={permalink(post)}>
-                    {post.title}
-                  </Link>
-                </h3>
-                <p>{post.description || post.excerpt || ""}</p>
-              </li>
-            ))}
-          </ul>
+          <div className="ledger-stream">
+            {posts.map((post) => {
+              const href = permalink(post);
+              const parts = post.publishedAt ? dateParts(post.publishedAt) : null;
+              const dateStr = parts ? `${parts.year}.${parts.month}.${parts.day}` : "DRAFT";
+
+              return (
+                <article key={post.id} className="ledger-row">
+                  <div className="ledger-row__time">
+                    <time dateTime={post.publishedAt ?? undefined}>{dateStr}</time>
+                  </div>
+
+                  <div className="ledger-row__main">
+                    <h2 className="ledger-row__title">
+                      <Link href={href}>{post.title}</Link>
+                    </h2>
+                    {post.description && post.description !== post.title && (
+                      <p className="ledger-row__desc">{post.description}</p>
+                    )}
+                  </div>
+
+                  <div className="ledger-row__aside">
+                    {post.tags.map((t) => (
+                      <span
+                        key={t}
+                        className={`ledger-row__tag ${t === name ? "is-active" : ""}`}
+                      >
+                        {t}
+                      </span>
+                    ))}
+                    {post.minutes && (
+                      <span className="ledger-row__reading-time">{post.minutes} min</span>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         )}
       </div>
     </main>

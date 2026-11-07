@@ -25,3 +25,10 @@ export const readingMinutes = (text: string): number => {
   const words = (text.match(/[A-Za-z0-9_]+/g) ?? []).length;
   return Math.max(1, Math.round(chinese / 400 + words / 220));
 };
+
+/** 文章永久地址：/blog/YYYY/MM/DD/<slug>，由发布时间推导。 */
+export const permalink = (post: { slug: string; publishedAt: string | null }): string => {
+  if (!post.publishedAt) return `/blog/${post.slug}`;
+  const { year, month, day } = dateParts(post.publishedAt);
+  return `/blog/${year}/${month}/${day}/${post.slug}`;
+};

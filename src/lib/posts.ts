@@ -58,12 +58,7 @@ const toSummary = (row: Row): PostSummary => ({
   minutes: row.minutes,
 });
 
-/** 文章地址：/blog/YYYY/MM/DD/<slug>，由发布时间推导。 */
-export const permalink = (post: Pick<PostSummary, "slug" | "publishedAt">): string => {
-  if (!post.publishedAt) return `/blog/${post.slug}`;
-  const { year, month, day } = dateParts(post.publishedAt);
-  return `/blog/${year}/${month}/${day}/${post.slug}`;
-};
+export { permalink } from "./format";
 
 export const listPosts = async (options?: {
   keyword?: string;
