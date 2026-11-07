@@ -1845,3 +1845,10 @@ a.tag:hover {
   font-family: inherit;
   font-size: 0.76rem;
 }
+
+@media (max-width: 720px) {
+  /* 窄屏没地方放终端 HUD，藏起来别遮正文 */
+  .terminal-hud {
+    display: none;
+  }
+}

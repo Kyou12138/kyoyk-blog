@@ -594,8 +594,10 @@
   }
 
   .heroTitle {
-    max-width: 12.6ch;
-    font-size: clamp(2rem, 11vw, 3rem);
+    max-width: 100%;
+    font-size: clamp(1.85rem, 8.6vw, 2.7rem);
+    line-height: 1.16;
+    text-wrap: pretty;
   }
 
   .heroVisual {
