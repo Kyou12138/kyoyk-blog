@@ -15,25 +15,52 @@ const headlineFrames = [
 ] as const;
 
 const heroFlow = [
-  { code: "01", title: "拆解目标", text: "先定义范围与约束，减少返工。" },
-  { code: "02", title: "快速试验", text: "以小步迭代验证交互与性能。" },
-  { code: "03", title: "沉淀复用", text: "把经验沉淀成文档和工具。" },
+  { code: "01", title: "拆解目标" },
+  { code: "02", title: "快速试验" },
+  { code: "03", title: "沉淀复用" },
 ] as const;
 
 const TEAR_START_MS = 2000;
 const WORD_FLIP_MS = 110;
 const WORD_TEAR_MS = 860;
 
+const GLYPHS = "!<>-_\\/[]{}—=+*^?#";
+
+function scramble(target: string, onUpdate: (s: string) => void) {
+  let step = 0;
+  const total = 8;
+  const timer = setInterval(() => {
+    step++;
+    const progress = step / total;
+    let s = "";
+    for (let i = 0; i < target.length; i++) {
+      if (progress > (i + 1) / target.length) {
+        s += target[i];
+      } else {
+        s += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      }
+    }
+    onUpdate(s);
+    if (step >= total) {
+      clearInterval(timer);
+      onUpdate(target);
+    }
+  }, 28);
+  return () => clearInterval(timer);
+}
+
 export default function HomeHero() {
   const [frameIndex, setFrameIndex] = useState(0);
   const [tearActive, setTearActive] = useState(false);
+  const [displayLead, setDisplayLead] = useState<string>(headlineFrames[0].lead);
+  const [displayTail, setDisplayTail] = useState<string>(headlineFrames[0].tail);
   const activeFrame = headlineFrames[frameIndex];
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    // 循环播放：撕裂 → 换词 → 复位 → 等待，让动效在长时间停留时也可见
+    // 循环播放：撕裂 → 换词矩阵解码 → 复位 → 等待
     let timers: number[] = [];
     const clear = () => {
       timers.forEach(window.clearTimeout);
@@ -42,10 +69,19 @@ export default function HomeHero() {
 
     const cycle = () => {
       setFrameIndex(0);
+      scramble(headlineFrames[0].lead, setDisplayLead);
+      scramble(headlineFrames[0].tail, setDisplayTail);
+
       timers.push(
         window.setTimeout(() => {
           setTearActive(true);
-          timers.push(window.setTimeout(() => setFrameIndex(1), WORD_FLIP_MS));
+          timers.push(
+            window.setTimeout(() => {
+              setFrameIndex(1);
+              scramble(headlineFrames[1].lead, setDisplayLead);
+              scramble(headlineFrames[1].tail, setDisplayTail);
+            }, WORD_FLIP_MS),
+          );
           timers.push(window.setTimeout(() => setTearActive(false), WORD_TEAR_MS));
           timers.push(window.setTimeout(cycle, WORD_TEAR_MS + 4200));
         }, TEAR_START_MS),
@@ -62,17 +98,13 @@ export default function HomeHero() {
       <div className={cx("container", styles.heroInner)}>
         <div className={styles.heroGrid}>
           <div className={styles.heroContent}>
-            <p className={styles.heroEyebrow}>
-              <span className={styles.heroEyebrowDot} aria-hidden="true" />
-              KYOU BLOG
-            </p>
             <h1 className={styles.heroTitle}>
               <span className={cx(styles.swapSlot, styles.swapSlotLead)}>
                 <span
                   className={cx(styles.swapWord, tearActive && styles.wordTearing)}
-                  data-word={activeFrame.lead}
+                  data-word={displayLead}
                 >
-                  {activeFrame.lead}
+                  {displayLead}
                 </span>
               </span>
               <span className={styles.heroText}> is cheap, show me </span>
@@ -81,26 +113,21 @@ export default function HomeHero() {
                 <span className={cx(styles.swapSlot, styles.swapSlotTail)}>
                   <span
                     className={cx(styles.swapWord, tearActive && styles.wordTearing)}
-                    data-word={activeFrame.tail}
+                    data-word={displayTail}
                   >
-                    {activeFrame.tail}
+                    {displayTail}
                   </span>
                 </span>
               </span>
             </h1>
             <p className={styles.heroSubtitle}>{SITE_TAGLINE}</p>
             <div className={styles.heroActions}>
-              <Link className={cx("button", styles.heroAction)} href="/blog">
+              <Link data-magnetic className={cx("button", styles.heroAction)} href="/blog">
                 开始阅读
               </Link>
-              <Link className={cx("button", "button--ghost", styles.heroActionGhost)} href="/proj">
+              <Link data-magnetic className={cx("button", "button--ghost", styles.heroActionGhost)} href="/proj">
                 资源导航
               </Link>
-            </div>
-            <div className={styles.heroStats} aria-label="站点速览">
-              <span>专注前后端与 AI 实践</span>
-              <span>持续更新学习记录</span>
-              <span>沉淀可复用资源</span>
             </div>
           </div>
 
@@ -115,12 +142,9 @@ export default function HomeHero() {
             </div>
             <div className={styles.heroFlow}>
               {heroFlow.map((item) => (
-                <div key={item.code} className={styles.heroFlowItem}>
+                <div key={item.code} data-magnetic className={styles.heroFlowItem}>
                   <span className={styles.heroFlowCode}>{item.code}</span>
-                  <div>
-                    <p className={styles.heroFlowTitle}>{item.title}</p>
-                    <p className={styles.heroFlowText}>{item.text}</p>
-                  </div>
+                  <span className={styles.heroFlowTitle}>{item.title}</span>
                 </div>
               ))}
             </div>

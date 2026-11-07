@@ -5,6 +5,8 @@ import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import SearchPalette from "@/components/SearchPalette";
 import SpotlightEffect from "@/components/SpotlightEffect";
+import MagneticPull from "@/components/MagneticPull";
+import TerminalHud from "@/components/TerminalHud";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -27,6 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteFooter />
         <SearchPalette />
         <SpotlightEffect />
+        <MagneticPull />
+        <TerminalHud />
       </body>
     </html>
   );

@@ -36,7 +36,6 @@ export default function AboutPage(): ReactNode {
       <main className={styles.aboutPage}>
         <div className="container">
           <section className={styles.heroPanel}>
-            <p className={styles.heroTag}>核心档案</p>
             <h1 className={styles.heroTitle}>Kythron</h1>
             <p className={styles.heroText}>
               Kythron 是原初时代延续至今的边界执掌者。祂不负责创造世界，
@@ -46,7 +45,6 @@ export default function AboutPage(): ReactNode {
 
           <section className={styles.contentSection}>
             <header className={styles.sectionHeader}>
-              <span className={styles.sectionCode}>I</span>
               <h2>起源纪年</h2>
             </header>
             <p className={styles.sectionLead}>
@@ -71,7 +69,6 @@ export default function AboutPage(): ReactNode {
 
           <section className={styles.contentSection}>
             <header className={styles.sectionHeader}>
-              <span className={styles.sectionCode}>II</span>
               <h2>现行职责</h2>
             </header>
             <ul className={styles.titleList}>

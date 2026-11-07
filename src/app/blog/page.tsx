@@ -53,11 +53,8 @@ export default async function BlogListPage({
 
         <div className="toolbar">
           <form className="search" action="/blog" method="get">
-            <input name="q" defaultValue={keyword} placeholder="搜索标题、摘要或正文" aria-label="搜索笔记" />
+            <input name="q" defaultValue={keyword} placeholder="搜索笔记（回车确认）…" aria-label="搜索笔记" />
             {tag && <input type="hidden" name="tag" value={tag} />}
-            <button className="button" type="submit">
-              搜索
-            </button>
           </form>
           <div className="tag-cloud">
             <Link className={tag ? "tag" : "tag tag--active"} href="/blog">

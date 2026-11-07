@@ -342,11 +342,10 @@
 
 .heroFlowItem {
   position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.72rem;
-  align-items: start;
-  padding: 0.65rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 0.95rem;
   border: 1px solid rgb(var(--ky-primary-light-rgb) / 0.2);
   border-radius: 14px;
   background:
@@ -364,7 +363,7 @@
 }
 
 .heroFlowItem:hover {
-  transform: translateX(4px);
+  transform: translateX(6px);
   border-color: rgb(var(--ky-primary-light-rgb) / 0.55);
   background: rgba(38, 30, 20, 0.65);
 }
@@ -373,27 +372,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  min-height: 2rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 999px;
   font-size: 0.74rem;
   font-weight: 760;
   color: #1b1305;
   background: linear-gradient(135deg, #ffedc1 0%, var(--hero-accent) 100%);
+  flex-shrink: 0;
 }
 
 .heroFlowTitle {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: 0.96rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
   color: rgba(250, 238, 217, 0.95);
-}
-
-.heroFlowText {
-  margin: 0.24rem 0 0;
-  font-size: 0.8rem;
-  line-height: 1.56;
-  color: rgba(232, 214, 185, 0.86);
 }
 
 .wordTearing {

@@ -15,7 +15,6 @@ type ProjectCard = {
 type ProjectSection = {
   code: string;
   title: string;
-  description: string;
   cards: ProjectCard[];
 };
 
@@ -23,7 +22,6 @@ const projectSections: ProjectSection[] = [
   {
     code: "01",
     title: "资源推荐",
-    description: "精选开发资源与学习社区，帮助更快定位答案与优质开源项目。",
     cards: [
       {
         icon: "compass",
@@ -57,7 +55,6 @@ const projectSections: ProjectSection[] = [
   {
     code: "02",
     title: "在线应用",
-    description: "自主维护的在线服务与生产力工具，覆盖日常对话与效率场景。",
     cards: [
       {
         icon: "chat",
@@ -124,14 +121,7 @@ export default function Projects(): ReactNode {
       <div className="container">
         {/* 顶部标题区 */}
         <section className={styles.heroPanel}>
-          <div className={styles.heroTag}>
-            <span className={styles.heroDot} />
-            精选导航 · RESOURCES
-          </div>
-          <h1 className={styles.heroTitle}>常用资源与在线应用</h1>
-          <p className={styles.heroText}>
-            高频站点、开源工具与自建服务索引，提供快速切换入口与极简导航。
-          </p>
+          <h1 className={styles.heroTitle}>资源 & 工具</h1>
         </section>
 
         {/* 分组网格 */}
@@ -140,10 +130,7 @@ export default function Projects(): ReactNode {
             <section key={section.code} className={styles.sectionBlock}>
               <div className={styles.sectionHeader}>
                 <span className={styles.sectionBadge}>{section.code}</span>
-                <div>
-                  <h2 className={styles.sectionTitle}>{section.title}</h2>
-                  <p className={styles.sectionSubtitle}>{section.description}</p>
-                </div>
+                <h2 className={styles.sectionTitle}>{section.title}</h2>
               </div>
 
               <div className={styles.cardGrid}>
@@ -177,9 +164,6 @@ export default function Projects(): ReactNode {
 
                     <div className={styles.cardFoot}>
                       <span className={styles.cardHost}>{card.host}</span>
-                      <span className={styles.cardAction}>
-                        访问 <span aria-hidden="true">→</span>
-                      </span>
                     </div>
                   </a>
                 ))}

@@ -57,10 +57,7 @@ export default function ColophonPage() {
   return (
     <main className="section">
       <div className="container">
-        <h1 style={{ fontSize: "1.7rem", marginTop: 0 }}>技术栈</h1>
-        <p className="muted" style={{ maxWidth: "60ch" }}>
-          这个站点本身是项目的一部分。下面每一项都记了选择它的理由，以及被放弃的替代方案。
-        </p>
+        <h1 style={{ fontSize: "1.7rem", margin: "0 0 1.6rem" }}>技术栈</h1>
         <ul className="stack-grid">
           {stack.map((item) => (
             <li key={item.title} className="post-card stack-card">
