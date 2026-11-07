@@ -28,12 +28,27 @@ const slugify = (text: string): string =>
     .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
     .replace(/^-+|-+$/g, "") || "section";
 
-type RenderEnv = { headings: HeadingItem[]; stack: string[] };
+type RenderEnv = { headings: HeadingItem[] };
+
+/**
+ * 正文整体降一级标题：文章标题已经是 h1，正文里的 h1 会让一个页面出现多个 h1。
+ * 41 个 h1 分布在 29 篇旧文里，逐个改源文件不现实，渲染时统一降级。
+ */
+const demoteHeadings = (instance: MarkdownIt): void => {
+  instance.core.ruler.push("demote_headings", (state) => {
+    for (const token of state.tokens) {
+      if (token.type !== "heading_open" && token.type !== "heading_close") continue;
+      const level = Number(token.tag.slice(1));
+      if (level >= 1 && level <= 4) token.tag = `h${level + 1}`;
+    }
+  });
+};
 
 /** 给 h2/h3 生成 id，并在标题末尾挂一个可点击的锚点。 */
 const headingAnchors = (instance: MarkdownIt): void => {
   instance.core.ruler.push("heading_anchors", (state) => {
     const env = state.env as RenderEnv;
+    env.headings ??= [];
     const used = new Map<string, number>();
 
     for (let i = 0; i < state.tokens.length; i += 1) {
@@ -59,6 +74,7 @@ const headingAnchors = (instance: MarkdownIt): void => {
   };
 };
 
+demoteHeadings(md);
 headingAnchors(md);
 
 /** 正文首行如果有和标题同名的 H1，去掉它，避免页面里出现两个一样的标题。 */
@@ -74,7 +90,7 @@ export const renderPost = (
   source: string,
   title?: string,
 ): { html: string; headings: HeadingItem[] } => {
-  const env: RenderEnv = { headings: [], stack: [] };
+  const env: RenderEnv = { headings: [] };
   const html = md.render(title ? stripLeadingTitle(source, title) : source, env);
   return { html, headings: env.headings };
 };

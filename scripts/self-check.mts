@@ -12,7 +12,7 @@ process.env.AUTH_SECRET = "self-check-secret-value";
 
 // Markdown：代码高亮 + HTML 保留
 const html = renderMarkdown("# 标题\n\n```js\nconst a = 1;\n```\n\n<div>raw</div>");
-assert.match(html, /<h1>标题<\/h1>/);
+assert.match(html, /<h2 id="标题">/);
 assert.match(html, /hljs/);
 assert.match(html, /<div>raw<\/div>/);
 
@@ -20,14 +20,15 @@ assert.match(html, /<div>raw<\/div>/);
 assert.equal(stripLeadingTitle("# WPF笔记\n正文", "WPF笔记"), "正文");
 assert.equal(stripLeadingTitle("# 布局\n正文", "WPF笔记"), "# 布局\n正文");
 
-// 标题锚点：h2/h3 有 id，重复标题自动加序号，h4 不收集
-const rendered = renderPost("## 布局\n\n### Grid\n\n## 布局\n\n#### 细节", "无关");
+// 标题降级 + 锚点：正文 h1 降成 h2，重复标题自动加序号，h4/h5 不进目录
+const rendered = renderPost("# 布局\n\n## Grid\n\n# 布局\n\n### 细节", "无关");
 assert.deepEqual(
   rendered.headings.map((h) => `${h.level}:${h.id}`),
   ["2:布局", "3:grid", "2:布局-2"],
 );
 assert.match(rendered.html, /<h2 id="布局">/);
 assert.match(rendered.html, /class="heading-anchor"/);
+assert.match(rendered.html, /<h4>细节<\/h4>/);
 
 // 摘要：去掉标记，截断加省略号
 assert.equal(plainExcerpt("## 标题\n\n![x](/a.png) 正文内容"), "标题 正文内容");

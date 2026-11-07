@@ -683,3 +683,15 @@
     min-height: auto;
   }
 }
+
+/* Hero 里的主按钮要和撕裂词的底色一致，否则金底金字看不清 */
+.heroAction {
+  color: #1a1308 !important;
+  border-color: transparent !important;
+  background: linear-gradient(135deg, var(--hero-accent-light) 0%, var(--hero-accent) 100%) !important;
+  box-shadow: 0 12px 26px rgb(var(--ky-primary-rgb) / 0.34);
+}
+
+.heroAction:hover {
+  background: linear-gradient(135deg, #fff0d2 0%, var(--hero-accent) 100%) !important;
+}

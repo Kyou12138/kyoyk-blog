@@ -481,6 +481,17 @@ a.tag:hover {
   font-size: 1.16rem;
 }
 
+.prose h4 {
+  margin: 1.4rem 0 0.5rem;
+  font-size: 1.02rem;
+}
+
+.prose h5 {
+  margin: 1.2rem 0 0.45rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
 .prose p,
 .prose ul,
 .prose ol {
