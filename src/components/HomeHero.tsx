@@ -15,80 +15,55 @@ const headlineFrames = [
 ] as const;
 
 const heroFlow = [
-  { code: "01", title: "拆解目标" },
-  { code: "02", title: "快速试验" },
-  { code: "03", title: "沉淀复用" },
+  { code: "01", title: "拆解目标", text: "先定义范围与约束，减少返工。" },
+  { code: "02", title: "快速试验", text: "以小步迭代验证交互与性能。" },
+  { code: "03", title: "沉淀复用", text: "把经验沉淀成文档和工具。" },
 ] as const;
 
-const TEAR_START_MS = 2000;
-const WORD_FLIP_MS = 110;
-const WORD_TEAR_MS = 860;
-
-const GLYPHS = "!<>-_\\/[]{}—=+*^?#";
-
-function scramble(target: string, onUpdate: (s: string) => void) {
-  let step = 0;
-  const total = 8;
-  const timer = setInterval(() => {
-    step++;
-    const progress = step / total;
-    let s = "";
-    for (let i = 0; i < target.length; i++) {
-      if (progress > (i + 1) / target.length) {
-        s += target[i];
-      } else {
-        s += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-      }
-    }
-    onUpdate(s);
-    if (step >= total) {
-      clearInterval(timer);
-      onUpdate(target);
-    }
-  }, 28);
-  return () => clearInterval(timer);
-}
+const POST_BOOT_TEAR_DELAY_MS = 2000;
+const WORD_FLIP_DURATION_MS = 110;
+const WORD_TEAR_DURATION_MS = 860;
+const LOOP_INTERVAL_MS = 7500;
 
 export default function HomeHero() {
   const [frameIndex, setFrameIndex] = useState(0);
   const [tearActive, setTearActive] = useState(false);
-  const [displayLead, setDisplayLead] = useState<string>(headlineFrames[0].lead);
-  const [displayTail, setDisplayTail] = useState<string>(headlineFrames[0].tail);
   const activeFrame = headlineFrames[frameIndex];
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    // 循环播放：撕裂 → 换词矩阵解码 → 复位 → 等待
     let timers: number[] = [];
     const clear = () => {
       timers.forEach(window.clearTimeout);
       timers = [];
     };
 
-    const cycle = () => {
-      setFrameIndex(0);
-      scramble(headlineFrames[0].lead, setDisplayLead);
-      scramble(headlineFrames[0].tail, setDisplayTail);
-
+    const runSequence = () => {
+      // 触发撕裂并切换词组
       timers.push(
         window.setTimeout(() => {
           setTearActive(true);
+
           timers.push(
             window.setTimeout(() => {
-              setFrameIndex(1);
-              scramble(headlineFrames[1].lead, setDisplayLead);
-              scramble(headlineFrames[1].tail, setDisplayTail);
-            }, WORD_FLIP_MS),
+              setFrameIndex((prev) => (prev === 0 ? 1 : 0));
+            }, WORD_FLIP_DURATION_MS),
           );
-          timers.push(window.setTimeout(() => setTearActive(false), WORD_TEAR_MS));
-          timers.push(window.setTimeout(cycle, WORD_TEAR_MS + 4200));
-        }, TEAR_START_MS),
+
+          timers.push(
+            window.setTimeout(() => {
+              setTearActive(false);
+            }, WORD_TEAR_DURATION_MS),
+          );
+
+          timers.push(window.setTimeout(runSequence, LOOP_INTERVAL_MS));
+        }, POST_BOOT_TEAR_DELAY_MS),
       );
     };
 
-    cycle();
+    runSequence();
     return clear;
   }, []);
 
@@ -98,13 +73,17 @@ export default function HomeHero() {
       <div className={cx("container", styles.heroInner)}>
         <div className={styles.heroGrid}>
           <div className={styles.heroContent}>
+            <p className={styles.heroEyebrow}>
+              <span className={styles.heroEyebrowDot} aria-hidden="true" />
+              KYOU BLOG
+            </p>
             <h1 className={styles.heroTitle}>
               <span className={cx(styles.swapSlot, styles.swapSlotLead)}>
                 <span
                   className={cx(styles.swapWord, tearActive && styles.wordTearing)}
-                  data-word={displayLead}
+                  data-word={activeFrame.lead}
                 >
-                  {displayLead}
+                  {activeFrame.lead}
                 </span>
               </span>
               <span className={styles.heroText}> is cheap, show me </span>
@@ -113,9 +92,9 @@ export default function HomeHero() {
                 <span className={cx(styles.swapSlot, styles.swapSlotTail)}>
                   <span
                     className={cx(styles.swapWord, tearActive && styles.wordTearing)}
-                    data-word={displayTail}
+                    data-word={activeFrame.tail}
                   >
-                    {displayTail}
+                    {activeFrame.tail}
                   </span>
                 </span>
               </span>
@@ -125,9 +104,18 @@ export default function HomeHero() {
               <Link data-magnetic className={cx("button", styles.heroAction)} href="/blog">
                 开始阅读
               </Link>
-              <Link data-magnetic className={cx("button", "button--ghost", styles.heroActionGhost)} href="/proj">
+              <Link
+                data-magnetic
+                className={cx("button", "button--ghost", styles.heroActionGhost)}
+                href="/proj"
+              >
                 资源导航
               </Link>
+            </div>
+            <div className={styles.heroStats} aria-label="站点速览">
+              <span>专注前后端与 AI 实践</span>
+              <span>持续更新学习记录</span>
+              <span>沉淀可复用资源</span>
             </div>
           </div>
 
@@ -142,9 +130,12 @@ export default function HomeHero() {
             </div>
             <div className={styles.heroFlow}>
               {heroFlow.map((item) => (
-                <div key={item.code} data-magnetic className={styles.heroFlowItem}>
+                <div key={item.code} className={styles.heroFlowItem}>
                   <span className={styles.heroFlowCode}>{item.code}</span>
-                  <span className={styles.heroFlowTitle}>{item.title}</span>
+                  <div className={styles.heroFlowContent}>
+                    <div className={styles.heroFlowTitle}>{item.title}</div>
+                    <div className={styles.heroFlowText}>{item.text}</div>
+                  </div>
                 </div>
               ))}
             </div>
