@@ -2,11 +2,14 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  min-height: clamp(600px, 82vh, 860px);
-  margin: clamp(0.8rem, 1.5vw, 1.2rem) 0 1.6rem;
+  min-height: clamp(620px, 82vh, 880px);
+  margin: clamp(0.8rem, 1.5vw, 1.2rem) auto 1.6rem;
   padding: clamp(2.5rem, 5.6vw, 4.6rem) 0 clamp(2rem, 4.1vw, 3.3rem);
   border-radius: 34px;
   border: 1px solid rgb(var(--ky-primary-light-rgb) / 0.26);
+  width: 100%;
+  display: flex;
+  align-items: center;
   --hero-accent: rgb(var(--ky-primary-rgb));
   --hero-accent-light: rgb(var(--ky-primary-light-rgb));
   --hero-accent-deep: rgb(var(--ky-primary-deep-rgb));
@@ -63,7 +66,10 @@
 .heroInner {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  max-width: 1320px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem);
 }
 
 .heroGrid {
@@ -665,17 +671,6 @@
 
 :global([data-theme="dark"]) .heroFlowText {
   color: rgba(221, 204, 180, 0.84);
-}
-
-/* 内容垂直居中，避免 Canvas 撑高后底部出现大片空白 */
-.heroBanner {
-  display: flex;
-  align-items: center;
-  min-height: clamp(560px, 72vh, 740px);
-}
-
-.heroInner {
-  width: 100%;
 }
 
 @media (max-width: 996px) {

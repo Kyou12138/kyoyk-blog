@@ -12,9 +12,13 @@ export default function SiteHeader() {
 
   return (
     <header className="site-header">
-      <div className="container site-header__inner">
+      <div className="site-header__inner">
         <Link className="brand" href="/">
-          {SITE_NAME.split(" ")[0]} <span>{SITE_NAME.split(" ")[1] ?? ""}</span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/img/logo.svg" alt="logo" width="32" height="32" className="brand__logo" />
+          <span className="brand__title">
+            {SITE_NAME.split(" ")[0]} <span>{SITE_NAME.split(" ")[1] ?? ""}</span>
+          </span>
         </Link>
         <nav className="nav">
           {NAV.map((item) => (
@@ -27,10 +31,17 @@ export default function SiteHeader() {
               {item.label}
             </Link>
           ))}
-          <a href="https://github.com/Kyou12138" target="_blank" rel="noreferrer">
+        </nav>
+        <div className="site-header__right">
+          <a
+            className="nav-link nav-link--ext"
+            href="https://github.com/Kyou12138"
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub
           </a>
-        </nav>
+        </div>
       </div>
     </header>
   );

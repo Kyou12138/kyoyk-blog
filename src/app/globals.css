@@ -62,7 +62,7 @@ img {
 }
 
 .container {
-  width: min(100% - 2.5rem, 1060px);
+  width: min(100% - 2rem, 1280px);
   margin-inline: auto;
 }
 
@@ -86,25 +86,65 @@ img {
   align-items: center;
   gap: 1.5rem;
   height: 62px;
+  width: 100%;
+  max-width: min(100vw - 2rem, 1360px);
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
   font-weight: 700;
   font-size: 1.06rem;
   letter-spacing: 0.02em;
   color: var(--text);
+  white-space: nowrap;
 }
 
-.brand span {
+.brand__logo {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.brand__title span {
   color: var(--primary);
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 0.15rem;
-  margin-left: auto;
+  gap: 0.2rem;
   font-size: 0.94rem;
+}
+
+.site-header__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-link--ext {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  white-space: nowrap;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.nav-link--ext:hover {
+  color: var(--primary);
+  background: var(--primary-soft);
+  text-decoration: none;
 }
 
 .nav a {
@@ -125,6 +165,41 @@ img {
   color: var(--primary);
   background: var(--primary-soft);
   text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .site-header__inner {
+    gap: 0.6rem;
+    padding: 0 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .site-header__inner::-webkit-scrollbar {
+    display: none;
+  }
+
+  .brand,
+  .nav,
+  .site-header__right {
+    flex: none;
+  }
+
+  .brand {
+    gap: 0.45rem;
+    font-size: 0.98rem;
+  }
+
+  .brand__logo {
+    width: 26px;
+    height: 26px;
+  }
+
+  .nav a,
+  .nav-link--ext {
+    padding: 0 0.6rem;
+    font-size: 0.9rem;
+  }
 }
 
 /* footer */
@@ -787,27 +862,6 @@ a.tag:hover {
 }
 
 @media (max-width: 720px) {
-  .site-header__inner {
-    height: auto;
-    padding: 0.6rem 0 0.4rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.35rem;
-  }
-
-  .nav {
-    /* 横向可滚，避免窄屏换行把 header 撑成两行 */
-    margin-left: -0.72rem;
-    width: calc(100% + 1.44rem);
-    overflow-x: auto;
-    scrollbar-width: none;
-    font-size: 0.88rem;
-  }
-
-  .nav::-webkit-scrollbar {
-    display: none;
-  }
-
   .hero__body {
     padding: 3.5rem 0 3rem;
   }
