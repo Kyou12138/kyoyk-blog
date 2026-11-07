@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "node --experimental-strip-types scripts/migrate.mts",
     "db:seed": "node --experimental-strip-types scripts/seed.mts",
-    "auth:hash": "node --experimental-strip-types scripts/hash-password.mts"
+    "auth:hash": "node --experimental-strip-types scripts/hash-password.mts",
+    "selfcheck": "node --experimental-strip-types scripts/self-check.mts"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",
