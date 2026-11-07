@@ -3,10 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import CodeCopyButtons from "@/components/CodeCopyButtons";
 import NoteGate from "@/components/NoteGate";
+import ReadingTools from "@/components/ReadingTools";
 import { formatDate, readingMinutes } from "@/lib/format";
 import { renderPost } from "@/lib/markdown";
 import { readPrivateBody } from "@/lib/noteAccess";
-import { getPostBySlug, permalink } from "@/lib/posts";
+import { getAdjacentPosts, getPostBySlug, permalink } from "@/lib/posts";
 import { isAdmin } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -43,6 +44,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const locked = post.status === "private" && !privateBody;
   const source = privateBody ?? post.body ?? "";
   const { html, headings } = locked ? { html: "", headings: [] } : renderPost(source, post.title);
+  const { newer, older } = await getAdjacentPosts(post.slug);
 
   // 13 篇旧文的 description 就是 title，重复渲染没有信息量
   const subtitle =
@@ -50,6 +52,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   return (
     <main className="container">
+      <ReadingTools />
       <div className="article-shell">
         <article className="article">
           <header className="article__head">
@@ -69,6 +72,22 @@ export default async function BlogPostPage({ params }: PageProps) {
             {subtitle && <p className="muted">{subtitle}</p>}
           </header>
 
+          {/* 窄屏没有右侧目录，用贴着屏幕底部的 details 充当日录入口 */}
+          {headings.length > 1 && (
+            <details className="toc-mobile">
+              <summary>
+                <span aria-hidden="true">☰</span> 目录
+              </summary>
+              <ol className="toc__list">
+                {headings.map((heading) => (
+                  <li key={heading.id} className={`toc__item toc__item--h${heading.level}`}>
+                    <a href={`#${heading.id}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
+
           {locked ? (
             <NoteGate postId={post.id} hint={post.secret?.hint ?? null} />
           ) : (
@@ -76,6 +95,33 @@ export default async function BlogPostPage({ params }: PageProps) {
               <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
               <CodeCopyButtons />
             </>
+          )}
+
+          {(newer || older) && (
+            <nav className="article-nav" aria-label="上下篇">
+              {older ? (
+                <Link className="article-nav__card" href={permalink(older)}>
+                  <span className="article-nav__hint">← 上一篇</span>
+                  <span className="article-nav__title">{older.title}</span>
+                  <time dateTime={older.publishedAt ?? undefined}>
+                    {older.publishedAt ? formatDate(older.publishedAt) : ""}
+                  </time>
+                </Link>
+              ) : (
+                <span />
+              )}
+              {newer ? (
+                <Link className="article-nav__card article-nav__card--next" href={permalink(newer)}>
+                  <span className="article-nav__hint">下一篇 →</span>
+                  <span className="article-nav__title">{newer.title}</span>
+                  <time dateTime={newer.publishedAt ?? undefined}>
+                    {newer.publishedAt ? formatDate(newer.publishedAt) : ""}
+                  </time>
+                </Link>
+              ) : (
+                <span />
+              )}
+            </nav>
           )}
         </article>
 

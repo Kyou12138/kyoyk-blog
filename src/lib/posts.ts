@@ -14,6 +14,8 @@ export type PostSummary = {
   publishedAt: string | null;
   updatedAt: string;
   tags: string[];
+  /** 预计阅读分钟，正文没存（私有笔记）时为 null。由 SQL 按与 readingMinutes() 相同的口径估算。 */
+  minutes: number | null;
 };
 
 export type Post = PostSummary & {
@@ -23,7 +25,11 @@ export type Post = PostSummary & {
 
 const SUMMARY_COLUMNS = `
   p.id, p.slug, p.title, p.description, p.excerpt, p.status, p.published_at, p.updated_at,
-  coalesce(array_agg(distinct t.name) filter (where t.name is not null), '{}') as tags
+  coalesce(array_agg(distinct t.name) filter (where t.name is not null), '{}') as tags,
+  case when p.body is null then null else greatest(1, round(
+    regexp_count(p.body, '[一-龥]') / 400.0
+    + regexp_count(p.body, '[A-Za-z0-9_]+') / 220.0
+  ))::int end as minutes
 `;
 
 type Row = {
@@ -36,6 +42,7 @@ type Row = {
   published_at: Date | null;
   updated_at: Date;
   tags: string[];
+  minutes: number | null;
 };
 
 const toSummary = (row: Row): PostSummary => ({
@@ -48,6 +55,7 @@ const toSummary = (row: Row): PostSummary => ({
   publishedAt: row.published_at ? row.published_at.toISOString() : null,
   updatedAt: row.updated_at.toISOString(),
   tags: row.tags ?? [],
+  minutes: row.minutes,
 });
 
 /** 文章地址：/blog/YYYY/MM/DD/<slug>，由发布时间推导。 */
@@ -136,8 +144,54 @@ export const getPostById = async (id: string): Promise<Post | null> => {
   return { ...toSummary(row), body: row.body, secret: row.secret };
 };
 
-export const listTags = async (): Promise<Array<{ name: string; count: number }>> => {
-  const { rows } = await query<{ name: string; count: string }>(
+export type AdjacentPosts = {
+  newer: PostSummary | null;
+  older: PostSummary | null;
+};
+
+/** 上下篇：只按已发布文章的时间顺序取相邻两条，一条 SQL 搞定。 */
+export const getAdjacentPosts = async (slug: string): Promise<AdjacentPosts> => {
+  const { rows } = await query<{
+    newer_slug: string | null;
+    newer_title: string | null;
+    newer_at: Date | null;
+    older_slug: string | null;
+    older_title: string | null;
+    older_at: Date | null;
+  }>(
+    `with ordered as (
+       select p.id, p.slug, p.title, p.description, p.excerpt, p.status,
+              coalesce(p.published_at, p.created_at) as at, p.updated_at,
+              row_number() over (order by coalesce(p.published_at, p.created_at) desc) as rn
+       from posts p
+       where p.status = 'published'
+     )
+     select n.slug as newer_slug, n.title as newer_title, n.at as newer_at,
+            o.slug as older_slug, o.title as older_title, o.at as older_at
+     from ordered cur
+     left join ordered n on n.rn = cur.rn - 1
+     left join ordered o on o.rn = cur.rn + 1
+     where cur.slug = $1`,
+    [slug],
+  );
+
+  const row = rows[0];
+  const pick = (
+    s: string | null,
+    title: string | null,
+    at: Date | null,
+  ): PostSummary | null =>
+    s && title && at
+      ? ({ slug: s, title, publishedAt: at.toISOString() } as PostSummary)
+      : null;
+
+  return {
+    newer: row ? pick(row.newer_slug, row.newer_title, row.newer_at) : null,
+    older: row ? pick(row.older_slug, row.older_title, row.older_at) : null,
+  };
+};
+
+export const listTags = async (): Promise<Array<{ name: string; count: number }>> => {  const { rows } = await query<{ name: string; count: string }>(
     `select t.name, count(*)::text as count
      from tags t
      join post_tags pt on pt.tag_id = t.id

@@ -33,6 +33,16 @@ export default function SiteHeader() {
           ))}
         </nav>
         <div className="site-header__right">
+          <button
+            type="button"
+            className="search-trigger"
+            onClick={() => window.dispatchEvent(new Event("open-search"))}
+            aria-label="搜索笔记"
+          >
+            <span aria-hidden="true">🔍</span>
+            <span className="search-trigger__text">搜索</span>
+            <kbd>Ctrl K</kbd>
+          </button>
           <a
             className="nav-link nav-link--ext"
             href="https://github.com/Kyou12138"

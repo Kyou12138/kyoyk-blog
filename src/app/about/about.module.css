@@ -1,28 +1,38 @@
+/* 页面配色统一交给 globals.css 的琥珀暗金变量，这里只管版式与动效 */
 .aboutPage {
   position: relative;
   padding: 3.5rem 0 4.5rem;
   background:
-    radial-gradient(circle at 15% 10%, rgba(91, 149, 255, 0.2), transparent 45%),
-    radial-gradient(circle at 85% 0%, rgba(115, 94, 255, 0.18), transparent 40%),
-    linear-gradient(180deg, rgba(8, 13, 28, 0.85), rgba(8, 13, 28, 0.95));
+    radial-gradient(circle at 15% 8%, rgb(209 153 71 / 0.16), transparent 46%),
+    radial-gradient(circle at 88% 4%, rgb(153 106 38 / 0.14), transparent 42%);
 }
 
 .heroPanel {
+  position: relative;
+  overflow: hidden;
   margin-bottom: 2rem;
-  border: 1px solid rgba(145, 183, 255, 0.3);
+  border: 1px solid var(--primary-line);
   border-radius: 20px;
   padding: 2.2rem;
-  background: linear-gradient(
-    135deg,
-    rgba(23, 36, 72, 0.9),
-    rgba(16, 24, 50, 0.88)
-  );
-  box-shadow: 0 18px 46px rgba(5, 10, 26, 0.38);
+  background: linear-gradient(135deg, rgb(33 28 21 / 0.92), rgb(20 18 15 / 0.9));
+  box-shadow: 0 18px 46px rgb(3 7 15 / 0.42);
+  animation: aboutRise 520ms cubic-bezier(0.22, 0.78, 0.22, 1) both;
+}
+
+.heroPanel::after {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(209 153 71 / 0.22), transparent 68%);
+  pointer-events: none;
 }
 
 .heroTag {
   margin: 0 0 0.7rem;
-  color: #99bcff;
+  color: var(--primary);
   font-size: 0.78rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -32,7 +42,7 @@
   margin: 0;
   font-size: clamp(2.1rem, 5vw, 3.3rem);
   letter-spacing: 0.03em;
-  color: #f3f7ff;
+  color: var(--text);
 }
 
 .heroText {
@@ -40,16 +50,22 @@
   max-width: 760px;
   font-size: 1.03rem;
   line-height: 1.8;
-  color: #d9e6ff;
+  color: var(--text-muted);
 }
 
 .contentSection {
-  border: 1px solid rgba(145, 183, 255, 0.25);
+  border: 1px solid var(--border);
   border-radius: 18px;
   margin-top: 1.25rem;
   padding: 1.6rem;
-  background: rgba(13, 23, 48, 0.7);
+  background: rgb(27 31 37 / 0.72);
   backdrop-filter: blur(2px);
+  animation: aboutRise 520ms cubic-bezier(0.22, 0.78, 0.22, 1) 80ms both;
+  transition: border-color 180ms ease;
+}
+
+.contentSection:hover {
+  border-color: var(--primary-line);
 }
 
 .sectionHeader {
@@ -66,23 +82,23 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  color: #c7dbff;
-  border: 1px solid rgba(177, 201, 255, 0.45);
-  background: rgba(112, 151, 255, 0.15);
+  color: var(--primary);
+  border: 1px solid var(--primary-line);
+  background: var(--primary-soft);
   font-weight: 700;
   font-size: 0.86rem;
 }
 
 .sectionHeader h2 {
   margin: 0;
-  color: #eef4ff;
+  color: var(--text);
   font-size: 1.3rem;
 }
 
 .sectionLead {
   margin: 0.45rem 0;
   line-height: 1.85;
-  color: #d2e0fb;
+  color: var(--text-muted);
 }
 
 .timelineGrid {
@@ -93,14 +109,20 @@
 }
 
 .timelineCard {
-  border: 1px solid rgba(172, 198, 255, 0.25);
+  border: 1px solid var(--border);
   border-radius: 14px;
   padding: 1rem;
-  background: linear-gradient(
-    160deg,
-    rgba(27, 43, 84, 0.72),
-    rgba(16, 27, 56, 0.72)
-  );
+  background: var(--surface-2);
+  transition:
+    border-color 180ms ease,
+    transform 220ms cubic-bezier(0.22, 0.78, 0.22, 1),
+    box-shadow 220ms ease;
+}
+
+.timelineCard:hover {
+  border-color: var(--primary-line);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px rgb(3 7 15 / 0.4);
 }
 
 .timelineSub {
@@ -108,25 +130,25 @@
   font-size: 0.76rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9ec1ff;
+  color: var(--primary);
 }
 
 .timelineCard h3 {
   margin: 0.35rem 0 0.5rem;
   font-size: 1.06rem;
-  color: #f2f7ff;
+  color: var(--text);
 }
 
 .timelineCard p {
   margin: 0;
   line-height: 1.72;
-  color: #d0def8;
+  color: var(--text-muted);
 }
 
 .titleList {
   margin: 0;
   padding-left: 1.2rem;
-  color: #dce8ff;
+  color: var(--text-muted);
 }
 
 .titleList li {
@@ -137,10 +159,30 @@
 .coreQuote {
   margin: 1rem 0 0;
   padding: 0.85rem 1rem;
-  border-left: 3px solid rgba(138, 178, 255, 0.8);
-  color: #e5eeff;
-  background: rgba(120, 156, 255, 0.12);
+  border-left: 3px solid var(--primary);
+  color: var(--text);
+  background: var(--primary-soft);
   border-radius: 8px;
+}
+
+@keyframes aboutRise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroPanel,
+  .contentSection,
+  .timelineCard {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 @media (max-width: 996px) {
@@ -160,4 +202,3 @@
     grid-template-columns: 1fr;
   }
 }
-
