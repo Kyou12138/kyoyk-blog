@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+data
+build
+.docusaurus
+.codegraph
+*.log
+.env.local
+README.md
+docs
+blog
+tests
+tmp

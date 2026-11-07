@@ -1,0 +1,13 @@
+tunnel: 0803ead6-888b-41de-974b-a5c8120d9600
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: kythron.com
+    service: http://app:3000
+  - hostname: www.kythron.com
+    service: http://app:3000
+  - hostname: blog.kythron.com
+    service: http://app:3000
+  - hostname: blog.kyoyk.top
+    service: http://app:3000
+  - service: http_status:404

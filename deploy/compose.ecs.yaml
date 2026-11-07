@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: kyou-blog:${TAG:-latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://blog:${BLOG_DB_PASSWORD}@promptvault-ecs-db-1:5432/blog
+      DATABASE_SSL: "false"
+      DATA_DIR: /app/data
+      NODE_ENV: production
+    volumes:
+      - ./data:/app/data
+    networks:
+      - web
+
+  tunnel:
+    image: cloudflare/cloudflared:2026.10.4
+    command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
+    restart: unless-stopped
+    depends_on:
+      - app
+    volumes:
+      - ./deploy/cloudflared:/etc/cloudflared:ro
+    networks:
+      - web
+
+networks:
+  web:
+    name: blog-web
