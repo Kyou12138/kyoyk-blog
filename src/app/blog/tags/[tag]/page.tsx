@@ -41,14 +41,21 @@ export default async function TagPage({ params }: PageProps) {
                   <time dateTime={post.publishedAt ?? undefined}>
                     {post.publishedAt ? formatDate(post.publishedAt) : "未发布"}
                   </time>
+                  {post.minutes && <span className="post-card__minutes">{post.minutes} 分钟</span>}
                   {post.tags.map((item) => (
-                    <span key={item} className="tag">
+                    <Link
+                      key={item}
+                      className={item === name ? "tag tag--active" : "tag"}
+                      href={`/blog/tags/${encodeURIComponent(item)}`}
+                    >
                       {item}
-                    </span>
+                    </Link>
                   ))}
                 </div>
                 <h3>
-                  <Link href={permalink(post)}>{post.title}</Link>
+                  <Link className="post-card__link" href={permalink(post)}>
+                    {post.title}
+                  </Link>
                 </h3>
                 <p>{post.description || post.excerpt || ""}</p>
               </li>

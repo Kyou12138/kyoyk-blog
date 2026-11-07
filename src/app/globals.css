@@ -327,7 +327,13 @@ img {
   padding: 1.15rem 1.3rem;
   border: 1px solid var(--border);
   border-radius: var(--radius-l);
-  background: var(--surface);
+  background:
+    radial-gradient(
+      320px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+      rgb(209 153 71 / 0.14),
+      transparent 70%
+    ),
+    var(--surface);
   overflow: hidden;
   transition:
     border-color 0.16s ease,
@@ -406,9 +412,11 @@ a.tag:hover {
 }
 
 .tag--active {
-  border-color: var(--primary-line);
-  background: var(--primary-soft);
-  color: var(--primary);
+  border-color: var(--primary);
+  background: rgb(209 153 71 / 0.22);
+  color: #fff4dc;
+  font-weight: 600;
+  box-shadow: 0 0 12px rgb(209 153 71 / 0.24);
 }
 
 /* search + filter bar */
@@ -510,13 +518,22 @@ a.tag:hover {
   color: var(--text-muted);
   line-height: 1.45;
   overflow-wrap: anywhere;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .toc__item a:hover {
   color: var(--primary);
   border-left-color: var(--primary-line);
   text-decoration: none;
+}
+
+.toc__item a.is-active,
+.toc__item.is-active > a {
+  color: var(--primary);
+  border-left-color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-soft);
+  border-radius: 0 6px 6px 0;
 }
 
 .toc__item--h3 a {
@@ -673,46 +690,106 @@ a.tag:hover {
   opacity: 1;
 }
 
-/* 代码块复制按钮：包一层相对定位容器，按钮才不会被 pre 的横向滚动带走 */
+/* 代码块容器与 Mac 顶栏 */
 .code-block {
   position: relative;
-  margin: 1.2rem 0;
+  margin: 1.4rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgb(0 0 0 / 0.4);
 }
 
-.code-block pre {
-  margin: 0;
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.85rem;
+  background: rgb(20 23 28 / 0.96);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-block__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.code-block__dots {
+  display: inline-flex;
+  gap: 5px;
+}
+
+.code-block__dots i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.45;
+  background: var(--text-muted);
+  transition: opacity 160ms ease, background-color 160ms ease;
+}
+
+.code-block:hover .code-block__dots i:nth-child(1) {
+  background: #ff5f56;
+  opacity: 0.85;
+}
+
+.code-block:hover .code-block__dots i:nth-child(2) {
+  background: #ffbd2e;
+  opacity: 0.85;
+}
+
+.code-block:hover .code-block__dots i:nth-child(3) {
+  background: #27c93f;
+  opacity: 0.85;
+}
+
+.code-block__lang {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--primary);
 }
 
 .code-copy {
-  position: absolute;
-  top: 0.55rem;
-  right: 0.55rem;
-  padding: 0.18rem 0.6rem;
-  border-radius: 7px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
   border: 1px solid var(--border);
-  background: rgb(27 31 37 / 0.92);
+  background: var(--surface-2);
   color: var(--text-muted);
   font-family: inherit;
   font-size: 0.74rem;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-.code-block:hover .code-copy,
-.code-copy:focus-visible {
-  opacity: 1;
+  transition: all 160ms ease;
 }
 
 .code-copy:hover {
   color: var(--primary);
   border-color: var(--primary-line);
+  background: var(--primary-soft);
 }
 
-@media (hover: none) {
-  .code-copy {
-    opacity: 1;
-  }
+.code-copy.is-copied {
+  color: #27c93f;
+  border-color: rgba(39, 201, 63, 0.4);
+  background: rgba(39, 201, 63, 0.1);
+}
+
+.code-copy__icon {
+  font-size: 0.76rem;
+}
+
+.code-block pre {
+  margin: 0;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 
 /* misc */
@@ -1099,9 +1176,9 @@ a.tag:hover {
   position: absolute;
   left: 4px;
   top: 1.6rem;
-  bottom: -1.4rem;
+  bottom: -2.1rem;
   width: 1px;
-  background: linear-gradient(180deg, var(--primary-line), transparent 88%);
+  background: linear-gradient(180deg, var(--primary-line) 0%, var(--border) 35%, var(--border) 100%);
 }
 
 .timeline__group:last-child::after {
@@ -1126,6 +1203,7 @@ a.tag:hover {
   font-weight: 700;
   letter-spacing: 0.02em;
   color: var(--text);
+  cursor: default;
 }
 
 .timeline__year::before {
@@ -1137,7 +1215,13 @@ a.tag:hover {
   height: 9px;
   border-radius: 50%;
   background: var(--primary);
-  box-shadow: 0 0 0 4px rgb(209 153 71 / 0.15);
+  box-shadow: 0 0 0 4px rgb(209 153 71 / 0.16), 0 0 8px rgb(209 153 71 / 0.35);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.timeline__group:hover .timeline__year::before {
+  transform: scale(1.25);
+  box-shadow: 0 0 0 6px rgb(209 153 71 / 0.25), 0 0 14px var(--primary);
 }
 
 .timeline--flat .timeline__year::before {

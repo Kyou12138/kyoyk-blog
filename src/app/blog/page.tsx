@@ -94,7 +94,11 @@ export default async function BlogListPage({
                         </time>
                         {post.minutes && <span className="post-card__minutes">{post.minutes} 分钟</span>}
                         {post.tags.map((item) => (
-                          <Link key={item} className="tag" href={`/blog/tags/${encodeURIComponent(item)}`}>
+                          <Link
+                            key={item}
+                            className={tag === item ? "tag tag--active" : "tag"}
+                            href={`/blog?tag=${encodeURIComponent(item)}`}
+                          >
                             {item}
                           </Link>
                         ))}

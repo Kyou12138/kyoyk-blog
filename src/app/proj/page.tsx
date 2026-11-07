@@ -1,76 +1,81 @@
 export const metadata = { title: "资源&工具" };
 
 import type { ReactNode } from "react";
-import Link from "next/link";
 import styles from "./proj.module.css";
 
 type ProjectCard = {
   icon: "compass" | "community" | "qr" | "chat" | "resume";
   title: string;
+  badge: string;
   description: string;
   href: string;
-  actionText: string;
+  host: string;
 };
 
-type ProjectGroup = {
+type ProjectSection = {
   code: string;
   title: string;
   description: string;
   cards: ProjectCard[];
 };
 
-const projectGroups: ProjectGroup[] = [
+const projectSections: ProjectSection[] = [
   {
-    code: "RES",
+    code: "01",
     title: "资源推荐",
-    description: "精选开发资源与学习站点，帮助你更快定位答案与优质内容。",
+    description: "精选开发资源与学习社区，帮助更快定位答案与优质开源项目。",
     cards: [
       {
         icon: "compass",
         title: "DeepWiki",
+        badge: "代码探索",
         description:
           "代码仓库探索工具，支持语义检索、结构浏览和知识聚合，适合快速理解大型开源项目。",
         href: "https://deepwiki.com/",
-        actionText: "访问网站",
+        host: "deepwiki.com",
       },
       {
         icon: "community",
         title: "Linux.do",
+        badge: "极客社区",
         description:
-          "面向 Linux 和开源技术的社区论坛，覆盖日常问题讨论、经验分享与实践交流。",
+          "面向 Linux 和开源技术的活跃社区，覆盖日常技术讨论、工具实践与经验分享。",
         href: "https://linux.do/",
-        actionText: "访问网站",
+        host: "linux.do",
       },
       {
         icon: "qr",
         title: "QRGPT",
+        badge: "AI 图像",
         description:
-          "基于 AI 的二维码生成工具，支持文本与链接编码，可用于活动页和快速信息分发。",
+          "基于 AI 的二维码艺术化生成工具，支持文本与链接编码，兼顾辨识度与视觉美感。",
         href: "https://www.qrgpt.io/",
-        actionText: "访问网站",
+        host: "qrgpt.io",
       },
     ],
   },
   {
-    code: "APP",
-    title: "应用服务",
-    description: "自主部署的在线工具，覆盖对话、内容生产与个人效率场景。",
+    code: "02",
+    title: "在线应用",
+    description: "自主维护的在线服务与生产力工具，覆盖日常对话与效率场景。",
     cards: [
       {
         icon: "chat",
         title: "AI 对话",
+        badge: "模型接入",
         description:
-          "基于 NextChat 定制的对话应用，支持多模型接入，适合知识问答和开发辅助。",
+          "基于 NextChat 定制的对话界面，支持主流大语言模型，适合快速知识问答与编程辅助。",
         href: "https://chat.kyoyk.top/",
-        actionText: "访问应用",
+        host: "chat.kyoyk.top",
       },
       {
         icon: "resume",
         title: "魔方简历",
+        badge: "效率工具",
         description:
-          "在线简历编辑与模板工具，支持实时预览和 PDF 导出，适合快速生成正式版本。",
+          "在线排版与简历编辑工具，支持实时 Markdown/模板预览与高质量 PDF 一键导出。",
         href: "https://magic-resume.kyoyk.top/",
-        actionText: "访问应用",
+        host: "magic-resume.kyoyk.top",
       },
     ],
   },
@@ -80,32 +85,32 @@ function ProjectIcon({ icon }: { icon: ProjectCard["icon"] }): ReactNode {
   switch (icon) {
     case "compass":
       return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M15.8 8.2L13.9 13.9L8.2 15.8L10.1 10.1L15.8 8.2ZM12 2.7A9.3 9.3 0 1 0 21.3 12A9.31 9.31 0 0 0 12 2.7Z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1.5-6.5l-2.1 4.6 4.6-2.1 2.1-4.6-4.6 2.1z" />
         </svg>
       );
     case "community":
       return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 9.3A2.8 2.8 0 1 0 5.2 6.5A2.8 2.8 0 0 0 8 9.3ZM16 9.3A2.8 2.8 0 1 0 13.2 6.5A2.8 2.8 0 0 0 16 9.3ZM8 11.2C5.3 11.2 3 12.6 3 14.3V16.2H13V14.3C13 12.6 10.7 11.2 8 11.2ZM16 11.2C15.5 11.2 15 11.2 14.5 11.3C15.4 12.1 16 13.2 16 14.3V16.2H21V14.3C21 12.6 18.7 11.2 16 11.2Z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
         </svg>
       );
     case "qr":
       return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M3 3H11V11H3V3ZM5 5V9H9V5H5ZM13 3H21V11H13V3ZM15 5V9H19V5H15ZM3 13H11V21H3V13ZM5 15V19H9V15H5ZM13 13H15V15H13V13ZM16 16H18V18H16V16ZM19 13H21V15H19V13ZM19 17H21V21H17V19H19V17ZM13 19H15V21H13V19Z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-5 0h3v3h-3v-3zm2 5h2v3h-2v-3zm3-2h3v5h-3v-5z" />
         </svg>
       );
     case "chat":
       return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 4H20V16H7.5L4 19.5V4ZM6 6V14.7L6.7 14H18V6H6ZM8 9H16V11H8V9Z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12zM7 9h10v2H7zm0-3h10v2H7z" />
         </svg>
       );
     case "resume":
       return (
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M6 3H15L20 8V21H6V3ZM8 5V19H18V9H14V5H8ZM10 11H16V13H10V11ZM10 15H16V17H10V15Z" />
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
         </svg>
       );
     default:
@@ -115,64 +120,92 @@ function ProjectIcon({ icon }: { icon: ProjectCard["icon"] }): ReactNode {
 
 export default function Projects(): ReactNode {
   return (
-    <>
-      <main className={styles.projectsPage}>
-        <div className="container">
-          <section className={styles.heroPanel}>
-            <p className={styles.heroTag}>精选导航</p>
-            <h1 className={styles.heroTitle}>常用资源与在线应用</h1>
-            <p className={styles.heroText}>
-              将高频使用的站点和工具集中管理，帮助你在学习与开发场景中快速切换。
-            </p>
-          </section>
-
-          <div className={styles.projectsRow}>
-            {projectGroups.map((group) => (
-              <section key={group.title} className={styles.columnWrapper}>
-                <header className={styles.sectionHeader}>
-                  <span className={styles.sectionCode}>{group.code}</span>
-                  <div>
-                    <h2 className={styles.sectionTitle}>{group.title}</h2>
-                    <p className={styles.sectionDescription}>{group.description}</p>
-                  </div>
-                </header>
-
-                <div className={styles.cardGrid}>
-                  {group.cards.map((card) => (
-                    <article key={card.title} className={styles.card}>
-                      <div className={styles.cardHeader}>
-                        <span className={styles.cardIcon} aria-hidden="true">
-                          <ProjectIcon icon={card.icon} />
-                        </span>
-                        <h3 className={styles.cardTitle}>{card.title}</h3>
-                      </div>
-                      <div className={styles.cardBody}>
-                        <p>{card.description}</p>
-                      </div>
-                      <div className={styles.cardFooter}>
-                        <Link
-                          href={card.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={styles.cardButton}
-                        >
-                          {card.actionText}
-                          <span className={styles.cardButtonIcon} aria-hidden="true">
-                            →
-                          </span>
-                        </Link>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            ))}
+    <main className={styles.projectsPage}>
+      <div className="container">
+        {/* 顶部标题区 */}
+        <section className={styles.heroPanel}>
+          <div className={styles.heroTag}>
+            <span className={styles.heroDot} />
+            精选导航 · RESOURCES
           </div>
-          <section className={styles.bottomTip}>
-            <p>提示：如果你有推荐资源，欢迎通过 GitHub 提交补充建议。</p>
-          </section>
+          <h1 className={styles.heroTitle}>常用资源与在线应用</h1>
+          <p className={styles.heroText}>
+            高频站点、开源工具与自建服务索引，提供快速切换入口与极简导航。
+          </p>
+        </section>
+
+        {/* 分组网格 */}
+        <div className={styles.sections}>
+          {projectSections.map((section, sectionIndex) => (
+            <section key={section.code} className={styles.sectionBlock}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.sectionBadge}>{section.code}</span>
+                <div>
+                  <h2 className={styles.sectionTitle}>{section.title}</h2>
+                  <p className={styles.sectionSubtitle}>{section.description}</p>
+                </div>
+              </div>
+
+              <div className={styles.cardGrid}>
+                {section.cards.map((card, cardIndex) => (
+                  <a
+                    key={card.title}
+                    href={card.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.card}
+                    style={{
+                      animationDelay: `${(sectionIndex * 3 + cardIndex) * 80 + 100}ms`,
+                    }}
+                  >
+                    <div className={styles.cardTop}>
+                      <span className={styles.cardIcon} aria-hidden="true">
+                        <ProjectIcon icon={card.icon} />
+                      </span>
+                      <div className={styles.cardBadges}>
+                        <span className={styles.badge}>{card.badge}</span>
+                        <span className={styles.externalArrow} aria-hidden="true">
+                          ↗
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.cardContent}>
+                      <h3 className={styles.cardTitle}>{card.title}</h3>
+                      <p className={styles.cardDescription}>{card.description}</p>
+                    </div>
+
+                    <div className={styles.cardFoot}>
+                      <span className={styles.cardHost}>{card.host}</span>
+                      <span className={styles.cardAction}>
+                        访问 <span aria-hidden="true">→</span>
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-      </main>
-    </>
+
+        {/* 底部补充提示 */}
+        <footer className={styles.bottomTip}>
+          <span className={styles.tipIcon} aria-hidden="true">
+            💡
+          </span>
+          <p>
+            有优质开发工具或开源资源推荐？欢迎在{" "}
+            <a
+              href="https://github.com/Kyou12138"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>{" "}
+            提交补充建议或发起讨论。
+          </p>
+        </footer>
+      </div>
+    </main>
   );
 }

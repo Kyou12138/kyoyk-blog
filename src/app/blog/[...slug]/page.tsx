@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import CodeCopyButtons from "@/components/CodeCopyButtons";
 import NoteGate from "@/components/NoteGate";
 import ReadingTools from "@/components/ReadingTools";
+import TableOfContents from "@/components/TableOfContents";
 import { formatDate, readingMinutes } from "@/lib/format";
 import { renderPost } from "@/lib/markdown";
 import { readPrivateBody } from "@/lib/noteAccess";
@@ -125,18 +126,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
         </article>
 
-        {headings.length > 1 && (
-          <nav className="toc" aria-label="目录">
-            <p className="toc__title">目录</p>
-            <ol className="toc__list">
-              {headings.map((heading) => (
-                <li key={heading.id} className={`toc__item toc__item--h${heading.level}`}>
-                  <a href={`#${heading.id}`}>{heading.text}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )}
+        <TableOfContents headings={headings} />
       </div>
     </main>
   );

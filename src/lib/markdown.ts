@@ -9,14 +9,15 @@ const md: MarkdownIt = new MarkdownIt({
   html: true,
   linkify: true,
   highlight(code, language) {
-    if (language && hljs.getLanguage(language)) {
+    const lang = (language || "").trim().toLowerCase();
+    if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<pre class="hljs"><code>${hljs.highlight(code, { language }).value}</code></pre>`;
+        return `<pre class="hljs" data-lang="${lang}"><code>${hljs.highlight(code, { language: lang }).value}</code></pre>`;
       } catch {
         /* 落到下面纯文本 */
       }
     }
-    return `<pre class="hljs"><code>${md.utils.escapeHtml(code)}</code></pre>`;
+    return `<pre class="hljs"${lang ? ` data-lang="${lang}"` : ""}><code>${md.utils.escapeHtml(code)}</code></pre>`;
   },
 });
 
