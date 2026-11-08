@@ -20,6 +20,13 @@ export const formatDate = (iso: string): string =>
     day: "numeric",
   }).format(new Date(iso));
 
+/** 点分日期格式（YYYY.MM.DD），用于账册与列表时间轴展示。 */
+export const formatDateDot = (iso: string | null | undefined): string => {
+  if (!iso) return "";
+  const { year, month, day } = dateParts(iso);
+  return `${year}.${month}.${day}`;
+};
+
 export const readingMinutes = (text: string): number => {
   const chinese = (text.match(/[\u4e00-\u9fa5]/g) ?? []).length;
   const words = (text.match(/[A-Za-z0-9_]+/g) ?? []).length;

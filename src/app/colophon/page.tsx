@@ -42,13 +42,6 @@ const stack = [
     href: "https://markdown-it.github.io/",
     why: "剔除动态运行代码的 MDX 隐患。纯 Markdown 解析配合服务端语义降级（H1 规整、自动 TOC 提取、Mac 终端代码块高亮）。",
   },
-  {
-    title: "华为 ECS + Cloudflare Zero Trust 隧道",
-    category: "INFRASTRUCTURE",
-    badge: "Argo Tunnel",
-    href: "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/",
-    why: "2vCPU / 2GB 轻量云主机，无暴露任何公网入站端口（0-Attack Surface）。流量由 Cloudflare 全球 Anycast 节点经 QUIC 隧道直接回源。",
-  },
 ];
 
 const hostOf = (href: string): string => {

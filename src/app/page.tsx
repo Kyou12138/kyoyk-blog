@@ -1,7 +1,7 @@
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
 import { listPosts, permalink } from "@/lib/posts";
-import { dateParts } from "@/lib/format";
+import { dateParts, formatDateDot } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -57,8 +57,7 @@ export default async function HomePage() {
           <ol className="home-recent">
             {posts.slice(0, 5).map((post) => {
               const href = permalink(post);
-              const parts = post.publishedAt ? dateParts(post.publishedAt) : null;
-              const dateStr = parts ? `${parts.year}.${parts.month}.${parts.day}` : "";
+              const dateStr = formatDateDot(post.publishedAt);
 
               return (
                 <li key={post.id} className="home-recent__item">

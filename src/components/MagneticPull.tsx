@@ -20,7 +20,7 @@ export default function MagneticPull() {
         const my = e.clientY;
 
         const targets = document.querySelectorAll<HTMLElement>(
-          "[data-magnetic], .search-trigger, .heroAction, .heroActionGhost"
+          "[data-magnetic], .search-trigger"
         );
 
         targets.forEach((el) => {
@@ -54,9 +54,7 @@ export default function MagneticPull() {
 
     const onMouseLeave = () => {
       document
-        .querySelectorAll<HTMLElement>(
-          "[data-magnetic], .search-trigger, .heroAction, .heroActionGhost"
-        )
+        .querySelectorAll<HTMLElement>("[data-magnetic], .search-trigger")
         .forEach((el) => {
           el.style.transform = "translate3d(0px, 0px, 0px)";
           el.style.transition =
