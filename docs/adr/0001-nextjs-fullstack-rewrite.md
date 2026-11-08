@@ -25,6 +25,8 @@ accepted
 ## Consequences
 
 - 文章历史不再体现在 git log，改由 `post_revisions` 表记录。
-- Algolia DocSearch 移除，改用站内服务端搜索（v1 用 `ILIKE`，数据量上来再换 `pg_trgm`）。
+- Algolia DocSearch 移除，采用双层搜索架构对齐体验与性能：
+  - **全局即时搜索（快捷键 Ctrl+K 浮层）**：按需拉取轻量 JSON 索引（`/api/search-index`，仅含已发布笔记的标题、地址、标签与摘要，首屏免载，约几 KB），实现零网络往返延迟的即时过滤与键盘快捷导航；
+  - **列表深度检索（`/blog?q=...` 与无 JS 降级）**：直通后端 PostgreSQL 原生 `ILIKE` 查询（覆盖正文 `body` 全文），数据量扩大后平滑升级为 `pg_trgm` GIN 索引。
 - `dev/nextjs-migration` 分支不 merge，只取 `src/lib/db.ts` 的连接/SSL 降级逻辑与 seed 脚本的 frontmatter 解析。
 - 全站从"零运维静态托管"变成"需要一台机器 + 一个数据库"，见 ADR-0002。
