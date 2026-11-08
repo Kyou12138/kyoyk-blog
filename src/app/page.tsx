@@ -51,7 +51,7 @@ export default async function HomePage() {
             <h2 id="recent-title" className="home-section__title">
               近期技术笔记
             </h2>
-            <span className="home-section__sub">全站 30 篇中的最新 5 篇</span>
+            <span className="home-section__sub">全站 {posts.length} 篇中的最新 5 篇</span>
           </div>
 
           <ol className="home-recent">
