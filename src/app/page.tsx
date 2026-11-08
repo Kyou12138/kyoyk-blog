@@ -31,7 +31,13 @@ const projects = [
 
 export default async function HomePage() {
   const posts = await listPosts();
-  const graphPosts = posts.map((p) => ({ title: p.title, href: permalink(p), tags: p.tags }));
+  const graphPosts = posts.map((p) => ({
+    title: p.title,
+    href: permalink(p),
+    tags: p.tags,
+    publishedAt: p.publishedAt,
+    minutes: p.minutes,
+  }));
   const tagCount = new Set(posts.flatMap((p) => p.tags)).size;
 
   return (
