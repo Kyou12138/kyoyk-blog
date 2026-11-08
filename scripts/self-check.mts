@@ -56,4 +56,14 @@ assert.equal(openSecret(secret, "wrong-pass"), null);
 assert.equal(openSecret({ ...secret, ct: secret.ct.slice(0, -4) + "AAAA" }, "note-pass"), null);
 assert.equal(secret.hint, "VX");
 
+// 领域术语守卫：防止 UI 出现 GLOSSARY.md 禁用的「文章」「分类」同义词漂移
+import { readFileSync } from "node:fs";
+const tocSource = readFileSync("src/components/TableOfContents.tsx", "utf8");
+assert.doesNotMatch(tocSource, /aria-label="文章目录"/);
+assert.match(tocSource, /aria-label="笔记目录"/);
+
+const kgraphSource = readFileSync("src/components/KnowledgeGraph.tsx", "utf8");
+assert.doesNotMatch(kgraphSource, /查看分类/);
+assert.match(kgraphSource, /查看标签/);
+
 console.log("self-check: 全部通过");

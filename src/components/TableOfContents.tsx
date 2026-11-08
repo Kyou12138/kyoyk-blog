@@ -84,7 +84,7 @@ export default function TableOfContents({ headings }: Props) {
   if (headings.length <= 1) return null;
 
   return (
-    <nav ref={tocRef} className="toc" aria-label="文章目录">
+    <nav ref={tocRef} className="toc" aria-label="笔记目录">
       <p className="toc__title">目录</p>
       <ol className="toc__list">
         {headings.map((heading) => {

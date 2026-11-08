@@ -604,7 +604,7 @@ export default function KnowledgeGraph({ posts }: { posts: GraphPost[] }) {
               <div className={styles.tooltipTitle}>{tooltip.node.label}</div>
               <div className={styles.tooltipMeta}>
                 <span>{tooltip.node.count} 篇归档笔记</span>
-                <span className={styles.tooltipAction}>查看分类 ➔</span>
+                <span className={styles.tooltipAction}>查看标签 ➔</span>
               </div>
             </>
           )}
