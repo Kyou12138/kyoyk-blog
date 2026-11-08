@@ -6,7 +6,7 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="container site-footer__inner">
         <span>
-          © {new Date().getFullYear()} {SITE_AUTHOR} · 用 Next.js 与 PostgreSQL 手搓
+          © {new Date().getFullYear()} {SITE_AUTHOR}
         </span>
         <span>
           <Link href="/rss.xml">RSS</Link> · <Link href="/colophon">技术栈</Link> ·{" "}
