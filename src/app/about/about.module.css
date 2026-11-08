@@ -88,6 +88,35 @@
   color: var(--text-secondary);
 }
 
+/* 原初星图：以一条发光的界线连接两个章节 */
+.originFigure {
+  margin: 0.5rem 0 0;
+  overflow: hidden;
+  border: 1px solid var(--primary-line);
+  background: radial-gradient(ellipse at 50% 50%, #19150f 0%, #0a0b0e 70%);
+}
+
+.originArt {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.figureCaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-top: 1px solid var(--primary-line);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.figureCaption span:last-child {
+  color: var(--primary);
+}
+
 /* ===== 里程碑网格 ===== */
 .milestoneGrid {
   display: grid;
@@ -148,12 +177,60 @@
 }
 
 /* ===== 职责列表 ===== */
+.directiveLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.8fr);
+  align-items: center;
+  gap: 2rem;
+}
+
+.watchFigure {
+  margin: 0;
+  padding: 0.6rem 1rem 1rem;
+  border: 1px solid var(--border);
+  background: radial-gradient(ellipse at 50% 35%, rgba(229, 167, 66, 0.09), transparent 70%), var(--surface);
+  text-align: center;
+}
+
+.watchFigure svg {
+  display: block;
+  width: 100%;
+  max-height: 210px;
+}
+
+.watchFigure figcaption {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}
+
+.watchFigure figcaption span {
+  padding: 0 0.3rem;
+  color: var(--primary);
+}
+
 .titleList {
   display: grid;
   gap: 0.5rem;
   padding: 0;
   margin: 0.4rem 0 0.8rem;
   list-style: none;
+}
+
+@media (max-width: 640px) {
+  .directiveLayout {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+
+  .watchFigure svg {
+    max-height: 180px;
+  }
+
+  .figureCaption {
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
 }
 
 .titleItem {

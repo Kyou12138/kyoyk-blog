@@ -66,6 +66,36 @@ export default function AboutPage(): ReactNode {
               当混沌分裂为现实与虚无，Kythron 首次定义“界限”。自该节点起，系统秩序具备可观测、可维持的确定性结构。
             </p>
 
+            <figure className={styles.originFigure}>
+              <svg className={styles.originArt} viewBox="0 0 820 310" role="img" aria-label="原初混沌中，一道界线穿过星轨，将现实与虚无分开">
+                <defs>
+                  <radialGradient id="origin-glow"><stop stopColor="#e5a742" stopOpacity=".24" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></radialGradient>
+                  <linearGradient id="origin-line"><stop stopColor="#e5a742" stopOpacity="0" /><stop offset=".5" stopColor="#f5c779" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></linearGradient>
+                </defs>
+                <circle cx="410" cy="155" r="155" fill="url(#origin-glow)" />
+                <g fill="none" stroke="#e5a742">
+                  <circle cx="410" cy="155" r="113" opacity=".16" />
+                  <circle cx="410" cy="155" r="91" opacity=".34" strokeDasharray="2 6" />
+                  <circle cx="410" cy="155" r="67" opacity=".45" />
+                  <ellipse cx="410" cy="155" rx="216" ry="63" transform="rotate(-18 410 155)" opacity=".28" />
+                  <ellipse cx="410" cy="155" rx="176" ry="51" transform="rotate(26 410 155)" opacity=".2" />
+                  <path d="M410 24v262M277 155h266" opacity=".18" />
+                  <path d="M410 75l80 80-80 80-80-80z" opacity=".45" />
+                  <path d="M38 155h744" stroke="url(#origin-line)" strokeWidth="1.5" />
+                  <path d="M68 114l75-29 80 24 71-40M529 237l80-46 64 17 77-38" opacity=".24" />
+                </g>
+                <g fill="#efc57e">
+                  <circle cx="410" cy="155" r="4" /><circle cx="330" cy="155" r="2.5" /><circle cx="490" cy="155" r="2.5" />
+                  <circle cx="143" cy="85" r="2" /><circle cx="223" cy="109" r="1.5" /><circle cx="609" cy="191" r="2" /><circle cx="673" cy="208" r="1.5" />
+                  <circle cx="95" cy="218" r="1" /><circle cx="198" cy="49" r="1" /><circle cx="568" cy="62" r="1" /><circle cx="733" cy="93" r="1" />
+                </g>
+              </svg>
+              <figcaption className={styles.figureCaption}>
+                <span>原初图景 · 界限的诞生</span>
+                <span>混沌 / 界限 / 秩序</span>
+              </figcaption>
+            </figure>
+
             <div className={styles.milestoneGrid}>
               {originMilestones.map((item) => (
                 <article key={item.title} className={styles.milestoneCard}>
@@ -86,6 +116,8 @@ export default function AboutPage(): ReactNode {
               <h2 className={styles.sectionTitle}>现行职责</h2>
             </div>
 
+            <div className={styles.directiveLayout}>
+              <div>
             <ul className={styles.titleList}>
               {divineTitles.map((title) => (
                 <li key={title} className={styles.titleItem}>
@@ -98,6 +130,23 @@ export default function AboutPage(): ReactNode {
             <p className={styles.paragraph}>
               当前负责多重边界的稳定，包括现实层、虚无层以及两者之间的缓冲区。在记录中，更常以“守望”而非“干预”的方式维持系统的动态平衡。
             </p>
+              </div>
+              <figure className={styles.watchFigure}>
+                <svg viewBox="0 0 260 200" role="img" aria-label="现实层、缓冲区与虚无层的三重边界示意图">
+                  <g fill="none" stroke="#e5a742">
+                    <path d="M130 18l105 50-105 50L25 68z" opacity=".7" />
+                    <path d="M25 87l105 50 105-50M25 106l105 50 105-50" opacity=".42" />
+                    <path d="M25 125l105 50 105-50" opacity=".22" />
+                    <path d="M130 18v157M25 68v57M235 68v57" opacity=".18" strokeDasharray="3 5" />
+                    <ellipse cx="130" cy="68" rx="42" ry="20" opacity=".55" />
+                    <ellipse cx="130" cy="68" rx="21" ry="10" opacity=".7" />
+                  </g>
+                  <circle cx="130" cy="68" r="3" fill="#f5c779" />
+                  <path d="M130 57v22M119 68h22" stroke="#f5c779" opacity=".7" />
+                </svg>
+                <figcaption>现实层 <span>/</span> 缓冲区 <span>/</span> 虚无层</figcaption>
+              </figure>
+            </div>
 
             <blockquote className={styles.coreQuote}>
               “祂并不创造世界，但祂决定世界之间的界线是否存在。”
