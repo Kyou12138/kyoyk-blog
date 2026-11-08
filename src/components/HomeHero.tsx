@@ -37,12 +37,17 @@ export default function HomeHero({ posts, tagCount }: { posts: GraphPost[]; tagC
     <header className={styles.hero}>
       <div className={styles.copy}>
         <p className={styles.slogan}>
-          <span className={cx(styles.word, tearing && styles.tearing)} data-word={lead}>
-            {lead}
-          </span>{" "}
-          is cheap, show me your{" "}
-          <span className={cx(styles.word, tearing && styles.tearing)} data-word={tail}>
-            {tail}
+          <span className={styles.sloganLine}>
+            <span className={cx(styles.word, tearing && styles.tearing)} data-word={lead}>
+              {lead}
+            </span>{" "}
+            is cheap,
+          </span>
+          <span className={styles.sloganLine}>
+            show me your{" "}
+            <span className={cx(styles.word, tearing && styles.tearing)} data-word={tail}>
+              {tail}
+            </span>
           </span>
         </p>
         <h1 className={styles.title}>Kyou 的博客</h1>
