@@ -45,7 +45,7 @@ export default function HomeHero({ posts, tagCount }: { posts: GraphPost[]; tagC
             {tail}
           </span>
         </p>
-        <h1 className={styles.title}>Kyou 的工程笔记</h1>
+        <h1 className={styles.title}>Kyou 的博客</h1>
         <p className={styles.lede}>
           前端、后端与 AI 工具的工程实践。这是站内全部 {posts.length} 篇笔记与 {tagCount} 个主题的拓扑图谱：探索关联网络，点击直接阅读。
         </p>
