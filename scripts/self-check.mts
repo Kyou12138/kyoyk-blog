@@ -56,8 +56,23 @@ assert.equal(openSecret(secret, "wrong-pass"), null);
 assert.equal(openSecret({ ...secret, ct: secret.ct.slice(0, -4) + "AAAA" }, "note-pass"), null);
 assert.equal(secret.hint, "VX");
 
+import { existsSync, readFileSync } from "node:fs";
+
+// 基础资产与 SEO 守卫
+assert.ok(existsSync("public/favicon.ico"), "public/favicon.ico 必须存在");
+
+const robotsSource = readFileSync("src/app/robots.ts", "utf8");
+assert.match(robotsSource, /disallow:\s*\["/);
+assert.match(robotsSource, /\/admin\//);
+assert.match(robotsSource, /\/api\//);
+assert.match(robotsSource, /sitemap:\s*`\$\{SITE_URL\}\/sitemap\.xml`/);
+
+const layoutSource = readFileSync("src/app/layout.tsx", "utf8");
+assert.match(layoutSource, /icons:\s*\{/);
+assert.match(layoutSource, /kyou-social-card\.png/);
+assert.match(layoutSource, /summary_large_image/);
+
 // 领域术语守卫：防止 UI 出现 GLOSSARY.md 禁用的「文章」「分类」同义词漂移
-import { readFileSync } from "node:fs";
 const tocSource = readFileSync("src/components/TableOfContents.tsx", "utf8");
 assert.doesNotMatch(tocSource, /aria-label="文章目录"/);
 assert.match(tocSource, /aria-label="笔记目录"/);

@@ -21,11 +21,28 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
   description: SITE_TAGLINE,
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/img/kyou.png",
+  },
   alternates: {
     canonical: "/",
     types: { "application/rss+xml": `${SITE_URL}/rss.xml` },
   },
-  openGraph: { type: "website", siteName: SITE_NAME, locale: "zh_CN" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "zh_CN",
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    images: [{ url: "/img/kyou-social-card.png", width: 1200, height: 630, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_TAGLINE,
+    images: ["/img/kyou-social-card.png"],
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
