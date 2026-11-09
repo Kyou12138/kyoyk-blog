@@ -258,3 +258,88 @@
   font-style: italic;
   line-height: 1.65;
 }
+
+/* 星轨与界限：以缓慢的轨道和光脉冲维持图景的呼吸感。 */
+.orbitRing,
+.orbitTrack,
+.orbitTrackReverse,
+.compass,
+.originGlow,
+.originCore,
+.watchPulse,
+.watchBeacon {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.orbitRing { animation: orbit 18s linear infinite; }
+.orbitTrack { animation: orbit 26s linear infinite; }
+.orbitTrackReverse { animation: orbit 34s linear infinite reverse; }
+.compass { animation: compassBreathe 4.5s ease-in-out infinite; }
+.originGlow { animation: glowBreathe 5s ease-in-out infinite; }
+.originCore { animation: beaconBreathe 2.8s ease-in-out infinite; }
+
+.stars circle { animation: starTwinkle 2.4s ease-in-out infinite alternate; }
+.stars circle:nth-child(3n + 2) { animation-delay: -0.9s; animation-duration: 3.1s; }
+.stars circle:nth-child(3n) { animation-delay: -1.8s; animation-duration: 2.1s; }
+
+.photon { animation: photonForward 5.5s linear infinite; }
+.photonReverse { animation: photonBackward 7s linear -2.8s infinite; }
+
+.watchTop { animation: layerFloat 4.2s ease-in-out infinite; }
+.watchMiddle { animation: layerFloat 4.8s ease-in-out -1.6s infinite reverse; }
+.watchBottom { animation: layerFloat 5.4s ease-in-out -3.1s infinite; }
+.watchBeacon { animation: beaconBreathe 2.4s ease-in-out infinite; }
+.watchScan {
+  transform-box: view-box;
+  transform-origin: 130px 68px;
+  animation: orbit 5s linear infinite;
+}
+.watchPulse { animation: radarPulse 3.2s ease-out infinite; }
+.watchPulseDelayed { animation-delay: -1.6s; }
+
+@keyframes orbit { to { transform: rotate(360deg); } }
+@keyframes compassBreathe {
+  0%, 100% { transform: scale(0.97); opacity: 0.65; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+@keyframes glowBreathe {
+  0%, 100% { transform: scale(0.9); opacity: 0.65; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+@keyframes beaconBreathe {
+  0%, 100% { transform: scale(0.85); opacity: 0.65; }
+  50% { transform: scale(1.45); opacity: 1; }
+}
+@keyframes starTwinkle {
+  from { opacity: 0.25; }
+  to { opacity: 1; }
+}
+@keyframes photonForward {
+  0% { transform: translateX(0); opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { transform: translateX(744px); opacity: 0; }
+}
+@keyframes photonBackward {
+  0% { transform: translateX(0); opacity: 0; }
+  10%, 90% { opacity: 0.8; }
+  100% { transform: translateX(-744px); opacity: 0; }
+}
+@keyframes layerFloat {
+  0%, 100% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); }
+}
+@keyframes radarPulse {
+  0% { transform: scale(0.45); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbitRing, .orbitTrack, .orbitTrackReverse, .compass, .originGlow,
+  .originCore, .stars circle, .photon, .watchTop, .watchMiddle,
+  .watchBottom, .watchBeacon, .watchScan, .watchPulse {
+    animation: none;
+  }
+
+  .photon, .watchScan, .watchPulse { display: none; }
+}
