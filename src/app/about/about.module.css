@@ -196,6 +196,7 @@
   display: block;
   width: 100%;
   max-height: 210px;
+  margin-inline: auto;
 }
 
 .watchFigure figcaption {
@@ -266,12 +267,22 @@
 .compass,
 .originGlow,
 .originCore,
+.orbitOuter,
+.orbitInner,
+.gravityHalo,
+.gravityHaloDelayed,
 .watchPulse,
 .watchBeacon {
   transform-box: fill-box;
   transform-origin: center;
 }
 
+.orbitOuter { animation: orbit 48s linear infinite reverse; }
+.orbitInner { animation: orbit 22s linear infinite; }
+.gravityHalo { animation: haloBreathe 6s ease-in-out infinite; }
+.gravityHaloDelayed { animation: haloBreathe 6s ease-in-out -3s infinite; }
+.boundaryWave { animation: boundaryFlow 5s linear infinite; }
+.boundaryWaveReverse { animation: boundaryFlow 7s linear infinite reverse; }
 .orbitRing { animation: orbit 18s linear infinite; }
 .orbitTrack { animation: orbit 26s linear infinite; }
 .orbitTrackReverse { animation: orbit 34s linear infinite reverse; }
@@ -289,15 +300,27 @@
 .watchTop { animation: layerFloat 4.2s ease-in-out infinite; }
 .watchMiddle { animation: layerFloat 4.8s ease-in-out -1.6s infinite reverse; }
 .watchBottom { animation: layerFloat 5.4s ease-in-out -3.1s infinite; }
-.watchBeacon { animation: beaconBreathe 2.4s ease-in-out infinite; }
+.watchBeacon { animation: beaconBreathe 1.6s ease-in-out infinite; }
+.energyFlow { animation: energyFlow 2.8s linear infinite; }
 .watchScan {
   transform-box: view-box;
   transform-origin: 130px 68px;
   animation: orbit 5s linear infinite;
 }
+.watchScanReverse {
+  transform-box: view-box;
+  transform-origin: 130px 68px;
+  animation: orbit 8s linear infinite reverse;
+}
 .watchPulse { animation: radarPulse 3.2s ease-out infinite; }
 .watchPulseDelayed { animation-delay: -1.6s; }
 
+@keyframes haloBreathe {
+  0%, 100% { transform: scale(0.9); opacity: 0.15; }
+  50% { transform: scale(1.12); opacity: 0.8; }
+}
+@keyframes boundaryFlow { to { stroke-dashoffset: -204; } }
+@keyframes energyFlow { to { stroke-dashoffset: -30; } }
 @keyframes orbit { to { transform: rotate(360deg); } }
 @keyframes compassBreathe {
   0%, 100% { transform: scale(0.97); opacity: 0.65; }
@@ -336,10 +359,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .orbitRing, .orbitTrack, .orbitTrackReverse, .compass, .originGlow,
-  .originCore, .stars circle, .photon, .watchTop, .watchMiddle,
-  .watchBottom, .watchBeacon, .watchScan, .watchPulse {
+  .originCore, .orbitOuter, .orbitInner, .gravityHalo, .gravityHaloDelayed,
+  .boundaryWave, .boundaryWaveReverse, .stars circle, .photon, .watchTop, .watchMiddle,
+  .watchBottom, .watchBeacon, .watchScan, .watchScanReverse, .watchPulse, .energyFlow {
     animation: none;
   }
 
-  .photon, .watchScan, .watchPulse { display: none; }
+  .photon, .watchPulse { display: none; }
 }

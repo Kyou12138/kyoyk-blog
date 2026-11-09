@@ -73,8 +73,12 @@ export default function AboutPage(): ReactNode {
                   <linearGradient id="origin-line"><stop stopColor="#e5a742" stopOpacity="0" /><stop offset=".5" stopColor="#f5c779" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></linearGradient>
                 </defs>
                 <circle className={styles.originGlow} cx="410" cy="155" r="155" fill="url(#origin-glow)" />
+                <circle className={styles.gravityHalo} cx="410" cy="155" r="122" fill="none" stroke="#f5c779" strokeOpacity=".18" />
+                <circle className={styles.gravityHaloDelayed} cx="410" cy="155" r="122" fill="none" stroke="#f5c779" strokeOpacity=".12" />
                 <g fill="none" stroke="#e5a742">
                   <circle cx="410" cy="155" r="113" opacity=".16" />
+                  <g className={styles.orbitOuter}><circle cx="410" cy="155" r="130" opacity=".24" strokeDasharray="18 9 2 9" /><circle cx="410" cy="25" r="2" fill="#f5c779" stroke="none" /></g>
+                  <g className={styles.orbitInner}><circle cx="410" cy="155" r="78" opacity=".3" strokeDasharray="1 5" /><circle cx="488" cy="155" r="2" fill="#fff0c9" stroke="none" /></g>
                   <circle className={styles.orbitRing} cx="410" cy="155" r="91" opacity=".34" strokeDasharray="2 6" />
                   <circle cx="410" cy="155" r="67" opacity=".45" />
                   <g className={styles.orbitTrack}><ellipse cx="410" cy="155" rx="216" ry="63" transform="rotate(-18 410 155)" opacity=".28" /></g>
@@ -82,6 +86,8 @@ export default function AboutPage(): ReactNode {
                   <path d="M410 24v262M277 155h266" opacity=".18" />
                   <path className={styles.compass} d="M410 75l80 80-80 80-80-80z" opacity=".45" />
                   <path d="M38 155h744" stroke="url(#origin-line)" strokeWidth="1.5" />
+                  <path className={styles.boundaryWave} d="M38 155h744" stroke="#fff0c9" strokeWidth="2" strokeDasharray="22 80" opacity=".6" />
+                  <path className={styles.boundaryWaveReverse} d="M38 155h744" stroke="#e5a742" strokeWidth="4" strokeDasharray="5 125" opacity=".35" />
                   <path d="M68 114l75-29 80 24 71-40M529 237l80-46 64 17 77-38" opacity=".24" />
                 </g>
                 <g fill="#efc57e">
@@ -140,17 +146,25 @@ export default function AboutPage(): ReactNode {
                   <g fill="none" stroke="#e5a742">
                     <path d="M130 18v157M25 68v57M235 68v57" opacity=".18" strokeDasharray="3 5" />
                     <g className={styles.watchTop}>
+                      <path d="M130 18l105 50-105 50L25 68z" fill="#e5a742" fillOpacity=".045" stroke="none" />
                       <path d="M130 18l105 50-105 50L25 68z" opacity=".7" />
                       <ellipse cx="130" cy="68" rx="42" ry="20" opacity=".55" />
                       <ellipse cx="130" cy="68" rx="21" ry="10" opacity=".7" />
                       <ellipse className={styles.watchPulse} cx="130" cy="68" rx="21" ry="10" />
                       <ellipse className={`${styles.watchPulse} ${styles.watchPulseDelayed}`} cx="130" cy="68" rx="21" ry="10" />
-                      <g className={styles.watchScan}><path d="M130 68l36-10" stroke="#f5c779" opacity=".85" /></g>
+                      <g className={styles.watchScan}><path d="M130 68l36-10" stroke="#f5c779" opacity=".85" /><path d="M130 68l27-15" opacity=".3" /></g>
+                      <g className={styles.watchScanReverse}><path d="M130 68l-25 16" stroke="#f5c779" opacity=".55" /></g>
                       <circle className={styles.watchBeacon} cx="130" cy="68" r="3" fill="#f5c779" stroke="none" />
                       <path d="M130 57v22M119 68h22" stroke="#f5c779" opacity=".7" />
                     </g>
-                    <path className={styles.watchMiddle} d="M25 87l105 50 105-50M25 106l105 50 105-50" opacity=".42" />
-                    <path className={styles.watchBottom} d="M25 125l105 50 105-50" opacity=".22" />
+                    <g className={styles.watchMiddle}>
+                      <path d="M25 87l105 50 105-50-105-50z" fill="#e5a742" fillOpacity=".025" opacity=".42" />
+                      <path d="M25 106l105 50 105-50" opacity=".42" />
+                    </g>
+                    <g className={styles.watchBottom}>
+                      <path d="M25 125l105 50 105-50-105-50z" fill="#e5a742" fillOpacity=".025" opacity=".3" />
+                    </g>
+                    <path className={styles.energyFlow} d="M130 68v107M25 68v57M235 68v57" stroke="#f5c779" strokeDasharray="3 12" opacity=".7" />
                   </g>
                 </svg>
                 <figcaption>现实层 <span>/</span> 缓冲区 <span>/</span> 虚无层</figcaption>
