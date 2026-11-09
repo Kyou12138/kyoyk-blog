@@ -529,14 +529,30 @@ export default function KnowledgeGraph({ posts }: { posts: GraphPost[] }) {
     canvas.addEventListener("pointerleave", handlePointerLeave);
     window.addEventListener("resize", resize);
 
-    const onVisible = () => {
+    let inViewport = true;
+
+    const updateLoop = () => {
       cancelAnimationFrame(raf);
-      if (!document.hidden && !reduced) raf = requestAnimationFrame(loop);
+      if (!document.hidden && inViewport && !reduced) {
+        raf = requestAnimationFrame(loop);
+      }
     };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        inViewport = Boolean(entries[0]?.isIntersecting);
+        updateLoop();
+      },
+      { threshold: 0.05 },
+    );
+    observer.observe(container);
+
+    const onVisible = () => updateLoop();
     document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       cancelAnimationFrame(raf);
+      observer.disconnect();
       canvas.removeEventListener("pointermove", handlePointerMove);
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointerup", handlePointerUp);

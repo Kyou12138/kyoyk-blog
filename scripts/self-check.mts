@@ -84,6 +84,19 @@ const headerSource = readFileSync("src/components/SiteHeader.tsx", "utf8");
 assert.match(headerSource, /⌘/);
 assert.match(headerSource, /Ctrl/);
 
+// 移动端手势与节能调度守卫
+const heroCss = readFileSync("src/components/home-hero.module.css", "utf8");
+assert.match(heroCss, /touch-action:\s*pan-y/);
+
+const kgraphFile = readFileSync("src/components/KnowledgeGraph.tsx", "utf8");
+assert.match(kgraphFile, /new IntersectionObserver/);
+assert.match(kgraphFile, /observer\.disconnect/);
+
+// 数据库连接层握手优化守卫
+const dbSource = readFileSync("src/lib/db.ts", "utf8");
+assert.match(dbSource, /sslVerified/);
+assert.match(dbSource, /if\s*\(sslVerified\s*&&\s*state\.pgPool\)/);
+
 // 领域术语守卫：防止 UI 出现 GLOSSARY.md 禁用的「文章」「分类」同义词漂移
 const tocSource = readFileSync("src/components/TableOfContents.tsx", "utf8");
 assert.doesNotMatch(tocSource, /aria-label="文章目录"/);

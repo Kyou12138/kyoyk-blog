@@ -3,6 +3,7 @@ import { Pool } from "pg";
 const globalForPg = globalThis as typeof globalThis & { pgPool?: Pool };
 
 let useSsl = process.env.DATABASE_SSL !== "false";
+let sslVerified = false;
 
 const createPool = (ssl: boolean) => {
   const connectionString = process.env.DATABASE_URL;
@@ -28,17 +29,21 @@ const getCurrent = (): Pool => {
 const isSslError = (error: unknown) =>
   error instanceof Error && /ssl|tls|certificate|does not support ssl/i.test(error.message);
 
-/** 首次连接失败且判定为 SSL 问题时，降级为明文连接重试一次。 */
+/** 首次连接验证 SSL；握手成功后缓存状态，后续业务查询直接复用连接池。 */
 const connect = async (): Promise<Pool> => {
+  if (sslVerified && state.pgPool) return state.pgPool;
+
   const pool = getCurrent();
   try {
     await pool.query("select 1");
+    sslVerified = true;
   } catch (error) {
     if (!useSsl || !isSslError(error)) throw error;
     useSsl = false;
     await pool.end();
     state.pgPool = createPool(false);
     await state.pgPool.query("select 1");
+    sslVerified = true;
   }
   return getCurrent();
 };
