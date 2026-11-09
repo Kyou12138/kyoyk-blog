@@ -72,6 +72,18 @@ assert.match(layoutSource, /icons:\s*\{/);
 assert.match(layoutSource, /kyou-social-card\.png/);
 assert.match(layoutSource, /summary_large_image/);
 
+// 404 兜底页守卫
+const notFoundSource = readFileSync("src/app/not-found.tsx", "utf8");
+assert.match(notFoundSource, /href="\/"/);
+assert.match(notFoundSource, /href="\/blog"/);
+assert.doesNotMatch(notFoundSource, /文章/);
+assert.match(notFoundSource, /笔记/);
+
+// 平台自适应快捷键提示守卫
+const headerSource = readFileSync("src/components/SiteHeader.tsx", "utf8");
+assert.match(headerSource, /⌘/);
+assert.match(headerSource, /Ctrl/);
+
 // 领域术语守卫：防止 UI 出现 GLOSSARY.md 禁用的「文章」「分类」同义词漂移
 const tocSource = readFileSync("src/components/TableOfContents.tsx", "utf8");
 assert.doesNotMatch(tocSource, /aria-label="文章目录"/);

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { NAV, SITE_NAME } from "@/lib/site";
 
 const isActive = (pathname: string, href: string): boolean =>
@@ -9,6 +10,11 @@ const isActive = (pathname: string, href: string): boolean =>
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
+  }, []);
 
   return (
     <header className="site-header">
@@ -41,7 +47,7 @@ export default function SiteHeader() {
           >
             <span aria-hidden="true">🔍</span>
             <span className="search-trigger__text">搜索</span>
-            <kbd>Ctrl K</kbd>
+            <kbd>{isMac ? "⌘" : "Ctrl"} K</kbd>
           </button>
           <a
             className="nav-link nav-link--ext"
