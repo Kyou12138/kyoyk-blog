@@ -93,7 +93,7 @@
   margin: 0.5rem 0 0;
   overflow: hidden;
   border: 1px solid var(--primary-line);
-  background: radial-gradient(ellipse at 50% 50%, #19150f 0%, #0a0b0e 70%);
+  background: #08090c;
 }
 
 .originArt {
@@ -188,14 +188,15 @@
   margin: 0;
   padding: 0.6rem 1rem 1rem;
   border: 1px solid var(--border);
-  background: radial-gradient(ellipse at 50% 35%, rgba(229, 167, 66, 0.09), transparent 70%), var(--surface);
+  background: radial-gradient(ellipse at 50% 40%, rgba(56, 189, 248, 0.07), transparent 65%), #08090c;
   text-align: center;
 }
 
 .watchFigure svg {
   display: block;
   width: 100%;
-  max-height: 210px;
+  height: auto;
+  max-height: 300px;
   margin-inline: auto;
 }
 
@@ -225,7 +226,7 @@
   }
 
   .watchFigure svg {
-    max-height: 180px;
+    max-height: 280px;
   }
 
   .figureCaption {
@@ -260,110 +261,32 @@
   line-height: 1.65;
 }
 
-/* 星轨与界限：以缓慢的轨道和光脉冲维持图景的呼吸感。 */
-.orbitRing,
-.orbitTrack,
-.orbitTrackReverse,
-.compass,
-.originGlow,
-.originCore,
-.orbitOuter,
-.orbitInner,
-.gravityHalo,
-.gravityHaloDelayed,
-.watchPulse,
-.watchBeacon {
+/* 仪器的缓慢转动和能量流只作用于图形内部。 */
+.orbitOuter, .orbitInner, .originGlow, .originCore {
   transform-box: fill-box;
   transform-origin: center;
 }
+.orbitOuter { animation: orbit 90s linear infinite; }
+.orbitInner { animation: orbit 70s linear infinite reverse; }
+.originGlow { animation: glowBreathe 7s ease-in-out infinite; }
+.originCore { animation: glowBreathe 4s ease-in-out infinite; }
+.boundaryWave { animation: boundaryFlow 8s linear infinite; }
+.energyFlow { animation: energyFlow 4s linear infinite; }
+.matrixFlow { animation: matrixBreathe 6s ease-in-out infinite; }
 
-.orbitOuter { animation: orbit 48s linear infinite reverse; }
-.orbitInner { animation: orbit 22s linear infinite; }
-.gravityHalo { animation: haloBreathe 6s ease-in-out infinite; }
-.gravityHaloDelayed { animation: haloBreathe 6s ease-in-out -3s infinite; }
-.boundaryWave { animation: boundaryFlow 5s linear infinite; }
-.boundaryWaveReverse { animation: boundaryFlow 7s linear infinite reverse; }
-.orbitRing { animation: orbit 18s linear infinite; }
-.orbitTrack { animation: orbit 26s linear infinite; }
-.orbitTrackReverse { animation: orbit 34s linear infinite reverse; }
-.compass { animation: compassBreathe 4.5s ease-in-out infinite; }
-.originGlow { animation: glowBreathe 5s ease-in-out infinite; }
-.originCore { animation: beaconBreathe 2.8s ease-in-out infinite; }
-
-.stars circle { animation: starTwinkle 2.4s ease-in-out infinite alternate; }
-.stars circle:nth-child(3n + 2) { animation-delay: -0.9s; animation-duration: 3.1s; }
-.stars circle:nth-child(3n) { animation-delay: -1.8s; animation-duration: 2.1s; }
-
-.photon { animation: photonForward 5.5s linear infinite; }
-.photonReverse { animation: photonBackward 7s linear -2.8s infinite; }
-
-.watchTop { animation: layerFloat 4.2s ease-in-out infinite; }
-.watchMiddle { animation: layerFloat 4.8s ease-in-out -1.6s infinite reverse; }
-.watchBottom { animation: layerFloat 5.4s ease-in-out -3.1s infinite; }
-.watchBeacon { animation: beaconBreathe 1.6s ease-in-out infinite; }
-.energyFlow { animation: energyFlow 2.8s linear infinite; }
-.watchScan {
-  transform-box: view-box;
-  transform-origin: 130px 68px;
-  animation: orbit 5s linear infinite;
-}
-.watchScanReverse {
-  transform-box: view-box;
-  transform-origin: 130px 68px;
-  animation: orbit 8s linear infinite reverse;
-}
-.watchPulse { animation: radarPulse 3.2s ease-out infinite; }
-.watchPulseDelayed { animation-delay: -1.6s; }
-
-@keyframes haloBreathe {
-  0%, 100% { transform: scale(0.9); opacity: 0.15; }
-  50% { transform: scale(1.12); opacity: 0.8; }
-}
-@keyframes boundaryFlow { to { stroke-dashoffset: -204; } }
-@keyframes energyFlow { to { stroke-dashoffset: -30; } }
 @keyframes orbit { to { transform: rotate(360deg); } }
-@keyframes compassBreathe {
-  0%, 100% { transform: scale(0.97); opacity: 0.65; }
-  50% { transform: scale(1.04); opacity: 1; }
-}
+@keyframes boundaryFlow { to { stroke-dashoffset: -158; } }
+@keyframes energyFlow { to { stroke-dashoffset: -52; } }
 @keyframes glowBreathe {
-  0%, 100% { transform: scale(0.9); opacity: 0.65; }
-  50% { transform: scale(1.1); opacity: 1; }
+  0%, 100% { transform: scale(0.94); opacity: 0.75; }
+  50% { transform: scale(1.08); opacity: 1; }
 }
-@keyframes beaconBreathe {
-  0%, 100% { transform: scale(0.85); opacity: 0.65; }
-  50% { transform: scale(1.45); opacity: 1; }
-}
-@keyframes starTwinkle {
-  from { opacity: 0.25; }
-  to { opacity: 1; }
-}
-@keyframes photonForward {
-  0% { transform: translateX(0); opacity: 0; }
-  10%, 90% { opacity: 1; }
-  100% { transform: translateX(744px); opacity: 0; }
-}
-@keyframes photonBackward {
-  0% { transform: translateX(0); opacity: 0; }
-  10%, 90% { opacity: 0.8; }
-  100% { transform: translateX(-744px); opacity: 0; }
-}
-@keyframes layerFloat {
-  0%, 100% { transform: translateY(-5px); }
-  50% { transform: translateY(5px); }
-}
-@keyframes radarPulse {
-  0% { transform: scale(0.45); opacity: 0.8; }
-  100% { transform: scale(2.2); opacity: 0; }
+@keyframes matrixBreathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbitRing, .orbitTrack, .orbitTrackReverse, .compass, .originGlow,
-  .originCore, .orbitOuter, .orbitInner, .gravityHalo, .gravityHaloDelayed,
-  .boundaryWave, .boundaryWaveReverse, .stars circle, .photon, .watchTop, .watchMiddle,
-  .watchBottom, .watchBeacon, .watchScan, .watchScanReverse, .watchPulse, .energyFlow {
-    animation: none;
-  }
-
-  .photon, .watchPulse { display: none; }
+  .orbitOuter, .orbitInner, .originGlow, .originCore,
+  .boundaryWave, .energyFlow, .matrixFlow { animation: none; }
 }

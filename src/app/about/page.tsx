@@ -67,38 +67,45 @@ export default function AboutPage(): ReactNode {
             </p>
 
             <figure className={styles.originFigure}>
-              <svg className={styles.originArt} viewBox="0 0 820 310" role="img" aria-label="原初混沌中，一道界线穿过星轨，将现实与虚无分开">
+              <svg className={styles.originArt} viewBox="0 0 820 360" role="img" aria-label="原初混沌中，金色秩序与冷色虚无在星轨仪中心的界限相接">
                 <defs>
-                  <radialGradient id="origin-glow"><stop stopColor="#e5a742" stopOpacity=".24" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></radialGradient>
-                  <linearGradient id="origin-line"><stop stopColor="#e5a742" stopOpacity="0" /><stop offset=".5" stopColor="#f5c779" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></linearGradient>
+                  <radialGradient id="origin-amber"><stop stopColor="#e5a742" stopOpacity=".3" /><stop offset="1" stopColor="#e5a742" stopOpacity="0" /></radialGradient>
+                  <radialGradient id="origin-cold"><stop stopColor="#38bdf8" stopOpacity=".25" /><stop offset="1" stopColor="#818cf8" stopOpacity="0" /></radialGradient>
+                  <radialGradient id="origin-core"><stop stopColor="#fff4d4" /><stop offset=".18" stopColor="#f5c779" /><stop offset=".5" stopColor="#e5a742" stopOpacity=".35" /><stop offset="1" stopColor="#38bdf8" stopOpacity="0" /></radialGradient>
+                  <linearGradient id="origin-boundary"><stop stopColor="#e5a742" stopOpacity="0" /><stop offset=".32" stopColor="#e5a742" /><stop offset=".5" stopColor="#fff4d4" /><stop offset=".68" stopColor="#38bdf8" /><stop offset="1" stopColor="#818cf8" stopOpacity="0" /></linearGradient>
+                  <pattern id="origin-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#a9b8ca" strokeOpacity=".08" strokeWidth=".5" /><circle cx="0" cy="0" r=".8" fill="#b9c9d8" fillOpacity=".2" /></pattern>
                 </defs>
-                <circle className={styles.originGlow} cx="410" cy="155" r="155" fill="url(#origin-glow)" />
-                <circle className={styles.gravityHalo} cx="410" cy="155" r="122" fill="none" stroke="#f5c779" strokeOpacity=".18" />
-                <circle className={styles.gravityHaloDelayed} cx="410" cy="155" r="122" fill="none" stroke="#f5c779" strokeOpacity=".12" />
-                <g fill="none" stroke="#e5a742">
-                  <circle cx="410" cy="155" r="113" opacity=".16" />
-                  <g className={styles.orbitOuter}><circle cx="410" cy="155" r="130" opacity=".24" strokeDasharray="18 9 2 9" /><circle cx="410" cy="25" r="2" fill="#f5c779" stroke="none" /></g>
-                  <g className={styles.orbitInner}><circle cx="410" cy="155" r="78" opacity=".3" strokeDasharray="1 5" /><circle cx="488" cy="155" r="2" fill="#fff0c9" stroke="none" /></g>
-                  <circle className={styles.orbitRing} cx="410" cy="155" r="91" opacity=".34" strokeDasharray="2 6" />
-                  <circle cx="410" cy="155" r="67" opacity=".45" />
-                  <g className={styles.orbitTrack}><ellipse cx="410" cy="155" rx="216" ry="63" transform="rotate(-18 410 155)" opacity=".28" /></g>
-                  <g className={styles.orbitTrackReverse}><ellipse cx="410" cy="155" rx="176" ry="51" transform="rotate(26 410 155)" opacity=".2" /></g>
-                  <path d="M410 24v262M277 155h266" opacity=".18" />
-                  <path className={styles.compass} d="M410 75l80 80-80 80-80-80z" opacity=".45" />
-                  <path d="M38 155h744" stroke="url(#origin-line)" strokeWidth="1.5" />
-                  <path className={styles.boundaryWave} d="M38 155h744" stroke="#fff0c9" strokeWidth="2" strokeDasharray="22 80" opacity=".6" />
-                  <path className={styles.boundaryWaveReverse} d="M38 155h744" stroke="#e5a742" strokeWidth="4" strokeDasharray="5 125" opacity=".35" />
-                  <path d="M68 114l75-29 80 24 71-40M529 237l80-46 64 17 77-38" opacity=".24" />
+                <path fill="url(#origin-grid)" d="M0 0h820v360H0z" />
+                <ellipse cx="315" cy="180" rx="260" ry="155" fill="url(#origin-amber)" />
+                <ellipse cx="505" cy="180" rx="260" ry="155" fill="url(#origin-cold)" />
+                <g fill="none" strokeWidth=".7">
+                  <path d="M35 180H785M410 18V342" stroke="#c8d5e3" opacity=".2" />
+                  <path d="M60 72h110M60 68v8M170 68v8M650 288h110M650 284v8M410 20v12M410 328v12" stroke="#f5c779" opacity=".45" />
+                  <path d="M52 247C150 208 181 110 291 110S403 180 410 180M52 266C167 232 193 137 300 135S389 166 410 180M410 180C463 180 478 250 552 250S675 146 768 118M410 180C463 194 480 226 555 225S676 161 768 137" stroke="url(#origin-boundary)" opacity=".48" />
+                  <path d="M65 100l62-28 49 35 62-42 47 29M536 268l55-28 54 22 55-51 58 14M78 281l61-24 51 10M557 76l53 29 58-39 67 25" stroke="#b8c9d8" opacity=".25" />
+                  <ellipse cx="410" cy="180" rx="270" ry="76" transform="rotate(-15 410 180)" stroke="#e5a742" opacity=".35" />
+                  <ellipse cx="410" cy="180" rx="235" ry="65" transform="rotate(21 410 180)" stroke="#38bdf8" opacity=".35" />
+                  <ellipse cx="410" cy="180" rx="195" ry="52" transform="rotate(-31 410 180)" stroke="#f5c779" opacity=".2" strokeDasharray="3 5" />
+                  <circle cx="410" cy="180" r="157" stroke="#d7c19a" opacity=".22" />
+                  <circle className={styles.orbitOuter} cx="410" cy="180" r="150" stroke="#f5c779" strokeWidth="7" strokeDasharray=".5 3.43" opacity=".55" />
+                  <circle cx="410" cy="180" r="140" stroke="#e5a742" opacity=".45" />
+                  <circle className={styles.orbitInner} cx="410" cy="180" r="132" stroke="#38bdf8" strokeWidth="5" strokeDasharray="1 7.3" opacity=".6" />
+                  <circle cx="410" cy="180" r="119" stroke="#e5a742" strokeDasharray="23 4 2 4" opacity=".5" />
+                  <circle cx="410" cy="180" r="104" stroke="#b7c9d7" opacity=".25" />
+                  <circle cx="410" cy="180" r="86" stroke="#818cf8" strokeDasharray="2 5" opacity=".55" />
+                  <circle cx="410" cy="180" r="67" stroke="#f5c779" opacity=".36" />
+                  <path d="M410 76l104 104-104 104-104-104z M410 113l67 67-67 67-67-67z" stroke="#e5a742" opacity=".25" />
+                  <path d="M410 31v18m0 262v18M261 180h18m262 0h18M304 74l13 13m186 186 13 13M516 74l-13 13M317 273l-13 13" stroke="#f5c779" opacity=".7" />
+                  <circle cx="356" cy="180" r="54" stroke="#e5a742" opacity=".6" /><circle cx="464" cy="180" r="54" stroke="#38bdf8" opacity=".6" />
+                  <path d="M20 180h780" stroke="url(#origin-boundary)" strokeWidth="1.5" />
+                  <path className={styles.boundaryWave} d="M20 180h780" stroke="#fff4d4" strokeWidth="2" strokeDasharray="4 75" opacity=".8" />
                 </g>
-                <g fill="#efc57e">
-                  <circle className={styles.originCore} cx="410" cy="155" r="4" /><circle cx="330" cy="155" r="2.5" /><circle cx="490" cy="155" r="2.5" />
-                </g>
-                <g className={styles.stars} fill="#efc57e">
-                  <circle cx="143" cy="85" r="2" /><circle cx="223" cy="109" r="1.5" /><circle cx="609" cy="191" r="2" /><circle cx="673" cy="208" r="1.5" />
-                  <circle cx="95" cy="218" r="1" /><circle cx="198" cy="49" r="1" /><circle cx="568" cy="62" r="1" /><circle cx="733" cy="93" r="1" />
-                </g>
-                <g className={styles.photon} fill="#fff0c9"><circle cx="38" cy="155" r="2.5" /><circle cx="38" cy="155" r="6" opacity=".2" /></g>
-                <g className={`${styles.photon} ${styles.photonReverse}`} fill="#fff0c9"><circle cx="782" cy="155" r="2" /><circle cx="782" cy="155" r="5" opacity=".2" /></g>
+                <g fill="#f5c779" opacity=".75"><circle cx="127" cy="72" r="2" /><circle cx="176" cy="107" r="1.5" /><circle cx="238" cy="65" r="2" /><circle cx="139" cy="257" r="1.5" /><circle cx="291" cy="110" r="2" /><circle cx="304" cy="74" r="2" /></g>
+                <g fill="#8bdcff" opacity=".75"><circle cx="591" cy="240" r="2" /><circle cx="645" cy="262" r="1.5" /><circle cx="700" cy="211" r="2" /><circle cx="610" cy="105" r="1.5" /><circle cx="668" cy="66" r="2" /><circle cx="516" cy="286" r="2" /></g>
+                <circle className={styles.originGlow} cx="410" cy="180" r="48" fill="url(#origin-core)" />
+                <circle cx="410" cy="180" r="12" fill="#08090c" stroke="#f5c779" strokeWidth=".8" />
+                <circle className={styles.originCore} cx="410" cy="180" r="3" fill="#fff4d4" />
+                <g fill="#cbb995" fontFamily="monospace" fontSize="7" letterSpacing="1.5" opacity=".65"><text x="62" y="61">ORDO / 00</text><text x="659" y="303">VOID / ∞</text><text x="420" y="25">N</text><text x="420" y="341">S</text></g>
               </svg>
               <figcaption className={styles.figureCaption}>
                 <span>原初图景 · 界限的诞生</span>
@@ -142,30 +149,37 @@ export default function AboutPage(): ReactNode {
             </p>
               </div>
               <figure className={styles.watchFigure}>
-                <svg viewBox="0 0 260 200" role="img" aria-label="现实层、缓冲区与虚无层的三重边界示意图">
-                  <g fill="none" stroke="#e5a742">
-                    <path d="M130 18v157M25 68v57M235 68v57" opacity=".18" strokeDasharray="3 5" />
-                    <g className={styles.watchTop}>
-                      <path d="M130 18l105 50-105 50L25 68z" fill="#e5a742" fillOpacity=".045" stroke="none" />
-                      <path d="M130 18l105 50-105 50L25 68z" opacity=".7" />
-                      <ellipse cx="130" cy="68" rx="42" ry="20" opacity=".55" />
-                      <ellipse cx="130" cy="68" rx="21" ry="10" opacity=".7" />
-                      <ellipse className={styles.watchPulse} cx="130" cy="68" rx="21" ry="10" />
-                      <ellipse className={`${styles.watchPulse} ${styles.watchPulseDelayed}`} cx="130" cy="68" rx="21" ry="10" />
-                      <g className={styles.watchScan}><path d="M130 68l36-10" stroke="#f5c779" opacity=".85" /><path d="M130 68l27-15" opacity=".3" /></g>
-                      <g className={styles.watchScanReverse}><path d="M130 68l-25 16" stroke="#f5c779" opacity=".55" /></g>
-                      <circle className={styles.watchBeacon} cx="130" cy="68" r="3" fill="#f5c779" stroke="none" />
-                      <path d="M130 57v22M119 68h22" stroke="#f5c779" opacity=".7" />
-                    </g>
-                    <g className={styles.watchMiddle}>
-                      <path d="M25 87l105 50 105-50-105-50z" fill="#e5a742" fillOpacity=".025" opacity=".42" />
-                      <path d="M25 106l105 50 105-50" opacity=".42" />
-                    </g>
-                    <g className={styles.watchBottom}>
-                      <path d="M25 125l105 50 105-50-105-50z" fill="#e5a742" fillOpacity=".025" opacity=".3" />
-                    </g>
-                    <path className={styles.energyFlow} d="M130 68v107M25 68v57M235 68v57" stroke="#f5c779" strokeDasharray="3 12" opacity=".7" />
+                <svg viewBox="0 0 320 280" role="img" aria-label="现实、缓冲与虚无三层全息边界由中央能量信标贯穿">
+                  <defs>
+                    <linearGradient id="matrix-top" x2="0" y2="1"><stop stopColor="#e5a742" stopOpacity=".22" /><stop offset="1" stopColor="#e5a742" stopOpacity=".02" /></linearGradient>
+                    <linearGradient id="matrix-mid" x2="0" y2="1"><stop stopColor="#38bdf8" stopOpacity=".19" /><stop offset="1" stopColor="#818cf8" stopOpacity=".02" /></linearGradient>
+                    <radialGradient id="matrix-void"><stop stopColor="#818cf8" stopOpacity=".34" /><stop offset="1" stopColor="#08090c" stopOpacity="0" /></radialGradient>
+                    <linearGradient id="matrix-beam" x2="0" y2="1"><stop stopColor="#f5c779" stopOpacity="0" /><stop offset=".25" stopColor="#f5c779" /><stop offset=".65" stopColor="#38bdf8" /><stop offset="1" stopColor="#818cf8" stopOpacity="0" /></linearGradient>
+                    <pattern id="matrix-grid" width="18" height="10" patternUnits="userSpaceOnUse"><path d="M0 5l9-5 9 5-9 5z" fill="none" stroke="#f5c779" strokeOpacity=".28" strokeWidth=".5" /><circle cx="9" cy="5" r=".7" fill="#f5c779" fillOpacity=".6" /></pattern>
+                    <clipPath id="matrix-top-clip"><path d="M160 35l125 51-125 51L35 86z" /></clipPath>
+                  </defs>
+                  <ellipse cx="160" cy="211" rx="118" ry="50" fill="url(#matrix-void)" />
+                  <g fill="none" strokeWidth=".7">
+                    <path d="M35 86v91l125 54 125-54V86M52 93v91M268 93v91" stroke="#a0b5ca" opacity=".18" strokeDasharray="2 5" />
+                    <path d="M160 160l125 51-125 51-125-51z" fill="#101217" fillOpacity=".7" stroke="#818cf8" opacity=".65" />
+                    <path d="M35 211l125 61 125-61v-9l-125 51-125-51z" fill="#818cf8" fillOpacity=".06" stroke="#818cf8" opacity=".35" />
+                    <ellipse cx="160" cy="211" rx="80" ry="32" stroke="#818cf8" opacity=".45" strokeDasharray="4 4" />
+                    <ellipse cx="160" cy="211" rx="55" ry="22" stroke="#38bdf8" opacity=".48" />
+                    <ellipse cx="160" cy="211" rx="29" ry="11" stroke="#818cf8" strokeDasharray="2 3" opacity=".8" />
+                    <path d="M53 207l45 3 18 13 22-5 22 15 16-11 29 2 22-15 40-4" stroke="#818cf8" strokeDasharray="3 4" opacity=".75" />
+                    <path d="M160 97l125 51-125 51-125-51z" fill="url(#matrix-mid)" stroke="#38bdf8" opacity=".75" />
+                    <path d="M35 148v9l125 51 125-51v-9l-125 51z" fill="#38bdf8" fillOpacity=".06" stroke="#38bdf8" opacity=".35" />
+                    <g className={styles.matrixFlow} stroke="#8bdcff" opacity=".6"><path d="M57 148c35-18 55 18 103 0s68-18 103 0" /><path d="M74 155c30-13 50 14 86 0s56-14 86 0" strokeDasharray="3 4" /><ellipse cx="160" cy="148" rx="66" ry="26" /><ellipse cx="160" cy="148" rx="42" ry="17" /></g>
+                    <path d="M160 35l125 51-125 51L35 86z" fill="url(#matrix-top)" stroke="#f5c779" opacity=".85" />
+                    <path d="M35 86v9l125 51 125-51v-9l-125 51z" fill="#e5a742" fillOpacity=".1" stroke="#e5a742" opacity=".55" />
+                    <g clipPath="url(#matrix-top-clip)"><path d="M30 30h260v110H30z" fill="url(#matrix-grid)" /><path d="M160 47l96 39-96 39-96-39z M160 60l64 26-64 26-64-26z" stroke="#f5c779" opacity=".55" /></g>
+                    <ellipse cx="160" cy="86" rx="39" ry="16" stroke="#f5c779" opacity=".8" /><ellipse cx="160" cy="86" rx="24" ry="10" stroke="#f5c779" strokeDasharray="2 3" />
+                    <path d="M160 12v244" stroke="url(#matrix-beam)" strokeWidth="2" /><path className={styles.energyFlow} d="M160 12v244" stroke="#fff4d4" strokeWidth="2" strokeDasharray="2 24" />
+                    <ellipse cx="160" cy="86" rx="12" ry="5" stroke="#fff4d4" /><ellipse cx="160" cy="148" rx="12" ry="5" stroke="#8bdcff" /><ellipse cx="160" cy="211" rx="12" ry="5" stroke="#b8baff" />
                   </g>
+                  <g fill="#f5c779"><circle cx="160" cy="35" r="2" /><circle cx="35" cy="86" r="2" /><circle cx="285" cy="86" r="2" /><circle cx="160" cy="137" r="2" /><circle cx="160" cy="86" r="3" /></g>
+                  <g fill="#8bdcff"><circle cx="35" cy="148" r="1.5" /><circle cx="285" cy="148" r="1.5" /><circle cx="160" cy="148" r="2" /></g>
+                  <g fill="#a5a9ff"><circle cx="160" cy="211" r="2" /><circle cx="160" cy="262" r="1.5" /></g>
                 </svg>
                 <figcaption>现实层 <span>/</span> 缓冲区 <span>/</span> 虚无层</figcaption>
               </figure>
