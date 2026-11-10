@@ -7,11 +7,32 @@ export const dynamic = "force-dynamic";
 
 const projects = [
   {
-    name: "AI 对话智能体",
-    href: "https://chat.kyoyk.top/",
-    host: "chat.kyoyk.top",
+    name: "PromptVault",
+    href: "https://prompt.kythron.com/",
+    host: "prompt.kythron.com",
     tag: "LIVE",
-    note: "基于 NextChat 定制的多模型流式交互平台，支持长上下文与本地 MCP 调用。",
+    note: "资产化 Prompt 模板管理与 MCP 协议枢纽，实现上下文工程高复用编排。",
+  },
+  {
+    name: "大肥鱼 Token 保卫战",
+    href: "https://td.kythron.com/",
+    host: "td.kythron.com",
+    tag: "LIVE",
+    note: "浏览器端实时 Token 塔防模拟与策略防御，融合防御塔升级与波次攻防。",
+  },
+  {
+    name: "英语研习室",
+    href: "https://cet.kythron.com/",
+    host: "cet.kythron.com",
+    tag: "LIVE",
+    note: "离线优先的英语四六级与考研真题练习空间，纯净无广告，持久保存练习进度。",
+  },
+  {
+    name: "StarLive 星播",
+    href: "https://live.kythron.com/",
+    host: "live.kythron.com",
+    tag: "LIVE",
+    note: "可自部署的实时直播互动平台，集成高并发弹幕流、虚拟礼物与星币经济。",
   },
   {
     name: "魔方简历",
@@ -19,13 +40,6 @@ const projects = [
     host: "magic-resume.kyoyk.top",
     tag: "STABLE",
     note: "基于 AST 结构化渲染的智能排版系统，针对工程师 ATS 匹配机制优化。",
-  },
-  {
-    name: "PromptVault",
-    href: "https://prompt.kythron.com/",
-    host: "prompt.kythron.com",
-    tag: "INTERNAL",
-    note: "资产化 Prompt 模板管理与 MCP 协议枢纽，实现上下文工程高复用编排。",
   },
 ];
 
