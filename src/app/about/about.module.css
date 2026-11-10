@@ -88,33 +88,98 @@
   color: var(--text-secondary);
 }
 
-/* 原初星图：以一条发光的界线连接两个章节 */
-.originFigure {
-  margin: 0.5rem 0 0;
+/* ===== 视觉图框与全息 HUD 叠加层 ===== */
+.heroFigure,
+.originFigure,
+.watchFigure {
+  margin: 0;
   overflow: hidden;
-  border: 1px solid var(--primary-line);
+  border-radius: var(--radius-m);
+  border: 1px solid rgba(229, 167, 66, 0.28);
+  background: #08090c;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+}
+
+.heroFigure {
+  max-width: 1000px;
+  margin-bottom: 3.5rem;
+}
+
+.originFigure {
+  margin-top: 0.6rem;
+}
+
+.artFrame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
   background: #08090c;
 }
 
-.originArt {
-  display: block;
+.artImage {
+  object-fit: cover;
+  transition:
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 1.1s ease;
+}
+
+.artFrame:hover .artImage {
+  transform: scale(1.035);
+  filter: brightness(1.1) contrast(1.03);
+}
+
+.artShade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(8, 9, 12, 0.22), transparent 28%, transparent 62%, rgba(8, 9, 12, 0.76)),
+    radial-gradient(ellipse at center, transparent 40%, rgba(8, 9, 12, 0.38));
+  pointer-events: none;
+}
+
+.hud {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
+  height: 100%;
+  color: #f5c779;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.telemetry {
+  position: absolute;
+  inset: auto 3% 4%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #f5c779;
+  font: 600 clamp(0.54rem, 1vw, 0.68rem) var(--font-mono);
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
 }
 
 .figureCaption {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.8rem 1rem;
-  border-top: 1px solid var(--primary-line);
-  color: var(--text-secondary);
+  padding: 0.8rem 1.1rem;
+  border-top: 1px solid rgba(229, 167, 66, 0.22);
+  background: #0b0d11;
+  color: #a9b2bd;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
 }
 
 .figureCaption span:last-child {
   color: var(--primary);
+  font-family: var(--font-mono);
 }
 
 /* ===== 里程碑网格 ===== */
@@ -179,30 +244,25 @@
 /* ===== 职责列表 ===== */
 .directiveLayout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.8fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
   align-items: center;
   gap: 2rem;
 }
 
 .watchFigure {
-  margin: 0;
-  padding: 0.6rem 1rem 1rem;
-  border: 1px solid var(--border);
-  background: radial-gradient(ellipse at 50% 40%, rgba(56, 189, 248, 0.07), transparent 65%), #08090c;
   text-align: center;
 }
 
-.watchFigure svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 300px;
-  margin-inline: auto;
+.watchFigure .artFrame {
+  aspect-ratio: 16 / 10;
 }
 
 .watchFigure figcaption {
+  padding: 0.8rem 1rem;
+  border-top: 1px solid rgba(229, 167, 66, 0.22);
+  background: #0b0d11;
   color: var(--text-secondary);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   letter-spacing: 0.05em;
 }
 
@@ -217,22 +277,6 @@
   padding: 0;
   margin: 0.4rem 0 0.8rem;
   list-style: none;
-}
-
-@media (max-width: 640px) {
-  .directiveLayout {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-
-  .watchFigure svg {
-    max-height: 280px;
-  }
-
-  .figureCaption {
-    flex-wrap: wrap;
-    gap: 0.25rem 1rem;
-  }
 }
 
 .titleItem {
@@ -262,31 +306,77 @@
 }
 
 /* 仪器的缓慢转动和能量流只作用于图形内部。 */
-.orbitOuter, .orbitInner, .originGlow, .originCore {
+.orbitOuter,
+.orbitInner {
   transform-box: fill-box;
   transform-origin: center;
 }
-.orbitOuter { animation: orbit 90s linear infinite; }
-.orbitInner { animation: orbit 70s linear infinite reverse; }
-.originGlow { animation: glowBreathe 7s ease-in-out infinite; }
-.originCore { animation: glowBreathe 4s ease-in-out infinite; }
-.boundaryWave { animation: boundaryFlow 8s linear infinite; }
-.energyFlow { animation: energyFlow 4s linear infinite; }
-.matrixFlow { animation: matrixBreathe 6s ease-in-out infinite; }
 
-@keyframes orbit { to { transform: rotate(360deg); } }
-@keyframes boundaryFlow { to { stroke-dashoffset: -158; } }
-@keyframes energyFlow { to { stroke-dashoffset: -52; } }
-@keyframes glowBreathe {
-  0%, 100% { transform: scale(0.94); opacity: 0.75; }
-  50% { transform: scale(1.08); opacity: 1; }
+.orbitOuter {
+  animation: orbit 32s linear infinite;
 }
-@keyframes matrixBreathe {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+
+.orbitInner {
+  animation: orbit 22s linear infinite reverse;
+}
+
+.pulse {
+  animation: boundaryFlow 4.5s linear infinite;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes boundaryFlow {
+  to {
+    stroke-dashoffset: -156;
+  }
+}
+
+@media (max-width: 760px) {
+  .heroFigure {
+    margin-bottom: 2.5rem;
+  }
+
+  .directiveLayout {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+
+  .artFrame,
+  .watchFigure .artFrame {
+    aspect-ratio: 16 / 10;
+  }
+
+  .milestoneGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .figureCaption {
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+  }
+
+  .telemetry {
+    letter-spacing: 0.04em;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .orbitOuter, .orbitInner, .originGlow, .originCore,
-  .boundaryWave, .energyFlow, .matrixFlow { animation: none; }
+  .orbitOuter,
+  .orbitInner,
+  .pulse {
+    animation: none;
+  }
+
+  .artImage {
+    transition: none;
+  }
+
+  .artFrame:hover .artImage {
+    transform: none;
+  }
 }
