@@ -7,6 +7,9 @@ const ALIASES = new Set(["www.kythron.com", "blog.kythron.com", "blog.kyoyk.top"
 /** 非 canonical 域名统一 301，避免重复内容与登录态分裂。 */
 export function middleware(request: NextRequest) {
   const host = request.headers.get("host")?.split(":")[0];
+  if (host === "status.kythron.com") {
+    return NextResponse.redirect(new URL("/status", SITE_URL), 302);
+  }
   if (!host || host === CANONICAL_HOST || !ALIASES.has(host)) {
     return NextResponse.next();
   }

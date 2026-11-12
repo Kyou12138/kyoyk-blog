@@ -2,11 +2,15 @@ node_modules
 .next
 .git
 data
+backups
+deploy/cloudflared/credentials.json
 build
 .docusaurus
 .codegraph
 *.log
-.env.local
+.env
+.env.*
+.pi
 README.md
 docs
 blog

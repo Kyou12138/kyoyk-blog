@@ -1,0 +1,16 @@
+name: nezha
+services:
+  dashboard:
+    container_name: nezha-dashboard
+    # Copy into /opt/nezha; keep the existing ./data directory.
+    image: ghcr.io/nezhahq/nezha:v2.6.1
+    restart: unless-stopped
+    volumes:
+      - ./data:/dashboard/data
+    ports:
+      - "127.0.0.1:8008:8008"
+    networks:
+      - blog-web
+networks:
+  blog-web:
+    external: true
