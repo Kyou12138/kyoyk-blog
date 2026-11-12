@@ -15,6 +15,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <a className="button button--ghost" href="/admin/posts/new">
               写新笔记
             </a>
+            <a className="button button--ghost" href="https://status.kythron.com" target="_blank" rel="noopener">
+              服务器监控 ↗
+            </a>
             <a className="button button--ghost" href="/">
               看前台
             </a>
