@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PostEditor from "@/components/PostEditor";
+import { openBody } from "@/lib/secret";
 import { getPostById, permalink } from "@/lib/posts";
 import { requireAdmin } from "@/lib/session";
 
@@ -22,11 +23,14 @@ export default async function EditPostPage({
 
   if (!post) notFound();
 
+  // 私有笔记库里只有密文，编辑时解密后再交给编辑器，避免“重新输入正文”。
+  const draftBody = post.status === "private" && post.secret ? openBody(post.secret) ?? "" : post.body ?? "";
+
   return (
     <div>
       <h1 style={{ fontSize: "1.4rem", marginTop: 0 }}>编辑：{post.title}</h1>
       <PostEditor
-        post={post}
+        post={{ ...post, body: draftBody }}
         viewHref={permalink(post)}
         error={error}
         notice={saved ? "已保存。" : undefined}

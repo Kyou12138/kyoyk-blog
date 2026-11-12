@@ -3,10 +3,10 @@
  * 运行：node --experimental-strip-types scripts/self-check.mts
  */
 import assert from "node:assert/strict";
-import { hashPassword, verifyPassword, createToken, verifyToken } from "../src/lib/auth.ts";
+import { createToken, hashPassword, verifyPassword, verifyToken } from "../src/lib/auth.ts";
+import { openBody, sealBody } from "../src/lib/secret.ts";
 import { dateParts, readingMinutes } from "../src/lib/format.ts";
 import { plainExcerpt, renderMarkdown, renderPost, stripLeadingTitle } from "../src/lib/markdown.ts";
-import { openSecret, sealSecret } from "../src/lib/secret.ts";
 
 process.env.AUTH_SECRET = "self-check-secret-value";
 
@@ -49,12 +49,11 @@ assert.equal(verifyToken(token), true);
 assert.equal(verifyToken(createToken(-1000)), false);
 assert.equal(verifyToken(token.slice(0, -2) + "aa"), false);
 
-// 私有笔记：密钥往返，密码错误返回 null，密文被改动返回 null
-const secret = sealSecret("抢票脚本正文", "note-pass", "VX");
-assert.equal(openSecret(secret, "note-pass"), "抢票脚本正文");
-assert.equal(openSecret(secret, "wrong-pass"), null);
-assert.equal(openSecret({ ...secret, ct: secret.ct.slice(0, -4) + "AAAA" }, "note-pass"), null);
-assert.equal(secret.hint, "VX");
+// 私有笔记：单密码方案，服务端密钥往返；密文被改动返回 null
+const secret = sealBody("抢票脚本正文");
+assert.equal(openBody(secret), "抢票脚本正文");
+assert.equal(openBody({ ...secret, ct: secret.ct.slice(0, -4) + "AAAA" }), null);
+assert.deepEqual(Object.keys(secret).sort(), ["ct", "iv", "tag"]);
 
 import { existsSync, readFileSync } from "node:fs";
 

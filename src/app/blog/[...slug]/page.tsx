@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CodeCopyButtons from "@/components/CodeCopyButtons";
-import NoteGate from "@/components/NoteGate";
 import ReadingTools from "@/components/ReadingTools";
 import TableOfContents from "@/components/TableOfContents";
 import { formatDate, readingMinutes } from "@/lib/format";
 import { renderPost } from "@/lib/markdown";
-import { readPrivateBody } from "@/lib/noteAccess";
+import { openBody } from "@/lib/secret";
 import { getAdjacentPosts, getPostBySlug, permalink } from "@/lib/posts";
 import { isAdmin } from "@/lib/session";
 
@@ -37,14 +36,12 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = await getPostBySlug(slug.at(-1) ?? "");
 
   if (!post) notFound();
-  if (post.status === "draft" && !(await isAdmin())) notFound();
-  if (post.status === "private" && !post.secret) notFound();
+  const admin = await isAdmin();
+  if (post.status === "draft" && !admin) notFound();
+  if (post.status === "private" && (!post.secret || !admin)) notFound();
 
-  const privateBody =
-    post.status === "private" && post.secret ? await readPrivateBody(post.id, post.secret) : null;
-  const locked = post.status === "private" && !privateBody;
-  const source = privateBody ?? post.body ?? "";
-  const { html, headings } = locked ? { html: "", headings: [] } : renderPost(source, post.title);
+  const source = post.status === "private" && post.secret ? openBody(post.secret) ?? "" : post.body ?? "";
+  const { html, headings } = renderPost(source, post.title);
   const { newer, older } = await getAdjacentPosts(post.slug);
 
   // 13 篇旧文的 description 就是 title，重复渲染没有信息量
@@ -89,14 +86,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             </details>
           )}
 
-          {locked ? (
-            <NoteGate postId={post.id} hint={post.secret?.hint ?? null} />
-          ) : (
-            <>
-              <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
-              <CodeCopyButtons />
-            </>
-          )}
+          <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+          <CodeCopyButtons />
 
           {(newer || older) && (
             <nav className="article-nav" aria-label="上下篇">

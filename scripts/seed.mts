@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import matter from "gray-matter";
 import { Client } from "pg";
 import { plainExcerpt } from "../src/lib/markdown.ts";
-import { sealSecret } from "../src/lib/secret.ts";
+import { sealBody } from "../src/lib/secret.ts";
 
 try {
   process.loadEnvFile?.(".env.local");
@@ -21,7 +21,6 @@ if (!connectionString) {
 const dataDir = process.env.DATA_DIR ?? path.join(process.cwd(), "data");
 const uploadsDir = path.join(dataDir, "uploads");
 const blogDir = path.join(process.cwd(), "blog");
-const privatePassword = process.env.SEED_PRIVATE_PASSWORD ?? null;
 
 const MIME: Record<string, string> = {
   ".png": "image/png",
@@ -115,7 +114,6 @@ const parseFile = async (file: string) => {
     tags,
     publishedAt,
     isEncrypted: Boolean(data.passwordHash || data.password),
-    passwordHint: data.passwordHint ? String(data.passwordHint) : null,
   };
 };
 
@@ -128,10 +126,8 @@ let imported = 0;
 for (const file of files) {
   const post = await parseFile(file);
 
-  const secret = post.isEncrypted && privatePassword
-    ? sealSecret(post.body, privatePassword, post.passwordHint)
-    : null;
-  const status = post.isEncrypted ? (secret ? "private" : "draft") : "published";
+  const secret = post.isEncrypted ? sealBody(post.body) : null;
+  const status = post.isEncrypted ? "private" : "published";
 
   const { rows } = await client.query<{ id: string }>(
     `insert into posts (slug, title, description, body, secret, excerpt, status, published_at)
@@ -176,9 +172,6 @@ for (const file of files) {
   console.log(`${status === "published" ? "✓" : "⚠"} ${post.slug} → ${status}`);
 }
 
-console.log(`\n导入 ${imported} 篇。`);
-if (!privatePassword) {
-  console.log("未设置 SEED_PRIVATE_PASSWORD：加密文章被导入为草稿，需在后台重设密码后发布为私有笔记。");
-}
+console.log(`\n导入 ${imported} 篇。加密文章为私有笔记：正文加密存库，登录后台即可阅读。`);
 
 await client.end();

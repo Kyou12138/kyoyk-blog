@@ -23,8 +23,6 @@ const MESSAGES: Record<string, string> = {
   "slug-taken": "这个 slug 已经被占用了。",
   title: "标题不能为空。",
   status: "状态不合法。",
-  password: "私有笔记必须设置密码。",
-  body: "私有笔记需要重新输入正文。",
   db: "写入数据库失败，请看服务端日志。",
   file: "没有选择文件。",
   "file-type": "只接受 8 MB 以内的图片。",
@@ -42,7 +40,6 @@ export default function PostEditor({
   notice?: string;
   error?: string;
 }) {
-  const isPrivate = post?.status === "private";
   const [body, setBody] = useState(post?.body ?? "");
   const [title, setTitle] = useState(post?.title ?? "");
   const [preview, setPreview] = useState<string | null>(null);
@@ -156,7 +153,7 @@ export default function PostEditor({
             <select id="status" name="status" defaultValue={post?.status ?? "draft"}>
               <option value="draft">草稿</option>
               <option value="published">已发布</option>
-              <option value="private">私有笔记（加密）</option>
+              <option value="private">私有笔记（加密存库，仅自己可见）</option>
             </select>
           </div>
           <div className="field">
@@ -185,18 +182,6 @@ export default function PostEditor({
           />
         </div>
 
-        <details className="panel" style={{ marginBottom: "1rem" }}>
-          <summary style={{ cursor: "pointer" }}>私有笔记密码（仅状态为「私有笔记」时使用）</summary>
-          <div className="field" style={{ marginTop: "0.8rem" }}>
-            <label htmlFor="password">密码</label>
-            <input id="password" name="password" type="password" autoComplete="new-password" />
-          </div>
-          <div className="field">
-            <label htmlFor="hint">密码提示</label>
-            <input id="hint" name="hint" defaultValue={post?.secret?.hint ?? ""} />
-          </div>
-        </details>
-
         <div className="editor">
           <div className="editor__pane">
             <div className="editor__bar">
@@ -223,11 +208,7 @@ export default function PostEditor({
               value={body}
               onChange={(event) => setBody(event.target.value)}
               onPaste={handlePaste}
-              placeholder={
-                isPrivate
-                  ? "这篇是私有笔记，正文需要重新输入，保存时用上面的密码重新加密。"
-                  : "支持 Markdown 与 HTML；可直接粘贴剪贴板里的截图"
-              }
+              placeholder="支持 Markdown 与 HTML；可直接粘贴剪贴板里的截图"
             />
           </div>
 

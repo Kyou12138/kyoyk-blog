@@ -1,4 +1,4 @@
-import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 
 const KEY_LENGTH = 32;
 const SCRYPT = { N: 16384, r: 8, p: 1, maxmem: 64 * 1024 * 1024 };
@@ -52,25 +52,3 @@ export const verifyToken = (token: string | undefined, scope = "admin"): boolean
   return expected.length === actual.length && timingSafeEqual(expected, actual);
 };
 
-const cacheKey = (): Buffer => createHash("sha256").update(`note-key:${secret()}`).digest();
-
-/** 把私密笔记的派生密钥封进 cookie，避免每次刷新都重新输密码。 */
-export const sealNoteKey = (key: Buffer): string => {
-  const iv = randomBytes(12);
-  const cipher = createCipheriv("aes-256-gcm", cacheKey(), iv);
-  const ct = Buffer.concat([cipher.update(key), cipher.final()]);
-  return [iv.toString("base64url"), ct.toString("base64url"), cipher.getAuthTag().toString("base64url")].join(".");
-};
-
-export const openNoteKey = (token: string | undefined): Buffer | null => {
-  if (!token) return null;
-  const [iv, ct, tag] = token.split(".");
-  if (!iv || !ct || !tag) return null;
-  try {
-    const decipher = createDecipheriv("aes-256-gcm", cacheKey(), Buffer.from(iv, "base64url"));
-    decipher.setAuthTag(Buffer.from(tag, "base64url"));
-    return Buffer.concat([decipher.update(Buffer.from(ct, "base64url")), decipher.final()]);
-  } catch {
-    return null;
-  }
-};

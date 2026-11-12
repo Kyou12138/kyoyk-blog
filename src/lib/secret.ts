@@ -1,24 +1,7 @@
-import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 
-export type SecretPayload = {
-  ct: string;
-  iv: string;
-  tag: string;
-  salt: string;
-  iterations: number;
-  hint: string | null;
-};
-
-const KEY_LENGTH = 32;
-const ITERATIONS = 16384;
-
-export const deriveKey = (password: string, salt: Buffer): Buffer =>
-  scryptSync(password.normalize("NFKC"), salt, KEY_LENGTH, {
-    N: ITERATIONS,
-    r: 8,
-    p: 1,
-    maxmem: 64 * 1024 * 1024,
-  });
+/** 私有笔记的密文：只有加密后的三段，密钥由服务端 AUTH_SECRET 派生。 */
+export type SecretPayload = { ct: string; iv: string; tag: string };
 
 export const sealWithKey = (plaintext: string, key: Buffer): { ct: string; iv: string; tag: string } => {
   const iv = randomBytes(12);
@@ -31,7 +14,7 @@ export const sealWithKey = (plaintext: string, key: Buffer): { ct: string; iv: s
   };
 };
 
-/** 密码错误或密文被改动时返回 null（GCM tag 校验失败）。 */
+/** 密钥不对或密文被改动时返回 null（GCM tag 校验失败）。 */
 export const openWithKey = (
   secret: Pick<SecretPayload, "ct" | "iv" | "tag">,
   key: Buffer,
@@ -46,12 +29,15 @@ export const openWithKey = (
   }
 };
 
-/** 保存私有笔记时使用：密码派生密钥，盐与迭代次数随密文一起入库。 */
-export const sealSecret = (plaintext: string, password: string, hint: string | null = null): SecretPayload => {
-  const salt = randomBytes(16);
-  const sealed = sealWithKey(plaintext, deriveKey(password, salt));
-  return { ...sealed, salt: salt.toString("base64"), iterations: ITERATIONS, hint };
+const bodyKey = (): Buffer => {
+  const value = process.env.AUTH_SECRET;
+  if (!value || value.length < 16) {
+    throw new Error("缺少 AUTH_SECRET（至少 16 字符），请在环境变量中配置。");
+  }
+  return createHash("sha256").update(`note-body:${value}`).digest();
 };
 
-export const openSecret = (secret: SecretPayload, password: string): string | null =>
-  openWithKey(secret, deriveKey(password, Buffer.from(secret.salt, "base64")));
+/** 私有笔记正文用服务端密钥加密存库：库里和备份里都不是明文，登录后台即可解密阅读。 */
+export const sealBody = (plaintext: string): SecretPayload => sealWithKey(plaintext, bodyKey());
+
+export const openBody = (payload: SecretPayload): string | null => openWithKey(payload, bodyKey());

@@ -25,7 +25,7 @@ npm run auth:hash -- '你的密码'
 
 | 表 | 用途 |
 |---|---|
-| `posts` | 笔记本体。`status` 为 `draft` / `published` / `private`；私有时正文在 `secret`（AES-256-GCM），`body` 为空 |
+| `posts` | 笔记本体。`status` 为 `draft` / `published` / `private`；私有时正文只存在 `secret`（AES-256-GCM，密钥由 `AUTH_SECRET` 派生），`body` 为空 |
 | `tags` / `post_tags` | 自由多值标签 |
 | `post_revisions` | 每次保存留一份快照 |
 | `assets` | 上传图片的 sha256 索引，文件本身在 `DATA_DIR/uploads` |

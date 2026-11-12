@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { verifyPassword } from "@/lib/auth";
+import { sealBody } from "@/lib/secret";
 import { plainExcerpt } from "@/lib/markdown";
-import { deletePost, getPostById, savePost, type PostStatus } from "@/lib/posts";
-import { sealSecret } from "@/lib/secret";
+import { deletePost, savePost, type PostStatus } from "@/lib/posts";
 import { endSession, requireAdmin, startSession } from "@/lib/session";
 
 const text = (form: FormData, key: string): string => String(form.get(key) ?? "").trim();
@@ -41,8 +41,6 @@ export async function savePostAction(formData: FormData) {
     .filter(Boolean);
   const publishedInput = optional(formData, "publishedAt");
   const publishedAt = publishedInput ? new Date(publishedInput).toISOString() : null;
-  const password = optional(formData, "password");
-  const hint = optional(formData, "hint");
 
   const back = id ? `/admin/posts/${id}` : "/admin/posts/new";
 
@@ -56,23 +54,10 @@ export async function savePostAction(formData: FormData) {
     redirect(`${back}?error=status`);
   }
 
-  const existing = id ? await getPostById(id) : null;
   const body = optional(formData, "body") ?? "";
-
-  let secret = existing?.secret ?? null;
-  let storedBody: string | null = body;
-
-  if (status === "private") {
-    if (password) {
-      secret = sealSecret(body, password, hint);
-    }
-    if (!secret) {
-      redirect(`${back}?error=password`);
-    }
-    storedBody = null;
-  } else {
-    secret = null;
-  }
+  // 私有笔记只存密文；解密密钥由服务端派生，登录后自动可读，不再需要第二个密码。
+  const secret = status === "private" ? sealBody(body) : null;
+  const storedBody: string | null = status === "private" ? null : body;
 
   const savedId = await savePost({
     id: id ?? undefined,
