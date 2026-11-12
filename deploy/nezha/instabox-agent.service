@@ -1,0 +1,15 @@
+[Unit]
+Description=Nezha resource monitoring
+Wants=network-online.target nezha-tunnel.service
+After=network-online.target nezha-tunnel.service
+StartLimitIntervalSec=0
+
+[Service]
+WorkingDirectory=/opt/nezha-agent
+ExecStart=/opt/nezha-agent/nezha-agent -c /opt/nezha-agent/config.yml
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

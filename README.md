@@ -55,6 +55,15 @@ docker compose -f deploy/compose.ecs.yaml --env-file .env up -d --build
 - TSDB 配置 `data_path: /dashboard/data/tsdb`、`retention_days: 90`、`max_memory_mb: 64`。当前上游 API 提供 1/7/30 天查询；采样从安装时开始，不回填旧数据。页面 5 秒更新实时读数、60 秒更新选中的历史指标，隐藏标签页暂停请求。
 - 公共子域 `status.kythron.com` 跳回博客 `/status`。Nezha 管理面板不通过该子域开放；维护可用 SSH 本地转发 `ssh -L 18008:127.0.0.1:8008 <server>` 后访问 `http://localhost:18008/dashboard`。无需 GitHub OAuth。
 - 部署描述见 `deploy/nezha/compose.yaml`（复制到 `/opt/nezha/docker-compose.yml`，保留原 `data/`）。本机 agent 通过 loopback 上报；额外机器需先建立到 Dashboard 的私网或 SSH 转发通道，不能把公开状态页当作 agent 接入地址。
+
+### Instabox 主机
+
+当前额外接入 3 台 Instabox 沙箱（`claude-code-7x24`、`claude-code-7x24-1`、`k-1`）。它们不在 ECS 内网，因此每台用一条反向受限的 SSH 本地转发把 Dashboard 映射到自己的 `127.0.0.1:18008`：
+
+- ECS 上存在系统用户 `nezha-tunnel`，`/etc/ssh/sshd_config.d/60-nezha-tunnel.conf` 限定它只能公钥登录、只能转发到 `127.0.0.1:8008`、无 TTY 无 shell。每台机器的公钥单独授权，注释即机器名，删除对应行即可吊销。
+- 每台机器上两个 systemd 单元（本目录的 `instabox-tunnel.service` / `instabox-agent.service`）开机自启并在断开后 10 秒重连；`/opt/nezha-agent` 存放 agent、独立密钥和 0600 配置（含 agent 密钥）。
+- 沙箱休眠时 agent 上报中断，页面显示离线并附最后读数；恢复后转发重建，无需手工干预。
+- 新增机器：复用同样两个单元，按机器名新建一对密钥并在 ECS 的 `authorized_keys` 追加一行，再为该机器准备一份 `config.yml`（uuid 随机、`server: 127.0.0.1:18008`）。
 - 每日备份会短暂停止 Dashboard，对 SQLite 和 TSDB 一起打包再恢复，避免不一致热备。博客保持运行；采集中断期间的数据不会回填。部署后 cron 调用 `bash /opt/blog/deploy/backup-daily.sh`。
 - 验证：`npm run selfcheck`；访问控制可运行 `node --experimental-strip-types scripts/probe-check.mts http://localhost:3101`。
 
