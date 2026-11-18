@@ -6,7 +6,7 @@ import { verifyPassword } from "@/lib/auth";
 import { sealBody } from "@/lib/secret";
 import { plainExcerpt } from "@/lib/markdown";
 import { deletePost, savePost, type PostStatus } from "@/lib/posts";
-import { endSession, requireAdmin, startSession } from "@/lib/session";
+import { endSession, isAdmin, requireAdmin, startSession } from "@/lib/session";
 
 const text = (form: FormData, key: string): string => String(form.get(key) ?? "").trim();
 const optional = (form: FormData, key: string): string | null => text(form, key) || null;
@@ -28,8 +28,8 @@ export async function logoutAction() {
   redirect("/admin/login");
 }
 
-export async function savePostAction(formData: FormData) {
-  await requireAdmin();
+export async function savePostAction(formData: FormData): Promise<{ id: string } | { error: string }> {
+  if (!(await isAdmin())) return { error: "unauthorized" };
 
   const id = optional(formData, "id");
   const slug = text(formData, "slug").toLowerCase();
@@ -40,18 +40,18 @@ export async function savePostAction(formData: FormData) {
     .map((tag) => tag.trim())
     .filter(Boolean);
   const publishedInput = optional(formData, "publishedAt");
-  const publishedAt = publishedInput ? new Date(publishedInput).toISOString() : null;
-
-  const back = id ? `/admin/posts/${id}` : "/admin/posts/new";
+  const timestamp = publishedInput ? Date.parse(`${publishedInput}+08:00`) : null;
+  if (timestamp !== null && !Number.isFinite(timestamp)) return { error: "date" };
+  const publishedAt = timestamp === null ? null : new Date(timestamp).toISOString();
 
   if (!/^[a-z0-9][a-z0-9-]*$/.test(slug)) {
-    redirect(`${back}?error=slug`);
+    return { error: "slug" };
   }
   if (!title) {
-    redirect(`${back}?error=title`);
+    return { error: "title" };
   }
   if (!["draft", "published", "private"].includes(status)) {
-    redirect(`${back}?error=status`);
+    return { error: "status" };
   }
 
   const body = optional(formData, "body") ?? "";
@@ -59,25 +59,20 @@ export async function savePostAction(formData: FormData) {
   const secret = status === "private" ? sealBody(body) : null;
   const storedBody: string | null = status === "private" ? null : body;
 
-  const savedId = await savePost({
-    id: id ?? undefined,
-    slug,
-    title,
-    description: optional(formData, "description"),
-    body: storedBody,
-    secret,
-    excerpt: plainExcerpt(body),
-    status,
-    publishedAt: status === "draft" ? publishedAt : (publishedAt ?? new Date().toISOString()),
-    tags,
-  }).catch((error: unknown) => {
-    const message = error instanceof Error ? error.message : "";
-    redirect(`${back}?error=${message.includes("posts_slug_key") ? "slug-taken" : "db"}`);
-  });
-
+  let savedId: string;
+  try {
+    savedId = await savePost({
+      id: id ?? undefined, slug, title, status, tags,
+      description: optional(formData, "description"),
+      body: storedBody, secret, excerpt: status === "private" ? null : plainExcerpt(body),
+      publishedAt: status === "draft" ? publishedAt : (publishedAt ?? new Date().toISOString()),
+    });
+  } catch (error) {
+    return { error: (error as { constraint?: string }).constraint === "posts_slug_key" ? "slug-taken" : "db" };
+  }
   revalidatePath("/blog");
   revalidatePath("/");
-  redirect(`/admin/posts/${savedId}?saved=1`);
+  return { id: savedId };
 }
 
 export async function deletePostAction(formData: FormData) {

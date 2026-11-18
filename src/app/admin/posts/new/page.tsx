@@ -6,13 +6,8 @@ import { requireAdmin } from "@/lib/session";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "写新笔记", robots: { index: false } };
 
-export default async function NewPostPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>;
-}) {
+export default async function NewPostPage() {
   await requireAdmin();
-  const { error } = await searchParams;
 
   return (
     <div>
@@ -24,7 +19,7 @@ export default async function NewPostPage({
           </Link>
         </div>
       </header>
-      <PostEditor post={null} error={error} />
+      <PostEditor post={null} />
     </div>
   );
 }

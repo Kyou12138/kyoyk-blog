@@ -45,7 +45,7 @@ export default function ReadingTools() {
         className={visible ? "to-top is-visible" : "to-top"}
         aria-label="回到顶部"
         tabIndex={visible ? 0 : -1}
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => window.scrollTo({ top: 0 })}
       >
         ↑
       </button>

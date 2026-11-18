@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { deletePostAction, savePostAction } from "@/app/admin/actions";
 import { dateParts } from "@/lib/format";
@@ -23,7 +23,8 @@ const MESSAGES: Record<string, string> = {
   "slug-taken": "这个 slug 已经被占用了。",
   title: "标题不能为空。",
   status: "状态不合法。",
-  db: "写入数据库失败，请看服务端日志。",
+  db: "保存失败，请重试。输入已保留。",
+  date: "请输入有效的发布时间。",
   file: "没有选择文件。",
   "file-type": "只接受 8 MB 以内的图片。",
   unauthorized: "登录已过期，请重新登录。",
@@ -31,18 +32,21 @@ const MESSAGES: Record<string, string> = {
 
 export default function PostEditor({
   post,
-  viewHref,
+  initialHtml = "",
   notice,
-  error,
 }: {
-  post: Post | null;
-  viewHref?: string;
+  post: Pick<Post, "id" | "slug" | "title" | "body" | "status" | "tags" | "description" | "publishedAt"> | null;
+  initialHtml?: string;
   notice?: string;
-  error?: string;
 }) {
   const [body, setBody] = useState(post?.body ?? "");
   const [title, setTitle] = useState(post?.title ?? "");
-  const [preview, setPreview] = useState<string | null>(null);
+  const router = useRouter();
+  const [preview, setPreview] = useState(initialHtml);
+  const [previewError, setPreviewError] = useState("");
+  const [saveError, setSaveError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const unchanged = body === (post?.body ?? "") && title === (post?.title ?? "");
   const [status, setStatus] = useState<string>("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -68,14 +72,18 @@ export default function PostEditor({
       setStatus("正在上传图片…");
       const data = new FormData();
       data.append("file", file);
-      const response = await fetch("/api/admin/upload", { method: "POST", body: data });
-      const payload = (await response.json().catch(() => ({}))) as { url?: string; error?: string };
-      if (!response.ok || !payload.url) {
-        setStatus(MESSAGES[payload.error ?? ""] ?? "上传失败。");
-        return;
+      try {
+        const response = await fetch("/api/admin/upload", { method: "POST", body: data });
+        const payload = await response.json() as { url?: string; error?: string };
+        if (!response.ok || !payload.url) {
+          setStatus(MESSAGES[payload.error ?? ""] ?? "上传失败，请重试。");
+          return;
+        }
+        insert(`![](${payload.url})\n`);
+        setStatus("图片已插入正文。");
+      } catch {
+        setStatus("上传失败，请检查连接后重试。");
       }
-      insert(`![](${payload.url})\n`);
-      setStatus("图片已插入正文。");
     },
     [insert],
   );
@@ -94,6 +102,11 @@ export default function PostEditor({
   };
 
   useEffect(() => {
+    setPreviewError("");
+    if (unchanged) {
+      setPreview(initialHtml);
+      return;
+    }
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
       try {
@@ -103,10 +116,12 @@ export default function PostEditor({
           body: JSON.stringify({ markdown: body, title }),
           signal: controller.signal,
         });
-        const payload = (await response.json()) as { html?: string };
-        setPreview(payload.html ?? "");
+        if (response.status === 401) { setPreviewError(MESSAGES.unauthorized); return; }
+        if (!response.ok) throw new Error();
+        const { html } = await response.json() as { html: string };
+        if (!controller.signal.aborted) setPreview(html);
       } catch {
-        /* 取消或网络失败时保留上一次预览 */
+        if (!controller.signal.aborted) setPreviewError("预览更新失败，保留上次预览。");
       }
     }, 400);
 
@@ -114,19 +129,37 @@ export default function PostEditor({
       window.clearTimeout(timer);
       controller.abort();
     };
-  }, [body, title]);
+  }, [body, title, unchanged, initialHtml]);
+
+  async function save(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (saving) return;
+    setSaving(true);
+    setSaveError("");
+    try {
+      const result = await savePostAction(new FormData(event.currentTarget));
+      if ("error" in result) setSaveError(MESSAGES[result.error] ?? MESSAGES.db);
+      else {
+        router.replace(`/admin/posts/${result.id}?saved=1`);
+        router.refresh();
+      }
+    } catch {
+      setSaveError("未能确认保存结果，请检查连接。输入已保留。");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div className="editor-studio">
       {notice && <p className="notice">{notice}</p>}
-      {error && MESSAGES[error] && (
-        <p className="error" role="alert">
-          {MESSAGES[error]}
-        </p>
+      {saveError && <p className="error" role="alert">{saveError}</p>}
+      {status && <p className="notice" role="status">{status}</p>}
+      {[saveError, status, previewError].includes(MESSAGES.unauthorized) && (
+        <a href="/admin/login" target="_blank" rel="noopener noreferrer">在新标签页登录</a>
       )}
-      {status && <p className="notice">{status}</p>}
 
-      <form id="post-editor-form" action={savePostAction} className="editor-form">
+      <form id="post-editor-form" onSubmit={save} className="editor-form">
         {post && <input type="hidden" name="id" value={post.id} />}
 
         <div className="field editor-title-field">
@@ -187,7 +220,7 @@ export default function PostEditor({
         <div className="editor">
           <div className="editor__pane">
             <div className="editor__bar">
-              <span>Markdown · {body.length} 字</span>
+              <label htmlFor="body">Markdown · {body.length} 字</label>
               <button
                 className="button button--ghost button--sm"
                 type="button"
@@ -198,6 +231,8 @@ export default function PostEditor({
               <input
                 ref={fileRef}
                 type="file"
+                aria-label="选择图片"
+                tabIndex={-1}
                 accept="image/*"
                 onChange={handleFile}
                 className="sr-only"
@@ -216,12 +251,11 @@ export default function PostEditor({
 
           <div className="editor__pane">
             <div className="editor__bar">
-              <span>预览{preview === null ? " · 渲染中" : ""}</span>
+              <span>预览</span>
             </div>
+            {previewError && <p className="error" role="status">{previewError}</p>}
             <div className="editor__preview prose">
-              {preview === null ? (
-                <p className="muted">渲染中…</p>
-              ) : preview.trim() ? (
+              {preview.trim() ? (
                 <div dangerouslySetInnerHTML={{ __html: preview }} />
               ) : (
                 <p className="muted">空白画布。</p>
@@ -233,14 +267,9 @@ export default function PostEditor({
 
       <div className="editor-actions">
         <div className="editor-actions__left">
-          <button form="post-editor-form" className="button button--primary" type="submit">
-            {post ? "保存更改" : "创建笔记"}
+          <button form="post-editor-form" className="button button--primary" type="submit" disabled={saving}>
+            {saving ? "保存中…" : post ? "保存更改" : "创建笔记"}
           </button>
-          {post && viewHref && (
-            <Link className="button button--ghost" href={viewHref}>
-              前台查看 ↗
-            </Link>
-          )}
         </div>
 
         {post && (

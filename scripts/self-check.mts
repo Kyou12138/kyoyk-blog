@@ -69,6 +69,9 @@ assert.match(robotsSource, /sitemap:\s*`\$\{SITE_URL\}\/sitemap\.xml`/);
 const layoutSource = readFileSync("src/app/layout.tsx", "utf8");
 assert.match(layoutSource, /icons:\s*\{/);
 assert.match(layoutSource, /kyou-social-card\.png/);
+const shareImage = readFileSync("public/img/kyou-social-card.png");
+assert.deepEqual([shareImage.readUInt32BE(16), shareImage.readUInt32BE(20)], [1200, 630]);
+assert.ok(shareImage.length < 200_000, "分享图应小于 200 KB");
 assert.match(layoutSource, /summary_large_image/);
 
 // 404 兜底页守卫

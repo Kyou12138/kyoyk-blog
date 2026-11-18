@@ -12,7 +12,7 @@ const escape = (value: string): string =>
     .replace(/'/g, "&apos;");
 
 export async function GET() {
-  const posts = await listPosts({ limit: 50 });
+  const posts = (await listPosts()).slice(0, 50);
 
   const items = posts
     .map((post) => {
@@ -43,7 +43,7 @@ ${items}
   return new Response(xml, {
     headers: {
       "content-type": "application/rss+xml; charset=utf-8",
-      "cache-control": "public, max-age=600",
+      "cache-control": "no-store",
     },
   });
 }

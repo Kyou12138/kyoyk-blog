@@ -50,10 +50,9 @@
 /* Museum Lithographic Plate */
 .plate {
   margin: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-xs);
+  border: 1px solid var(--border);
+  padding: clamp(0.35rem, 0.9vw, 0.75rem);
   background: var(--surface);
-  overflow: hidden;
 }
 
 .artFrame {
@@ -114,8 +113,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.68rem 1rem;
-  border-top: 1px solid var(--border);
+  padding: 0.68rem 0.2rem 0.15rem;
   background: var(--surface);
   font-family: var(--font-mono);
   font-size: var(--text-xs);

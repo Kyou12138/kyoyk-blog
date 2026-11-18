@@ -129,6 +129,7 @@ for (const file of files) {
   const secret = post.isEncrypted ? sealBody(post.body) : null;
   const status = post.isEncrypted ? "private" : "published";
 
+  await client.query("begin");
   const { rows } = await client.query<{ id: string }>(
     `insert into posts (slug, title, description, body, secret, excerpt, status, published_at)
      values ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -148,7 +149,7 @@ for (const file of files) {
       post.description,
       secret ? null : post.body,
       secret,
-      post.excerpt,
+      secret ? null : post.excerpt,
       status,
       post.publishedAt,
     ],
@@ -168,6 +169,7 @@ for (const file of files) {
     ]);
   }
 
+  await client.query("commit");
   imported += 1;
   console.log(`${status === "published" ? "✓" : "⚠"} ${post.slug} → ${status}`);
 }

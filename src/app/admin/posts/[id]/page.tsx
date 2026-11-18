@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PostEditor from "@/components/PostEditor";
+import { renderPost } from "@/lib/markdown";
 import { openBody } from "@/lib/secret";
 import { getPostById, permalink } from "@/lib/posts";
 import { requireAdmin } from "@/lib/session";
@@ -14,20 +15,18 @@ export default async function EditPostPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string; saved?: string }>;
+  searchParams: Promise<{ saved?: string }>;
 }) {
   await requireAdmin();
 
   const { id } = await params;
-  const { error, saved } = await searchParams;
+  const { saved } = await searchParams;
   const post = await getPostById(id);
 
   if (!post) notFound();
 
-  const draftBody =
-    post.status === "private" && post.secret
-      ? (openBody(post.secret) ?? "")
-      : (post.body ?? "");
+  const draftBody = post.status === "private" && post.secret ? openBody(post.secret) : post.body;
+  if (draftBody === null) return <p role="alert">无法读取这篇笔记的正文，已停止编辑以保护原稿。</p>;
 
   const frontHref = post.status !== "draft" ? permalink(post) : undefined;
 
@@ -47,9 +46,10 @@ export default async function EditPostPage({
         </div>
       </header>
       <PostEditor
-        post={{ ...post, body: draftBody }}
-        viewHref={frontHref}
-        error={error}
+        key={post.id}
+        post={{ id: post.id, slug: post.slug, title: post.title, status: post.status, tags: post.tags,
+          description: post.description, publishedAt: post.publishedAt, body: draftBody }}
+        initialHtml={renderPost(draftBody, post.title).html}
         notice={saved ? "已保存。" : undefined}
       />
     </div>

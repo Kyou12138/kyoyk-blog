@@ -1,13 +1,11 @@
 const DATE_TZ = "Asia/Shanghai";
+const dateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: DATE_TZ, year: "numeric", month: "2-digit", day: "2-digit",
+});
 
 /** 固定按东八区计算，避免服务器时区影响 permalink。 */
 export const dateParts = (iso: string): { year: string; month: string; day: string } => {
-  const formatted = new Intl.DateTimeFormat("en-CA", {
-    timeZone: DATE_TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(iso));
+  const formatted = dateFormatter.format(new Date(iso));
   const [year, month, day] = formatted.split("-");
   return { year, month, day };
 };

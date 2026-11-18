@@ -11,7 +11,7 @@ const stack = [
     code: "01",
     title: "Next.js 15 Standalone",
     href: "https://nextjs.org/docs",
-    why: "单机轻量容器化部署，借 App Router 与 Server Actions 实现零客户端胶水代码的原子写入，Standalone 镜像体积压至 60MB。",
+    why: "页面由服务端渲染，编辑器通过 Server Actions 保存笔记。Standalone 构建只打包运行需要的文件。",
   },
   {
     code: "02",
@@ -29,7 +29,7 @@ const stack = [
     code: "04",
     title: "私有笔记封存 (AES-256-GCM)",
     href: "https://nodejs.org/api/crypto.html#class-aesgcm",
-    why: "私有笔记入库前以服务端派生密钥加密为密文与认证标签，未登录请求一律返回 404，杜绝存在性侧信道。",
+    why: "私有笔记入库前以服务端派生密钥加密为密文与认证标签，只有登录后的作者可以解密阅读。",
   },
   {
     code: "05",

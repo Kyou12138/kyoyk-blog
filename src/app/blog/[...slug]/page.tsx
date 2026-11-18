@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import CodeCopyButtons from "@/components/CodeCopyButtons";
 import ReadingTools from "@/components/ReadingTools";
 import TableOfContents from "@/components/TableOfContents";
@@ -14,10 +15,16 @@ export const dynamic = "force-dynamic";
 
 type PageProps = { params: Promise<{ slug: string[] }> };
 
+const readVisiblePost = cache(async (slug: string) => {
+  const [post, admin] = await Promise.all([getPostBySlug(slug), isAdmin()]);
+  if (!post || (post.status !== "published" && !admin) || (post.status === "private" && !post.secret)) notFound();
+  return { post, admin };
+});
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getPostBySlug(slug.at(-1) ?? "");
-  if (!post) return { title: "笔记不存在" };
+  const { post } = await readVisiblePost(slug.at(-1) ?? "");
+  if (post.status !== "published") return { title: "编辑预览", robots: { index: false, follow: false } };
   return {
     title: post.title,
     description: post.description ?? post.excerpt ?? undefined,
@@ -33,12 +40,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug.at(-1) ?? "");
-
-  if (!post) notFound();
-  const admin = await isAdmin();
-  if (post.status === "draft" && !admin) notFound();
-  if (post.status === "private" && (!post.secret || !admin)) notFound();
+  const { post, admin } = await readVisiblePost(slug.at(-1) ?? "");
 
   const source =
     post.status === "private" && post.secret ? (openBody(post.secret) ?? "") : (post.body ?? "");

@@ -1,5 +1,4 @@
 import { query, getPool } from "./db";
-import { dateParts } from "./format";
 import type { SecretPayload } from "./secret";
 
 export type PostStatus = "draft" | "published" | "private";
@@ -60,12 +59,15 @@ const toSummary = (row: Row): PostSummary => ({
 
 export { permalink } from "./format";
 
-export const listPosts = async (options?: {
+type ListOptions = {
   keyword?: string;
   tag?: string;
   includeUnpublished?: boolean;
   limit?: number;
-}): Promise<PostSummary[]> => {
+};
+
+const DEFAULT_LIMIT = 200;
+const readRows = async (options?: ListOptions) => {
   const params: unknown[] = [];
   const where: string[] = [];
 
@@ -90,21 +92,43 @@ export const listPosts = async (options?: {
     )`);
   }
 
-  params.push(Math.min(options?.limit ?? 200, 500));
+  params.push(Math.min(options?.limit ?? DEFAULT_LIMIT, 500));
 
-  const { rows } = await query<Row>(
-    `select ${SUMMARY_COLUMNS}
+  const { rows } = await query<Row & { revision: string }>(
+    `select ${SUMMARY_COLUMNS}, p.xmin::text as revision
      from posts p
      left join post_tags pt on pt.post_id = p.id
      left join tags t on t.id = pt.tag_id
      ${where.length ? `where ${where.join(" and ")}` : ""}
-     group by p.id
-     order by coalesce(p.published_at, p.created_at) desc
+     group by p.id, p.xmin
+     order by coalesce(p.published_at, p.created_at) desc, p.id
      limit $${params.length}`,
     params,
   );
 
-  return rows.map(toSummary);
+  return rows;
+};
+
+// Cache only the public archive. Each save (including tag edits) updates the post in the same transaction.
+// PostgreSQL row versions also catch writes by the importer and other app instances.
+let publicArchive: { versions: string[]; posts: PostSummary[] } | undefined;
+
+export const listPosts = async (options?: ListOptions): Promise<PostSummary[]> => {
+  if (options) return (await readRows(options)).map(toSummary);
+  const cached = publicArchive;
+  if (cached) {
+    const { rows } = await query<{ version: string }>(
+      `select id::text || ':' || xmin::text as version from posts where status = 'published'
+       order by coalesce(published_at, created_at) desc, id limit $1`, [DEFAULT_LIMIT],
+    );
+    if (rows.length === cached.versions.length && rows.every((row, i) => row.version === cached.versions[i])) {
+      return cached.posts;
+    }
+  }
+  const rows = await readRows();
+  const posts = rows.map(toSummary);
+  publicArchive = { posts, versions: rows.map((row) => row.id + ":" + row.revision) };
+  return posts;
 };
 
 export const getPostBySlug = async (slug: string): Promise<Post | null> => {

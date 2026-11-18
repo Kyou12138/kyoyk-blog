@@ -23,6 +23,7 @@ tmp/
 .DS_Store
 *.log
 .codegraph/
+.pi/
 
 # cloudflared 隧道凭证（只存在于服务器）
 deploy/cloudflared/credentials.json

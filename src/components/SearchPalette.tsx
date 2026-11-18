@@ -8,7 +8,6 @@ type IndexItem = {
   href: string;
   tags: string[];
   excerpt: string;
-  date: string | null;
 };
 
 const highlight = (text: string, keyword: string): React.ReactNode => {
@@ -30,7 +29,8 @@ export default function SearchPalette() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<IndexItem[] | null>(null);
   const [active, setActive] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,7 +40,6 @@ export default function SearchPalette() {
         setOpen((value) => !value);
         return;
       }
-      if (event.key === "Escape") setOpen(false);
     };
     const onOpen = () => setOpen(true);
 
@@ -54,22 +53,26 @@ export default function SearchPalette() {
 
   useEffect(() => {
     if (!open) return;
+    const dialog = dialogRef.current!;
+    const trigger = document.activeElement;
+    const controller = new AbortController();
+    dialog.showModal();
     setActive(0);
-    const timer = window.setTimeout(() => inputRef.current?.focus(), 20);
-    document.body.style.overflow = "hidden";
+    setItems(null);
+    setLoadFailed(false);
+    fetch("/api/search-index", { cache: "no-store", signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error();
+        return res.json() as Promise<IndexItem[]>;
+      })
+      .then((data) => { if (!controller.signal.aborted) setItems(data); })
+      .catch(() => { if (!controller.signal.aborted) setLoadFailed(true); });
     return () => {
-      window.clearTimeout(timer);
-      document.body.style.overflow = "";
+      controller.abort();
+      dialog.close();
+      if (trigger instanceof HTMLElement) trigger.focus({ preventScroll: true });
     };
   }, [open]);
-
-  useEffect(() => {
-    if (!open || items) return;
-    fetch("/api/search-index")
-      .then((res) => res.json())
-      .then((data: IndexItem[]) => setItems(data))
-      .catch(() => setItems([]));
-  }, [open, items]);
 
   const results = useMemo(() => {
     const keyword = query.trim().toLowerCase();
@@ -110,8 +113,9 @@ export default function SearchPalette() {
   if (!open) return null;
 
   return (
-    <div className="palette" role="dialog" aria-modal="true" aria-label="搜索笔记">
-      <div className="palette__backdrop" onClick={() => setOpen(false)} />
+    <dialog className="palette" ref={dialogRef} aria-label="搜索笔记"
+      onCancel={() => setOpen(false)}
+      onClick={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
       <div className="palette__panel">
         <div className="palette__field">
           <svg
@@ -130,23 +134,22 @@ export default function SearchPalette() {
             <path d="M20 20l-3.8-3.8" />
           </svg>
           <input
-            ref={inputRef}
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);
               setActive(0);
             }}
             onKeyDown={onInputKey}
-            placeholder="检索笔记标题、标签或正文…"
+            placeholder="搜索标题、标签或摘要…"
             aria-label="搜索关键词"
           />
           <button type="button" className="palette__esc" onClick={() => setOpen(false)}>
-            ESC
+            关闭
           </button>
         </div>
 
         <ul className="palette__list">
-          {items === null && <li className="palette__empty">索引加载中…</li>}
+          {items === null && <li role="status" className="palette__empty">{loadFailed ? "搜索暂不可用，请重新打开重试。" : "索引加载中…"}</li>}
           {items !== null && results.length === 0 && (
             <li className="palette__empty">无匹配笔记</li>
           )}
@@ -188,6 +191,6 @@ export default function SearchPalette() {
           </span>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

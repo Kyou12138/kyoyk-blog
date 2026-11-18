@@ -14,10 +14,8 @@ export default function TableOfContents({ headings }: Props) {
   useEffect(() => {
     if (headings.length === 0) return;
 
+    const elements = document.querySelectorAll<HTMLElement>(".prose h2, .prose h3");
     const findActive = () => {
-      const elements = Array.from(
-        document.querySelectorAll<HTMLElement>(".prose h2, .prose h3"),
-      );
       if (elements.length === 0) return;
 
       const topOffset = 130; // 顶部导航与边距的基准线
@@ -65,8 +63,12 @@ export default function TableOfContents({ headings }: Props) {
   useEffect(() => {
     if (!activeId || !tocRef.current) return;
     const activeEl = tocRef.current.querySelector<HTMLElement>(`a[href="#${CSS.escape(activeId)}"]`);
-    if (activeEl) {
-      activeEl.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    const toc = tocRef.current;
+    if (activeEl && toc.clientHeight) {
+      const row = activeEl.getBoundingClientRect();
+      const box = toc.getBoundingClientRect();
+      if (row.bottom > box.bottom) toc.scrollTop += row.bottom - box.bottom;
+      else if (row.top < box.top) toc.scrollTop -= box.top - row.top;
     }
 
     // 同时给移动端目录里的对应 a 标上 is-active
@@ -97,15 +99,7 @@ export default function TableOfContents({ headings }: Props) {
               <a
                 href={`#${heading.id}`}
                 className={isActive ? "is-active" : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  const target = document.getElementById(heading.id);
-                  if (target) {
-                    target.scrollIntoView({ behavior: "smooth" });
-                    history.pushState(null, "", `#${heading.id}`);
-                    setActiveId(heading.id);
-                  }
-                }}
+                aria-current={isActive ? "location" : undefined}
               >
                 {heading.text}
               </a>

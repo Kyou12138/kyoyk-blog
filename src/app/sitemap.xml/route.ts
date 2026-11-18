@@ -12,7 +12,7 @@ export async function GET() {
     ...tags.map((tag) => ({ loc: `${SITE_URL}/blog/tags/${encodeURIComponent(tag.name)}`, lastmod: undefined })),
     ...posts.map((post) => ({
       loc: `${SITE_URL}${permalink(post)}`,
-      lastmod: (post.publishedAt ?? post.updatedAt).slice(0, 10),
+      lastmod: post.updatedAt.slice(0, 10),
     })),
   ];
 
@@ -31,7 +31,7 @@ ${body}
     {
       headers: {
         "content-type": "application/xml; charset=utf-8",
-        "cache-control": "public, max-age=600",
+        "cache-control": "no-store",
       },
     },
   );
