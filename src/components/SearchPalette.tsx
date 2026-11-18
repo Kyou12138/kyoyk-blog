@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-type IndexItem = { title: string; href: string; tags: string[]; excerpt: string };
+type IndexItem = {
+  title: string;
+  href: string;
+  tags: string[];
+  excerpt: string;
+  date: string | null;
+};
 
-const highlight = (text: string, keyword: string) => {
+const highlight = (text: string, keyword: string): React.ReactNode => {
   if (!keyword) return text;
   const at = text.toLowerCase().indexOf(keyword.toLowerCase());
   if (at < 0) return text;
@@ -18,7 +24,7 @@ const highlight = (text: string, keyword: string) => {
   );
 };
 
-/** 全局搜索浮层：Ctrl/Cmd+K 唤起，索引首次打开时才拉。 */
+/** 全局检索面板：Ctrl/Cmd+K 唤起，索引首次打开时按需加载。 */
 export default function SearchPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -108,7 +114,21 @@ export default function SearchPalette() {
       <div className="palette__backdrop" onClick={() => setOpen(false)} />
       <div className="palette__panel">
         <div className="palette__field">
-          <span aria-hidden="true">🔍</span>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="palette__icon"
+          >
+            <circle cx="11" cy="11" r="7.5" />
+            <path d="M20 20l-3.8-3.8" />
+          </svg>
           <input
             ref={inputRef}
             value={query}
@@ -117,16 +137,18 @@ export default function SearchPalette() {
               setActive(0);
             }}
             onKeyDown={onInputKey}
-            placeholder="搜索笔记标题、标签或摘要…"
+            placeholder="检索笔记标题、标签或正文…"
             aria-label="搜索关键词"
           />
-          <kbd>Esc</kbd>
+          <button type="button" className="palette__esc" onClick={() => setOpen(false)}>
+            ESC
+          </button>
         </div>
 
         <ul className="palette__list">
-          {items === null && <li className="palette__empty">正在加载索引…</li>}
+          {items === null && <li className="palette__empty">索引加载中…</li>}
           {items !== null && results.length === 0 && (
-            <li className="palette__empty">没有匹配的笔记</li>
+            <li className="palette__empty">无匹配笔记</li>
           )}
           {results.map((item, index) => (
             <li key={item.href}>
@@ -136,25 +158,33 @@ export default function SearchPalette() {
                 onMouseEnter={() => setActive(index)}
                 onClick={() => go(item)}
               >
-                <span className="palette__title">{highlight(item.title, query.trim())}</span>
-                <span className="palette__excerpt">{highlight(item.excerpt, query.trim())}</span>
+                <span className="palette__num" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="palette__body">
+                  <span className="palette__title">{highlight(item.title, query.trim())}</span>
+                  {item.excerpt && (
+                    <span className="palette__excerpt">{highlight(item.excerpt, query.trim())}</span>
+                  )}
+                </span>
                 {item.tags.length > 0 && (
-                  <span className="palette__tags">{item.tags.join(" · ")}</span>
+                  <span className="palette__tags">{item.tags.slice(0, 2).join(" / ")}</span>
                 )}
               </button>
             </li>
           ))}
         </ul>
 
-        <div className="palette__foot">
+        <div className="palette__foot" aria-hidden="true">
           <span>
-            <kbd>↑</kbd> <kbd>↓</kbd> 选择
+            <kbd>↑</kbd>
+            <kbd>↓</kbd>
           </span>
           <span>
-            <kbd>↵</kbd> 打开
+            <kbd>↵</kbd>
           </span>
           <span>
-            <kbd>Ctrl</kbd> <kbd>K</kbd> 开关
+            <kbd>ESC</kbd>
           </span>
         </div>
       </div>

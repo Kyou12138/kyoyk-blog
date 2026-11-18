@@ -112,14 +112,14 @@ function HistoryChart({ history, capacity }: { history: ProbeHistory; capacity: 
           setIndex(nearest);
         }} onPointerLeave={() => setIndex(null)}>
         {[0, 0.5, 1].map((part) => <g key={part}><line x1="44" x2={width - 20} y1={y(max * part)} y2={y(max * part)} className="probe__chart-grid" /><text x="44" y={Math.max(12, y(max * part) - 6)}>{format(max * part)}</text></g>)}
-        <path d={path} fill="none" stroke="var(--cyan)" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-        {chosen ? <g><line x1={x(chosen.ts)} x2={x(chosen.ts)} y1="16" y2="184" className="probe__chart-cursor" /><circle cx={x(chosen.ts)} cy={y(chosen.value)} r="4" fill="var(--cyan)" /></g> : null}
+        <path d={path} fill="none" stroke="var(--primary)" strokeWidth="1.75" vectorEffect="non-scaling-stroke" />
+        {chosen ? <g><line x1={x(chosen.ts)} x2={x(chosen.ts)} y1="16" y2="184" className="probe__chart-cursor" /><circle cx={x(chosen.ts)} cy={y(chosen.value)} r="3.5" fill="var(--primary)" /></g> : null}
       </svg>
       <div className="probe__chart-times"><span>{time(start)}</span><span>{time(end)}</span></div>
       <label className="probe__range">查看历史采样
         <input type="range" min="0" max={points.length - 1} value={Math.min(index ?? points.length - 1, points.length - 1)} onChange={(event) => setIndex(Number(event.target.value))} aria-valuetext={chosen ? `${time(chosen.ts)}，${format(chosen.value)}` : "暂无数据"} />
       </label>
-      <figcaption>{points.length} 个采样点 · 时间为北京时间 · 空白表示该时段没有采样</figcaption>
+      <figcaption>{points.length} 采样点 · UTC+8</figcaption>
     </figure>
   );
 }
@@ -138,16 +138,19 @@ export default function StatusProbe({ initial }: { initial: ProbeSnapshot | null
   return (
     <div className="probe">
       <div className="probe__bar">
-        <span>{stale ? "状态未知" : `${servers.filter((server) => server.online).length} / ${servers.length} 台在线`}</span>
-        <span className="probe__meta">{current.data ? `更新于 ${time(current.data.at)}` : "等待连接"} · 每 5 秒刷新</span>
-        <button className="button button--ghost" onClick={() => { current.refresh(); history.refresh(); }}>立即刷新</button>
+        <span className={`probe__state ${stale ? "is-unknown" : servers.some((s) => !s.online) ? "is-offline" : "is-online"}`}>
+          <i aria-hidden="true" />
+          {stale ? "状态未知" : `${servers.filter((server) => server.online).length} / ${servers.length} 台在线`}
+        </span>
+        <span className="probe__meta">{current.data ? `${time(current.data.at)} · 5s` : "等待连接 · 5s"}</span>
+        <button className="button button--ghost button--sm" onClick={() => { current.refresh(); history.refresh(); }}>立即刷新</button>
       </div>
-      {current.error ? <p role="alert" className="probe__warning">{current.error}。保留上次读数。</p> : null}
+      {current.error ? <p role="alert" className="probe__warning">{current.error}。{current.data ? "保留上次读数。" : ""}</p> : null}
       {!current.data && !current.error ? <p role="status" className="muted">正在连接探针…</p> : null}
       {current.data && !servers.length ? <p className="empty">尚未接入服务器。</p> : null}
       {servers.map((server) => <ServerCard key={server.id} server={server} stale={stale} />)}
       {selected ? <section className="probe__history" aria-labelledby="history-heading">
-        <header className="probe__server-head"><div><h2 id="history-heading">资源历史</h2><p className="probe__meta">采样持续保存 90 天，页面刷新后仍可查看。当前可查询最近 30 天。</p></div></header>
+        <header className="probe__server-head"><h2 id="history-heading">资源历史</h2></header>
         <div className="probe__filters">
           <label>服务器<select value={selected.id} onChange={(event) => setServerId(Number(event.target.value))}>{servers.map((server) => <option key={server.id} value={server.id}>{server.name}</option>)}</select></label>
           <label>指标<select value={metric} onChange={(event) => setMetric(event.target.value as ProbeMetric)}>{Object.entries(PROBE_METRICS).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>

@@ -1,46 +1,47 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "技术栈与系统架构",
-  description: "个人站点的系统架构、工程选型与权衡决断。",
+  title: "Colophon",
+  description: "本站的工程选型、安全边界与排版体系。",
   alternates: { canonical: "/colophon" },
 };
 
 const stack = [
   {
-    title: "Next.js 15 (App Router Standalone)",
-    category: "CORE RUNTIME",
-    badge: "v15.5",
+    code: "01",
+    title: "Next.js 15 Standalone",
     href: "https://nextjs.org/docs",
-    why: "单机轻量全栈容器化，利用 App Router 与 Server Actions 实现零客户端胶水代码的原子保存，配合 Standalone 输出压缩镜像至 60MB。",
+    why: "单机轻量容器化部署，借 App Router 与 Server Actions 实现零客户端胶水代码的原子写入，Standalone 镜像体积压至 60MB。",
   },
   {
-    title: "PostgreSQL 17 + 原生纯 SQL",
-    category: "DATA PERSISTENCE",
-    badge: "PG 17",
+    code: "02",
+    title: "PostgreSQL 17 + 原生 SQL",
     href: "https://www.postgresql.org/docs/",
-    why: "拒绝臃肿 ORM。全站仅 6 条核心高频查询，裸 SQL 配合连接池与 SSL 自动重试，执行计划一目了然，零无谓抽象层。",
+    why: "拒绝厚重 ORM。全站核心查询由参数化纯 SQL 驱动，配合连接池 SSL 握手缓存，执行计划清晰透明。",
   },
   {
-    title: "无用户表轻量鉴权 (Scrypt + HMAC)",
-    category: "SECURITY LAYER",
-    badge: "Cookie Auth",
+    code: "03",
+    title: "无用户表鉴权 (Scrypt + HMAC)",
     href: "https://nodejs.org/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback",
-    why: "单作者个人站架构，不需要冗余的多租户 Users 表。密码经 Scrypt (N=16384) 散列，会话由服务端 HMAC-SHA256 签名签发 HttpOnly Cookie。",
+    why: "单作者架构无需多租户用户表。口令经 Scrypt 散列校验，会话由 HMAC-SHA256 签发 HttpOnly Cookie。",
   },
   {
-    title: "私有笔记封存：Scrypt + AES-256-GCM",
-    category: "ZERO-KNOWLEDGE CIPHER",
-    badge: "AES-GCM",
+    code: "04",
+    title: "私有笔记封存 (AES-256-GCM)",
     href: "https://nodejs.org/api/crypto.html#class-aesgcm",
-    why: "正文入库前客户端/服务端派生密钥加密封存，库中仅存密文与 Tag。服务端无明文泄露风险，解密密钥封入会话 Cookie 保障无感阅读。",
+    why: "私有笔记入库前以服务端派生密钥加密为密文与认证标签，未登录请求一律返回 404，杜绝存在性侧信道。",
   },
   {
-    title: "Markdown-it + Highlight.js 静态管线",
-    category: "CONTENT PIPELINE",
-    badge: "Deterministic",
+    code: "05",
+    title: "Markdown-it + Highlight.js",
     href: "https://markdown-it.github.io/",
-    why: "剔除动态运行代码的 MDX 隐患。纯 Markdown 解析配合服务端语义降级（H1 规整、自动 TOC 提取、Mac 终端代码块高亮）。",
+    why: "剔除运行期 MDX 复杂度。服务端一次性完成标题层级规整、中英锚点目录提取与代码块语法高亮。",
+  },
+  {
+    code: "06",
+    title: "原生 CSS 网格与 Canvas 拓扑",
+    href: "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API",
+    why: "暖棉宣纸、松烟墨与朱砂构成的出版级排版网格；零外部图形库手写力导向知识拓扑与视口休眠调度。",
   },
 ];
 
@@ -56,37 +57,31 @@ export default function ColophonPage() {
   return (
     <main className="section">
       <div className="container">
-        <header className="section-block__head" style={{ marginBottom: "2.5rem" }}>
-          <div className="section-block__meta">
-            <span className="section-block__dot section-block__dot--gold" />
-            <span className="section-block__tag">SYSTEM BLUEPRINT // COLOPHON</span>
+        <header className="editorial-head">
+          <h1 className="editorial-head__title">Colophon</h1>
+          <div className="editorial-head__aside">
+            <span className="editorial-head__count">0{stack.length} 项</span>
           </div>
-          <h1 className="section-block__title">全栈系统拓扑与架构决策</h1>
-          <p className="section-block__desc">
-            轻量单租户全栈站点的技术选型与工程权衡。不依赖庞大框架抽象，用最精简可信的代码解决问题。
-          </p>
         </header>
 
         <div className="arch-grid">
           {stack.map((item) => (
-            <article key={item.title} className="arch-card">
+            <article key={item.code} className="arch-card">
               <div className="arch-card__top">
-                <span className="arch-card__category">{item.category}</span>
-                <span className="arch-card__badge">{item.badge}</span>
+                <span className="arch-card__code">{item.code}</span>
+                <span className="arch-card__host">{hostOf(item.href)}</span>
               </div>
 
               <h2 className="arch-card__title">
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
-                  {item.title}
-                  <span className="arch-card__arrow">↗</span>
+                  <span>{item.title}</span>
+                  <span className="arch-card__arrow" aria-hidden="true">
+                    ↗
+                  </span>
                 </a>
               </h2>
 
               <p className="arch-card__desc">{item.why}</p>
-
-              <div className="arch-card__foot">
-                <span className="arch-card__host">{hostOf(item.href)}</span>
-              </div>
             </article>
           ))}
         </div>

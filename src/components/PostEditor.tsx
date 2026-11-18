@@ -93,7 +93,6 @@ export default function PostEditor({
     event.target.value = "";
   };
 
-  // 预览：防抖 400ms 后请求服务端渲染，避免把 markdown-it/highlight.js 打进浏览器包
   useEffect(() => {
     const controller = new AbortController();
     const timer = window.setTimeout(async () => {
@@ -118,34 +117,33 @@ export default function PostEditor({
   }, [body, title]);
 
   return (
-    <div style={{ display: "grid", gap: "1.2rem" }}>
+    <div className="editor-studio">
       {notice && <p className="notice">{notice}</p>}
-      {error && MESSAGES[error] && <p className="error">{MESSAGES[error]}</p>}
+      {error && MESSAGES[error] && (
+        <p className="error" role="alert">
+          {MESSAGES[error]}
+        </p>
+      )}
       {status && <p className="notice">{status}</p>}
 
-      <form action={savePostAction}>
+      <form id="post-editor-form" action={savePostAction} className="editor-form">
         {post && <input type="hidden" name="id" value={post.id} />}
 
-        <div className="field">
+        <div className="field editor-title-field">
           <label htmlFor="title">标题</label>
           <input
             id="title"
             name="title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
+            placeholder="输入笔记标题…"
             required
           />
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gap: "1rem",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          }}
-        >
+        <div className="editor-meta-grid">
           <div className="field">
-            <label htmlFor="slug">Slug（地址最后一段）</label>
+            <label htmlFor="slug">Slug</label>
             <input id="slug" name="slug" defaultValue={post?.slug ?? ""} placeholder="es16" required />
           </div>
           <div className="field">
@@ -153,11 +151,11 @@ export default function PostEditor({
             <select id="status" name="status" defaultValue={post?.status ?? "draft"}>
               <option value="draft">草稿</option>
               <option value="published">已发布</option>
-              <option value="private">私有笔记（加密存库，仅自己可见）</option>
+              <option value="private">私有笔记</option>
             </select>
           </div>
           <div className="field">
-            <label htmlFor="publishedAt">发布时间（东八区）</label>
+            <label htmlFor="publishedAt">发布时间</label>
             <input
               id="publishedAt"
               name="publishedAt"
@@ -165,27 +163,31 @@ export default function PostEditor({
               defaultValue={toLocalInput(post?.publishedAt ?? null)}
             />
           </div>
+          <div className="field">
+            <label htmlFor="tags">标签</label>
+            <input
+              id="tags"
+              name="tags"
+              defaultValue={post?.tags.join(", ") ?? ""}
+              placeholder="front-end, javascript"
+            />
+          </div>
         </div>
 
         <div className="field">
-          <label htmlFor="description">摘要（列表和 SEO 用）</label>
-          <input id="description" name="description" defaultValue={post?.description ?? ""} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="tags">标签（逗号分隔）</label>
+          <label htmlFor="description">摘要</label>
           <input
-            id="tags"
-            name="tags"
-            defaultValue={post?.tags.join(", ") ?? ""}
-            placeholder="front-end, javascript"
+            id="description"
+            name="description"
+            defaultValue={post?.description ?? ""}
+            placeholder="可选"
           />
         </div>
 
         <div className="editor">
           <div className="editor__pane">
             <div className="editor__bar">
-              <span>正文（Markdown）</span>
+              <span>Markdown · {body.length} 字</span>
               <button
                 className="button button--ghost button--sm"
                 type="button"
@@ -198,7 +200,7 @@ export default function PostEditor({
                 type="file"
                 accept="image/*"
                 onChange={handleFile}
-                style={{ display: "none" }}
+                className="sr-only"
               />
             </div>
             <textarea
@@ -208,48 +210,48 @@ export default function PostEditor({
               value={body}
               onChange={(event) => setBody(event.target.value)}
               onPaste={handlePaste}
-              placeholder="支持 Markdown 与 HTML；可直接粘贴剪贴板里的截图"
+              placeholder="撰写正文，支持直接粘贴剪贴板截图上传…"
             />
           </div>
 
           <div className="editor__pane">
             <div className="editor__bar">
-              <span>预览{preview === null ? "（渲染中…）" : ""}</span>
+              <span>预览{preview === null ? " · 渲染中" : ""}</span>
             </div>
             <div className="editor__preview prose">
               {preview === null ? (
-                <p className="muted">加载中…</p>
+                <p className="muted">渲染中…</p>
               ) : preview.trim() ? (
                 <div dangerouslySetInnerHTML={{ __html: preview }} />
               ) : (
-                <p className="muted">还没有内容。</p>
+                <p className="muted">空白画布。</p>
               )}
             </div>
           </div>
         </div>
+      </form>
 
-        <div className="admin-bar" style={{ marginTop: "1.2rem" }}>
-          <button className="button" type="submit">
-            {post ? "保存" : "创建"}
+      <div className="editor-actions">
+        <div className="editor-actions__left">
+          <button form="post-editor-form" className="button button--primary" type="submit">
+            {post ? "保存更改" : "创建笔记"}
           </button>
           {post && viewHref && (
             <Link className="button button--ghost" href={viewHref}>
-              查看
+              前台查看 ↗
             </Link>
           )}
         </div>
-      </form>
 
-      {post && (
-        <div className="admin-bar" style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
-          <form action={deletePostAction} style={{ marginLeft: "auto" }}>
+        {post && (
+          <form action={deletePostAction}>
             <input type="hidden" name="id" value={post.id} />
-            <button className="button button--ghost" type="submit">
-              删除
+            <button className="button button--danger-ghost" type="submit">
+              删除笔记
             </button>
           </form>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

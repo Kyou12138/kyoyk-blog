@@ -5,8 +5,10 @@ import { useEffect } from "react";
 const LANG_MAP: Record<string, string> = {
   ts: "TypeScript",
   typescript: "TypeScript",
+  tsx: "TSX",
   js: "JavaScript",
   javascript: "JavaScript",
+  jsx: "JSX",
   bash: "Bash",
   sh: "Shell",
   shell: "Shell",
@@ -30,8 +32,7 @@ const LANG_MAP: Record<string, string> = {
 };
 
 /**
- * 给正文代码块挂接语言头与复制按钮。
- * 包含 Mac 风格三点、规范化语言标识与平滑复制反馈。
+ * 为正文代码块挂载出版级题头栏与复制动作。
  */
 export default function CodeCopyButtons() {
   useEffect(() => {
@@ -41,7 +42,7 @@ export default function CodeCopyButtons() {
       if (pre.parentElement?.classList.contains("code-block")) continue;
 
       const rawLang = pre.getAttribute("data-lang") || "";
-      const displayLang = LANG_MAP[rawLang] || (rawLang ? rawLang.toUpperCase() : "CODE");
+      const displayLang = LANG_MAP[rawLang] || (rawLang ? rawLang.toUpperCase() : "TEXT");
 
       const wrapper = document.createElement("div");
       wrapper.className = "code-block";
@@ -49,31 +50,19 @@ export default function CodeCopyButtons() {
       const header = document.createElement("div");
       header.className = "code-block__header";
 
-      const meta = document.createElement("div");
-      meta.className = "code-block__meta";
-
-      const dots = document.createElement("span");
-      dots.className = "code-block__dots";
-      dots.setAttribute("aria-hidden", "true");
-      dots.innerHTML = "<i></i><i></i><i></i>";
-
       const langSpan = document.createElement("span");
       langSpan.className = "code-block__lang";
       langSpan.textContent = displayLang;
-
-      meta.appendChild(dots);
-      meta.appendChild(langSpan);
 
       const button = document.createElement("button");
       button.type = "button";
       button.className = "code-copy";
       button.setAttribute("aria-label", "复制代码");
-      button.innerHTML = '<span class="code-copy__icon" aria-hidden="true">📋</span><span class="code-copy__text">复制</span>';
+      button.textContent = "复制";
 
       let timer = 0;
       const onClick = async () => {
         window.clearTimeout(timer);
-        const textSpan = button.querySelector<HTMLSpanElement>(".code-copy__text");
         const codeText = pre.querySelector("code")?.textContent ?? "";
         let success = false;
 
@@ -90,10 +79,14 @@ export default function CodeCopyButtons() {
           try {
             const textarea = document.createElement("textarea");
             textarea.value = codeText;
+            textarea.setAttribute("readonly", "");
             textarea.style.position = "fixed";
+            textarea.style.top = "0";
             textarea.style.opacity = "0";
             document.body.appendChild(textarea);
+            textarea.focus({ preventScroll: true });
             textarea.select();
+            textarea.setSelectionRange(0, codeText.length);
             success = document.execCommand("copy");
             document.body.removeChild(textarea);
           } catch {
@@ -101,18 +94,18 @@ export default function CodeCopyButtons() {
           }
         }
 
-        if (textSpan) textSpan.textContent = success ? "已复制" : "复制失败";
+        button.textContent = success ? "已复制" : "失败";
         if (success) button.classList.add("is-copied");
 
         timer = window.setTimeout(() => {
-          if (textSpan) textSpan.textContent = "复制";
+          button.textContent = "复制";
           button.classList.remove("is-copied");
         }, 1600);
       };
 
       button.addEventListener("click", onClick);
 
-      header.appendChild(meta);
+      header.appendChild(langSpan);
       header.appendChild(button);
 
       pre.replaceWith(wrapper);

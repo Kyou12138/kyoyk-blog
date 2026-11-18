@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import PostEditor from "@/components/PostEditor";
 import { openBody } from "@/lib/secret";
@@ -23,15 +24,31 @@ export default async function EditPostPage({
 
   if (!post) notFound();
 
-  // 私有笔记库里只有密文，编辑时解密后再交给编辑器，避免“重新输入正文”。
-  const draftBody = post.status === "private" && post.secret ? openBody(post.secret) ?? "" : post.body ?? "";
+  const draftBody =
+    post.status === "private" && post.secret
+      ? (openBody(post.secret) ?? "")
+      : (post.body ?? "");
+
+  const frontHref = post.status !== "draft" ? permalink(post) : undefined;
 
   return (
     <div>
-      <h1 style={{ fontSize: "1.4rem", marginTop: 0 }}>编辑：{post.title}</h1>
+      <header className="editorial-head">
+        <h1 className="editorial-head__title">编辑笔记</h1>
+        <div className="editorial-head__aside">
+          {frontHref && (
+            <Link href={frontHref} className="editorial-head__link">
+              前台查看 ↗
+            </Link>
+          )}
+          <Link href="/admin" className="editorial-head__link">
+            ← 全部笔记
+          </Link>
+        </div>
+      </header>
       <PostEditor
         post={{ ...post, body: draftBody }}
-        viewHref={permalink(post)}
+        viewHref={frontHref}
         error={error}
         notice={saved ? "已保存。" : undefined}
       />

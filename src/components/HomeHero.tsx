@@ -5,67 +5,73 @@ import { useEffect, useState } from "react";
 import KnowledgeGraph, { type GraphPost } from "@/components/KnowledgeGraph";
 import styles from "@/components/home-hero.module.css";
 
-const cx = (...names: Array<string | false | undefined>): string => names.filter(Boolean).join(" ");
+const WORDS = ["Code.", "Prompt.", "System."] as const;
 
-const frames = [
-  { lead: "TALK", tail: "CODE" },
-  { lead: "CODE", tail: "PROMPT" },
-] as const;
-
-export default function HomeHero({ posts, tagCount }: { posts: GraphPost[]; tagCount: number }) {
-  const [frame, setFrame] = useState(0);
-  const [tearing, setTearing] = useState(false);
+export default function HomeHero({
+  posts,
+  tagCount,
+  yearSpan,
+}: {
+  posts: GraphPost[];
+  tagCount: number;
+  yearSpan: string;
+}) {
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timers: number[] = [];
-    const cycle = () => {
-      setTearing(true);
-      timers.push(window.setTimeout(() => setFrame((f) => 1 - f), 120));
-      timers.push(window.setTimeout(() => setTearing(false), 860));
-    };
-    const id = window.setInterval(cycle, 6000);
-    return () => {
-      window.clearInterval(id);
-      timers.forEach(window.clearTimeout);
-    };
+    const timer = window.setInterval(() => {
+      setIdx((prev) => (prev + 1) % WORDS.length);
+    }, 4600);
+    return () => window.clearInterval(timer);
   }, []);
 
-  const { lead, tail } = frames[frame];
+  const currentWord = WORDS[idx];
 
   return (
-    <header className={styles.hero}>
-      <div className={styles.copy}>
-        <p className={styles.slogan}>
-          <span className={styles.sloganLine}>
-            <span className={cx(styles.word, tearing && styles.tearing)} data-word={lead}>
-              {lead}
-            </span>{" "}
-            is cheap,
-          </span>
-          <span className={styles.sloganLine}>
-            show me your{" "}
-            <span className={cx(styles.word, tearing && styles.tearing)} data-word={tail}>
-              {tail}
-            </span>
-          </span>
-        </p>
-        <h1 className={styles.title}>Kyou 的博客</h1>
-        <p className={styles.lede}>
-          前端、后端与 AI 工具的工程实践。这是站内全部 {posts.length} 篇笔记与 {tagCount} 个主题的拓扑图谱：探索关联网络，点击直接阅读。
-        </p>
-        <div className={styles.actions}>
-          <Link className={styles.primary} href="/blog">
-            浏览知识库 ➔
-          </Link>
-          <Link className={styles.secondary} href="/proj">
-            开源工具箱 ➔
-          </Link>
+    <section className={`container ${styles.heroSection}`} aria-label="首页题头与知识拓扑">
+      <div className={styles.datumBar}>
+        <span>ARCHIVE · {yearSpan}</span>
+        <span>
+          {posts.length} 篇 · {tagCount} 标签
+        </span>
+      </div>
+
+      <div className={styles.hero}>
+        <div className={styles.copy}>
+          <h1 className={styles.title}>
+            <span className={styles.kicker}>Talk is cheap,</span>
+            <span className={styles.headline}>show me your</span>
+            <button
+              type="button"
+              className={styles.reelBtn}
+              onClick={() => setIdx((prev) => (prev + 1) % WORDS.length)}
+              aria-label={`切换关键词，当前：${currentWord}`}
+            >
+              <span key={currentWord} className={styles.reelWord}>
+                {currentWord}
+              </span>
+              <sup className={styles.reelIndex} aria-hidden="true">
+                0{idx + 1}
+              </sup>
+            </button>
+          </h1>
+
+          <div className={styles.actions}>
+            <Link className="button button--primary" href="/blog" data-magnetic>
+              <span>阅读笔记</span>
+              <span aria-hidden="true">→</span>
+            </Link>
+            <Link className="button button--ghost" href="/proj" data-magnetic>
+              <span>自研工具</span>
+            </Link>
+          </div>
+        </div>
+
+        <div className={styles.graph}>
+          <KnowledgeGraph posts={posts} tagCount={tagCount} />
         </div>
       </div>
-      <div className={styles.graph}>
-        <KnowledgeGraph posts={posts} />
-      </div>
-    </header>
+    </section>
   );
 }
