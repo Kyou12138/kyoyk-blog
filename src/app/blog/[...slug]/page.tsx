@@ -1,3 +1,4 @@
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -5,7 +6,7 @@ import { cache } from "react";
 import CodeCopyButtons from "@/components/CodeCopyButtons";
 import ReadingTools from "@/components/ReadingTools";
 import TableOfContents from "@/components/TableOfContents";
-import { formatDateDot, readingMinutes } from "@/lib/format";
+import { formatDate, formatDateDot, readingMinutes } from "@/lib/format";
 import { renderPost } from "@/lib/markdown";
 import { openBody } from "@/lib/secret";
 import { getAdjacentPosts, getPostBySlug, permalink } from "@/lib/posts";
@@ -45,7 +46,9 @@ export default async function BlogPostPage({ params }: PageProps) {
   const source =
     post.status === "private" && post.secret ? (openBody(post.secret) ?? "") : (post.body ?? "");
   const { html, headings } = renderPost(source, post.title);
-  const { newer, older } = await getAdjacentPosts(post.slug);
+  const [{ newer, older }, skin] = await Promise.all([getAdjacentPosts(post.slug), getSkin()]);
+  const ink = skin === "ink";
+  const showDate = ink ? formatDate : formatDateDot;
 
   const subtitle =
     post.description && post.description.trim() !== post.title.trim() ? post.description : null;
@@ -56,7 +59,18 @@ export default async function BlogPostPage({ params }: PageProps) {
       <div className="article-shell">
         <article className="article">
           <header className="article__head">
-            <div className="article__datum">
+            {ink ? <div className="post-card__meta">
+              <time dateTime={post.publishedAt ?? undefined}>
+                {post.publishedAt ? formatDate(post.publishedAt) : "草稿"}
+              </time>
+              {post.status !== "published" && <span className="tag tag--active">{post.status === "draft" ? "草稿" : "私有笔记"}</span>}
+              {post.tags.map((tag) => (
+                <Link key={tag} className="tag" href={`/blog/tags/${encodeURIComponent(tag)}`}>
+                  {tag}
+                </Link>
+              ))}
+              {source && <span>{readingMinutes(source)} 分钟</span>}
+            </div> : <div className="article__datum">
               <Link href="/blog" className="editorial-back">
                 ← 笔记
               </Link>
@@ -81,12 +95,12 @@ export default async function BlogPostPage({ params }: PageProps) {
                   编辑
                 </Link>
               )}
-            </div>
+            </div>}
 
             <h1>{post.title}</h1>
-            {subtitle && <p className="article__lead">{subtitle}</p>}
+            {subtitle && <p className={ink ? "muted" : "article__lead"}>{subtitle}</p>}
 
-            {post.tags.length > 0 && (
+            {!ink && post.tags.length > 0 && (
               <div className="article__tags">
                 {post.tags.map((tag) => (
                   <Link
@@ -103,7 +117,7 @@ export default async function BlogPostPage({ params }: PageProps) {
 
           {headings.length > 1 && (
             <details className="toc-mobile">
-              <summary>目录 · {headings.length}</summary>
+              <summary>{ink ? <><span aria-hidden="true">☰</span> 目录</> : `目录 · ${headings.length}`}</summary>
               <ol className="toc__list">
                 {headings.map((heading) => (
                   <li key={heading.id} className={`toc__item toc__item--h${heading.level}`}>
@@ -115,7 +129,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           )}
 
           <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
-          <CodeCopyButtons />
+          <CodeCopyButtons ink={ink} />
 
           {(newer || older) && (
             <nav className="article-nav" aria-label="上下篇笔记">
@@ -125,7 +139,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <span className="article-nav__title">{older.title}</span>
                   {older.publishedAt && (
                     <time className="article-nav__time" dateTime={older.publishedAt}>
-                      {formatDateDot(older.publishedAt)}
+                      {showDate(older.publishedAt)}
                     </time>
                   )}
                 </Link>
@@ -138,7 +152,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                   <span className="article-nav__title">{newer.title}</span>
                   {newer.publishedAt && (
                     <time className="article-nav__time" dateTime={newer.publishedAt}>
-                      {formatDateDot(newer.publishedAt)}
+                      {showDate(newer.publishedAt)}
                     </time>
                   )}
                 </Link>

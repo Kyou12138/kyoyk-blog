@@ -1,6 +1,7 @@
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { formatDateDot } from "@/lib/format";
+import { formatDate, formatDateDot } from "@/lib/format";
 import { listPosts, permalink, type PostStatus } from "@/lib/posts";
 import { requireAdmin } from "@/lib/session";
 
@@ -20,6 +21,39 @@ export default async function AdminPage() {
   const publishedCount = posts.filter((p) => p.status === "published").length;
   const privateCount = posts.filter((p) => p.status === "private").length;
   const draftCount = posts.filter((p) => p.status === "draft").length;
+
+  if ((await getSkin()) === "ink") return (
+    <div>
+      <div className="section__head">
+        <h1 style={{ margin: 0, fontSize: "1.5rem" }}>全部笔记</h1>
+        <span className="muted">{posts.length} 篇</span>
+      </div>
+
+      <ul className="post-list">
+        {posts.map((post) => (
+          <li key={post.id} className="post-card">
+            <div className="post-card__meta">
+              <span className={post.status === "published" ? "tag" : "tag tag--active"}>{STATUS_LABELS[post.status]}</span>
+              <time dateTime={post.publishedAt ?? undefined}>
+                {post.publishedAt ? formatDate(post.publishedAt) : "未排期"}
+              </time>
+              <span>{post.tags.join(" · ")}</span>
+            </div>
+            <h3>
+              <Link href={`/admin/posts/${post.id}`}>{post.title}</Link>
+            </h3>
+            <p>{post.excerpt || post.description || ""}</p>
+            {post.status !== "draft" && (
+              <p style={{ marginTop: "0.4rem" }}>
+                <Link href={permalink(post)}>查看前台 →</Link>
+              </p>
+            )}
+          </li>
+        ))}
+        {posts.length === 0 && <li className="empty">还没有笔记，先写一篇。</li>}
+      </ul>
+    </div>
+  );
 
   return (
     <div>

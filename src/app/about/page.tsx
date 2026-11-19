@@ -1,3 +1,5 @@
+import ObsidianAbout from "@/components/obsidian/About";
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import Image from "next/image";
 import styles from "./about.module.css";
@@ -79,7 +81,9 @@ function PlateArt({
   );
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  if ((await getSkin()) === "ink") return <ObsidianAbout />;
+
   return (
     <main className="section">
       <div className="container">

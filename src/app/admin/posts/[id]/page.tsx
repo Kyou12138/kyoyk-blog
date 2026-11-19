@@ -1,3 +1,4 @@
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -30,9 +31,10 @@ export default async function EditPostPage({
 
   const frontHref = post.status !== "draft" ? permalink(post) : undefined;
 
+  const ink = (await getSkin()) === "ink";
   return (
     <div>
-      <header className="editorial-head">
+      {ink ? <h1 style={{ fontSize: "1.4rem", marginTop: 0 }}>编辑：{post.title}</h1> : <header className="editorial-head">
         <h1 className="editorial-head__title">编辑笔记</h1>
         <div className="editorial-head__aside">
           {frontHref && (
@@ -44,8 +46,10 @@ export default async function EditPostPage({
             ← 全部笔记
           </Link>
         </div>
-      </header>
+      </header>}
       <PostEditor
+        ink={ink}
+        viewHref={frontHref}
         key={post.id}
         post={{ id: post.id, slug: post.slug, title: post.title, status: post.status, tags: post.tags,
           description: post.description, publishedAt: post.publishedAt, body: draftBody }}

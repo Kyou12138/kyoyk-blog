@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import localFont from "next/font/local";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import SearchPalette from "@/components/SearchPalette";
 import MagneticPull from "@/components/MagneticPull";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
-import { DEFAULT_SKIN, SKIN_BOOT } from "@/lib/skins";
+import SpotlightEffect from "@/components/obsidian/SpotlightEffect";
+import { getSkin } from "@/lib/skinPreference";
+import { skinStylesheet } from "@/lib/skinCss";
+import { SKIN_BOOT } from "@/lib/skins";
 
 // ponytail: 只放拉丁 700 一个字重（22KB），中文与衬线走系统原生高品质字体栈
 const bricolage = localFont({
@@ -44,19 +46,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const skin = await getSkin();
+  const ink = skin === "ink";
   return (
-    <html lang="zh-Hans" data-skin={DEFAULT_SKIN} className={bricolage.variable} suppressHydrationWarning>
+    <html lang="zh-Hans" data-skin={skin} className={bricolage.variable}>
       <head>
-        {/* 皮肤在首帧前落定，避免切换历史读到时闪一下默认配色 */}
+        <link rel="stylesheet" href={skinStylesheet(ink)} />
         <script dangerouslySetInnerHTML={{ __html: SKIN_BOOT }} />
       </head>
       <body>
-        <SiteHeader />
+        <SiteHeader skin={skin} />
         {children}
-        <SiteFooter />
-        <SearchPalette />
-        <MagneticPull />
+        <SiteFooter ink={ink} />
+        <SearchPalette ink={ink} />
+        {ink && <SpotlightEffect />}
+        <MagneticPull ink={ink} />
       </body>
     </html>
   );

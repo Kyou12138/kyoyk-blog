@@ -1,3 +1,4 @@
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import BlogLedger from "@/components/BlogLedger";
 import { listPosts, listTags } from "@/lib/posts";
@@ -22,15 +23,17 @@ export default async function BlogListPage({
   const keyword = pick(params.q)?.trim() ?? "";
   const tag = pick(params.tag)?.trim() ?? "";
 
-  const [posts, tags] = await Promise.all([
+  const [posts, tags, skin] = await Promise.all([
     listPosts(), // 获取全部已发布笔记，供客户端做毫秒级即时过滤与无刷新分词搜索
     listTags(),
+    getSkin(),
   ]);
 
   return (
     <main className="section">
       <div className="container">
         <BlogLedger
+          ink={skin === "ink"}
           initialPosts={posts}
           tags={tags}
           initialKeyword={keyword}

@@ -112,8 +112,8 @@ function HistoryChart({ history, capacity }: { history: ProbeHistory; capacity: 
           setIndex(nearest);
         }} onPointerLeave={() => setIndex(null)}>
         {[0, 0.5, 1].map((part) => <g key={part}><line x1="44" x2={width - 20} y1={y(max * part)} y2={y(max * part)} className="probe__chart-grid" /><text x="44" y={Math.max(12, y(max * part) - 6)}>{format(max * part)}</text></g>)}
-        <path d={path} fill="none" stroke="var(--primary)" strokeWidth="1.75" vectorEffect="non-scaling-stroke" />
-        {chosen ? <g><line x1={x(chosen.ts)} x2={x(chosen.ts)} y1="16" y2="184" className="probe__chart-cursor" /><circle cx={x(chosen.ts)} cy={y(chosen.value)} r="3.5" fill="var(--primary)" /></g> : null}
+        <path d={path} fill="none" stroke="var(--cyan)" strokeWidth="1.75" vectorEffect="non-scaling-stroke" />
+        {chosen ? <g><line x1={x(chosen.ts)} x2={x(chosen.ts)} y1="16" y2="184" className="probe__chart-cursor" /><circle cx={x(chosen.ts)} cy={y(chosen.value)} r="3.5" fill="var(--cyan)" /></g> : null}
       </svg>
       <div className="probe__chart-times"><span>{time(start)}</span><span>{time(end)}</span></div>
       <label className="probe__range">查看历史采样

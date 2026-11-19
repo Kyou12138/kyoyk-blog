@@ -6,6 +6,7 @@ import { dateParts, permalink } from "@/lib/format";
 import type { PostSummary } from "@/lib/posts";
 
 type BlogLedgerProps = {
+  ink: boolean;
   initialPosts: PostSummary[];
   tags: Array<{ name: string; count: number }>;
   initialKeyword?: string;
@@ -13,6 +14,7 @@ type BlogLedgerProps = {
 };
 
 export default function BlogLedger({
+  ink,
   initialPosts,
   tags,
   initialKeyword = "",
@@ -56,6 +58,10 @@ export default function BlogLedger({
     return list;
   }, [filteredPosts]);
 
+  // The historical view labels years and rows exactly as it did (span + h2).
+  const YearTag = (ink ? "span" : "h2") as "span" | "h2";
+  const RowTag = (ink ? "h2" : "h3") as "h2" | "h3";
+
   const countText =
     filteredPosts.length === initialPosts.length
       ? `${initialPosts.length} 篇`
@@ -63,7 +69,17 @@ export default function BlogLedger({
 
   return (
     <div className="blog-ledger">
-      <header className="editorial-head">
+      {ink ? <div className="ledger-header">
+        <div className="ledger-header__meta">
+          <span className="ledger-header__dot" />
+          <span className="ledger-header__tag">KNOWLEDGE VAULT // SYSTEM LEDGER</span>
+          <span className="ledger-header__count">{filteredPosts.length} / {initialPosts.length} 篇</span>
+        </div>
+        <h1 className="ledger-header__title">技术笔记与系统知识库</h1>
+        <p className="ledger-header__desc">
+          涵盖全栈底层架构、MCP 协议、LLM 智能体流水线与系统工程实践的系统化思考。
+        </p>
+      </div> : <header className="editorial-head">
         <h1 className="editorial-head__title">笔记</h1>
         <div className="editorial-head__aside">
           <span className="editorial-head__count">{countText}</span>
@@ -71,11 +87,11 @@ export default function BlogLedger({
             标签 ({tags.length}) →
           </Link>
         </div>
-      </header>
+      </header>}
 
       <div className="ledger-toolbar">
         <div className="ledger-search">
-          <svg
+          {ink ? <span className="ledger-search__icon" aria-hidden="true">🔍</span> : <svg
             className="ledger-search__icon"
             width="15"
             height="15"
@@ -89,12 +105,12 @@ export default function BlogLedger({
           >
             <circle cx="11" cy="11" r="7.5" />
             <path d="m20 20-3.8-3.8" />
-          </svg>
+          </svg>}
           <input
             type="search"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            placeholder="检索标题、摘要或标签…"
+            placeholder={ink ? "即时过滤笔记标题、描述或标签..." : "检索标题、摘要或标签…"}
             className="ledger-search__input"
             aria-label="即时过滤笔记"
           />
@@ -105,7 +121,7 @@ export default function BlogLedger({
               className="ledger-search__clear"
               aria-label="清空搜索"
             >
-              清空
+              {ink ? "✕" : "清空"}
             </button>
           )}
         </div>
@@ -117,7 +133,7 @@ export default function BlogLedger({
             aria-pressed={!selectedTag}
             onClick={() => setSelectedTag("")}
           >
-            全部 <span className="ledger-tag__num">{initialPosts.length}</span>
+            全部 {ink ? `(${initialPosts.length})` : <span className="ledger-tag__num">{initialPosts.length}</span>}
           </button>
           {tags.map((t) => {
             const active = selectedTag === t.name;
@@ -157,7 +173,7 @@ export default function BlogLedger({
           {groups.map((group) => (
             <section key={group.year} className="ledger-year-section">
               <div className="ledger-year-sticky">
-                <h2 className="ledger-year-title">{group.year}</h2>
+                <YearTag className="ledger-year-title">{group.year}</YearTag>
                 <span className="ledger-year-count">{group.posts.length}</span>
               </div>
 
@@ -177,9 +193,10 @@ export default function BlogLedger({
                       </time>
 
                       <div className="ledger-row__main">
-                        <h3 className="ledger-row__title">
+                        <RowTag className="ledger-row__title">
                           <Link href={href}>{post.title}</Link>
-                        </h3>
+                        </RowTag>
+                        {ink && post.description && post.description !== post.title && <p className="ledger-row__desc">{post.description}</p>}
                       </div>
 
                       <div className="ledger-row__aside">
@@ -190,7 +207,7 @@ export default function BlogLedger({
                             className={`ledger-row__tag ${selectedTag === t ? "is-active" : ""}`}
                             onClick={() => setSelectedTag(selectedTag === t ? "" : t)}
                           >
-                            #{t}
+                            {ink ? t : `#${t}`}
                           </button>
                         ))}
                         {post.minutes && (

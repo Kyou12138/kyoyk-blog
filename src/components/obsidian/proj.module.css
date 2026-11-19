@@ -1,0 +1,217 @@
+.projectsPage {
+  padding: 1.5rem 0 4rem;
+}
+
+/* ===== 顶部 Header ===== */
+.pageHeader {
+  margin-bottom: 2.8rem;
+}
+
+.pageMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.pageDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+.pageTag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.pageTitle {
+  margin: 0 0 0.5rem;
+  font-size: 1.85rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.pageDesc {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 65ch;
+  line-height: 1.6;
+}
+
+/* ===== 章节区块 ===== */
+.sections {
+  display: grid;
+  gap: 3rem;
+}
+
+.sectionBlock {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sectionBadge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+/* ===== 卡片网格 ===== */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.9rem;
+}
+
+.cardIcon {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--primary);
+}
+
+.cardIcon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.cardBadges {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 0.12rem 0.45rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-muted);
+}
+
+.externalArrow {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  transition: transform 140ms ease, color 140ms ease;
+}
+
+.card:hover .externalArrow {
+  color: var(--primary);
+  transform: translate(2px, -2px);
+}
+
+.cardContent {
+  flex: 1;
+}
+
+.cardTitle {
+  margin: 0 0 0.45rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.card:hover .cardTitle {
+  color: var(--primary);
+}
+
+.cardDescription {
+  margin: 0 0 1.2rem;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.cardFoot {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cardHost {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* ===== 底部提示 ===== */
+.bottomTip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 3.5rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+
+.bottomTip p {
+  margin: 0;
+}
+
+.bottomTip a {
+  color: var(--primary);
+  font-weight: 500;
+}

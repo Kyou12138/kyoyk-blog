@@ -34,15 +34,15 @@ npm run auth:hash -- '你的密码'
 
 ## 皮肤
 
-页头右侧的圆盘按钮在几套皮肤间轮换，选择记在 `localStorage` 的 `kyou-skin`，首屏由 `layout.tsx` 里的内联脚本在绘制前落定，不会先闪一下默认色。皮肤只换 token（配色、圆角、字面），不动布局与数据：
+首次访问使用**曜石**。页头圆盘可切换皮肤，服务端按 `kyou-skin` Cookie 渲染对应的布局和样式表。旧版读者保存在 `localStorage` 的选择会在首次访问时迁移。
 
 | 皮肤 | 说明 |
 |---|---|
-| `gold` 原版 | 雾蓝白纸 + 金，迁移前 Docusaurus 站的配色（默认） |
-| `ink` 曜石 | 墨黑底 + 琥珀，迁移后那版 Linear 风格暗色站 |
-| `paper` 纸墨 | 暖棉纸 + 朱砂，Editorial 版式自带配色 |
+| `ink` 曜石（默认） | 取自 Editorial 改版前的提交 `97694c7`，包含原导航、星图、笔记账册与工具卡片 |
+| `paper` 纸墨 | 暖棉纸与朱砂的 Editorial 版式 |
+| `gold` 原版 | Editorial 布局，沿用 Docusaurus 的雾蓝与金色 |
 
-新增一套 = `src/lib/skins.ts` 加一项 + `globals.css` 末尾加一段 `html[data-skin="…"]` 覆盖。画布类组件（如 `KnowledgeGraph`）读不到 CSS 变量，需监听 `data-skin` 变化后重读 `getComputedStyle` 再重绘。
+曜石视图位于 `src/components/obsidian/`，两种版式的全局样式位于 `public/skins/`。页面共享现行的笔记查询、权限判断和编辑器。
 
 ## 部署
 

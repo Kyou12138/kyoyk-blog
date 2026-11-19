@@ -1,3 +1,5 @@
+import ObsidianColophon from "@/components/obsidian/Colophon";
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -53,7 +55,9 @@ const hostOf = (href: string): string => {
   }
 };
 
-export default function ColophonPage() {
+export default async function ColophonPage() {
+  if ((await getSkin()) === "ink") return <ObsidianColophon />;
+
   return (
     <main className="section">
       <div className="container">

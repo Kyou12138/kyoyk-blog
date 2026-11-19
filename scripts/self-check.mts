@@ -3,6 +3,8 @@
  * 运行：node --experimental-strip-types scripts/self-check.mts
  */
 import assert from "node:assert/strict";
+import { runInNewContext } from "node:vm";
+import { DEFAULT_SKIN, isSkin, SKIN_BOOT, SKIN_STORAGE_KEY } from "../src/lib/skins.ts";
 import { createToken, hashPassword, verifyPassword, verifyToken } from "../src/lib/auth.ts";
 import { openBody, sealBody } from "../src/lib/secret.ts";
 import { dateParts, readingMinutes } from "../src/lib/format.ts";
@@ -94,17 +96,33 @@ const kgraphFile = readFileSync("src/components/KnowledgeGraph.tsx", "utf8");
 assert.match(kgraphFile, /new IntersectionObserver/);
 assert.match(kgraphFile, /observer\.disconnect/);
 
-// 皮肤守卫：每套皮肤都有 token 覆盖，代码块在暗色皮肤下仍可读，画布跟随皮肤重绘
-const globalsCss = readFileSync("src/app/globals.css", "utf8");
-assert.match(globalsCss, /html\[data-skin="gold"\]/);
-assert.match(globalsCss, /html\[data-skin="ink"\] \{/);
-assert.match(globalsCss, /html\[data-skin="ink"\] \.hljs \{/);
+// Existing readers keep their choice; an invalid preference must not select a template.
+assert.equal(DEFAULT_SKIN, "ink");
+assert.equal(isSkin("__proto__"), false);
+const editorialCss = readFileSync("public/skins/editorial.css", "utf8");
+const obsidianCss = readFileSync("public/skins/obsidian.css", "utf8");
+assert.match(editorialCss, /html\[data-skin="gold"\]/);
+assert.match(obsidianCss, /--bg: #08090c/);
+assert.match(obsidianCss, /Theme: GitHub Dark/);
 assert.match(headerSource, /className="skin-toggle"/);
 assert.match(layoutSource, /SKIN_BOOT/);
-const skinsSource = readFileSync("src/lib/skins.ts", "utf8");
-assert.match(skinsSource, /dataset\.skin/);
-assert.match(skinsSource, /DEFAULT_SKIN: SkinId = "gold"/);
+assert.match(layoutSource, /skinStylesheet\(ink\)/);
+assert.match(readFileSync("src/lib/skinCss.ts", "utf8"), /obsidian\.css\?v=/);
+assert.match(readFileSync("src/lib/skinPreference.ts", "utf8"), /cookies\(\)/);
 assert.match(kgraphFile, /attributeFilter: \["data-skin"\]/);
+const legacyGraph = readFileSync("src/components/obsidian/KnowledgeGraph.tsx", "utf8");
+assert.match(legacyGraph, /KNOWLEDGE MATRIX/);
+assert.match(legacyGraph, /observer\.disconnect/);
+for (const [stored, cookie, expectedReloads] of [
+  ["paper", "", 1], ["gold", "", 1], ["ink", "", 0], ["invalid", "", 0], ["gold", "kyou-skin=paper", 0],
+] as const) {
+  const document = { cookie: String(cookie), documentElement: { dataset: { skin: DEFAULT_SKIN } } };
+  let reloads = 0;
+  runInNewContext(SKIN_BOOT, { document, localStorage: { getItem: () => stored }, location: { reload: () => reloads++ } });
+  assert.equal(reloads, expectedReloads);
+  if (cookie || !isSkin(stored)) assert.equal(document.cookie, cookie);
+  else assert.equal(document.cookie.split("; ")[0], `${SKIN_STORAGE_KEY}=${stored}`);
+}
 
 // 数据库连接层握手优化守卫
 const dbSource = readFileSync("src/lib/db.ts", "utf8");

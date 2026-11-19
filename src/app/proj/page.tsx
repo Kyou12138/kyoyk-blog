@@ -1,3 +1,5 @@
+import ObsidianProjects from "@/components/obsidian/Projects";
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import styles from "./proj.module.css";
 
@@ -131,7 +133,9 @@ const projectSections: ProjectSection[] = [
   },
 ];
 
-export default function ProjPage() {
+export default async function ProjPage() {
+  if ((await getSkin()) === "ink") return <ObsidianProjects />;
+
   const totalCount = projectSections.reduce((sum, s) => sum + s.items.length, 0);
 
   return (

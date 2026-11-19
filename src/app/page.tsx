@@ -1,3 +1,5 @@
+import ObsidianHome from "@/components/obsidian/Home";
+import { getSkin } from "@/lib/skinPreference";
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
 import { listPosts, permalink } from "@/lib/posts";
@@ -39,7 +41,8 @@ const projects = [
 ];
 
 export default async function HomePage() {
-  const posts = await listPosts();
+  const [posts, skin] = await Promise.all([listPosts(), getSkin()]);
+  if (skin === "ink") return <ObsidianHome posts={posts} />;
   const graphPosts = posts.map((p) => ({
     title: p.title,
     href: permalink(p),

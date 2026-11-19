@@ -2,20 +2,19 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { selectSkin } from "@/app/skin-action";
 import { NAV } from "@/lib/site";
 import { SKINS, SKIN_STORAGE_KEY, type SkinId } from "@/lib/skins";
 
 const isActive = (pathname: string, href: string): boolean =>
   href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
-const nextSkin = (): SkinId => {
-  const current = document.documentElement.dataset.skin;
-  const idx = SKINS.findIndex((skin) => skin.id === current);
-  return SKINS[(idx + 1) % SKINS.length].id;
-};
-
-export default function SiteHeader() {
+export default function SiteHeader({ skin }: { skin: SkinId }) {
+  const ink = skin === "ink";
+  const next = SKINS[(SKINS.findIndex((entry) => entry.id === skin) + 1) % SKINS.length];
+  const [pending, startTransition] = useTransition();
+  const [failed, setFailed] = useState(false);
   const pathname = usePathname();
   const [isMac, setIsMac] = useState(false);
 
@@ -24,21 +23,29 @@ export default function SiteHeader() {
   }, []);
 
   const cycleSkin = () => {
-    const skin = nextSkin();
-    document.documentElement.dataset.skin = skin;
-    try {
-      localStorage.setItem(SKIN_STORAGE_KEY, skin);
-    } catch {
-      // ponytail: 无痕模式禁用存储时只当次生效，不值得再兜一层
-    }
+    startTransition(async () => {
+      setFailed(false);
+      try {
+        await selectSkin(next.id);
+      } catch {
+        setFailed(true);
+        return;
+      }
+      try { localStorage.setItem(SKIN_STORAGE_KEY, next.id); } catch { /* Cookie already saved. */ }
+    });
   };
 
   return (
     <header className="site-header">
       <div className="site-header__inner">
         <Link className="brand" href="/" aria-label="Kyou Blog 首页">
-          <span className="brand__word">KYOU</span>
-          <span className="brand__dot" aria-hidden="true" />
+          {ink ? <>
+            <img src="/img/logo.svg" alt="" width="32" height="32" className="brand__logo" />
+            <span className="brand__title">Kyou <span>Blog</span></span>
+          </> : <>
+            <span className="brand__word">KYOU</span>
+            <span className="brand__dot" aria-hidden="true" />
+          </>}
         </Link>
 
         <nav className="nav" aria-label="主导航">
@@ -51,10 +58,10 @@ export default function SiteHeader() {
                 className={active ? "is-active" : undefined}
                 aria-current={active ? "page" : undefined}
               >
-                <span className="nav__idx" aria-hidden="true">
+                {!ink && <span className="nav__idx" aria-hidden="true">
                   0{idx + 1}
-                </span>
-                <span>{item.label}</span>
+                </span>}
+                <span>{ink ? item.inkLabel : item.label}</span>
               </Link>
             );
           })}
@@ -65,8 +72,9 @@ export default function SiteHeader() {
             type="button"
             className="skin-toggle"
             onClick={cycleSkin}
-            aria-label="切换皮肤"
-            title="切换皮肤"
+            disabled={pending}
+            aria-label={`切换皮肤，当前${SKINS.find((entry) => entry.id === skin)?.label}，切换到${next.label}`}
+            title={`切换到${next.label}`}
           >
             <svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true">
               <circle
@@ -80,6 +88,7 @@ export default function SiteHeader() {
               <path d="M10 2.9a7.1 7.1 0 0 0 0 14.2z" fill="currentColor" />
             </svg>
           </button>
+          {failed && <span role="alert">切换失败，请重试。</span>}
           <button
             type="button"
             className="search-trigger"
@@ -87,7 +96,7 @@ export default function SiteHeader() {
             onClick={() => window.dispatchEvent(new Event("open-search"))}
             aria-label="搜索笔记"
           >
-            <svg
+            {ink ? <><span aria-hidden="true">🔍</span><span className="search-trigger__text">搜索</span></> : <svg
               width="14"
               height="14"
               viewBox="0 0 24 24"
@@ -100,9 +109,10 @@ export default function SiteHeader() {
             >
               <circle cx="11" cy="11" r="7.5" />
               <path d="M20 20l-3.8-3.8" />
-            </svg>
+            </svg>}
             <kbd>{isMac ? "⌘" : "Ctrl"} K</kbd>
           </button>
+          {ink && <a className="nav-link nav-link--ext" href="https://github.com/Kyou12138" target="_blank" rel="noreferrer">GitHub</a>}
         </div>
       </div>
     </header>

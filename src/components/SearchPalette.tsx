@@ -24,7 +24,7 @@ const highlight = (text: string, keyword: string): React.ReactNode => {
 };
 
 /** 全局检索面板：Ctrl/Cmd+K 唤起，索引首次打开时按需加载。 */
-export default function SearchPalette() {
+export default function SearchPalette({ ink }: { ink: boolean }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<IndexItem[] | null>(null);
@@ -118,7 +118,7 @@ export default function SearchPalette() {
       onClick={(event) => { if (event.target === event.currentTarget) setOpen(false); }}>
       <div className="palette__panel">
         <div className="palette__field">
-          <svg
+          {ink ? <span aria-hidden="true">🔍</span> : <svg
             width="16"
             height="16"
             viewBox="0 0 24 24"
@@ -132,7 +132,7 @@ export default function SearchPalette() {
           >
             <circle cx="11" cy="11" r="7.5" />
             <path d="M20 20l-3.8-3.8" />
-          </svg>
+          </svg>}
           <input
             value={query}
             onChange={(event) => {
@@ -144,7 +144,7 @@ export default function SearchPalette() {
             aria-label="搜索关键词"
           />
           <button type="button" className="palette__esc" onClick={() => setOpen(false)}>
-            关闭
+            {ink ? "Esc" : "关闭"}
           </button>
         </div>
 
@@ -161,9 +161,9 @@ export default function SearchPalette() {
                 onMouseEnter={() => setActive(index)}
                 onClick={() => go(item)}
               >
-                <span className="palette__num" aria-hidden="true">
+                {!ink && <span className="palette__num" aria-hidden="true">
                   {String(index + 1).padStart(2, "0")}
-                </span>
+                </span>}
                 <span className="palette__body">
                   <span className="palette__title">{highlight(item.title, query.trim())}</span>
                   {item.excerpt && (
@@ -171,7 +171,7 @@ export default function SearchPalette() {
                   )}
                 </span>
                 {item.tags.length > 0 && (
-                  <span className="palette__tags">{item.tags.slice(0, 2).join(" / ")}</span>
+                  <span className="palette__tags">{ink ? item.tags.join(" · ") : item.tags.slice(0, 2).join(" / ")}</span>
                 )}
               </button>
             </li>
@@ -181,13 +181,13 @@ export default function SearchPalette() {
         <div className="palette__foot" aria-hidden="true">
           <span>
             <kbd>↑</kbd>
-            <kbd>↓</kbd>
+            <kbd>↓</kbd>{ink && " 选择"}
           </span>
           <span>
-            <kbd>↵</kbd>
+            <kbd>↵</kbd>{ink && " 打开"}
           </span>
           <span>
-            <kbd>ESC</kbd>
+            {ink ? <><kbd>Ctrl</kbd> <kbd>K</kbd> 开关</> : <kbd>ESC</kbd>}
           </span>
         </div>
       </div>

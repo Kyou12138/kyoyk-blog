@@ -1,3 +1,4 @@
+import { getSkin } from "@/lib/skinPreference";
 import type { Metadata } from "next";
 import { loginAction } from "../actions";
 
@@ -9,6 +10,25 @@ export default async function LoginPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+
+  if ((await getSkin()) === "ink") return (
+    <section className="section">
+      <div className="narrow" style={{ maxWidth: 420 }}>
+        <h1 style={{ fontSize: "1.5rem" }}>登录</h1>
+        <p className="muted">只有作者能进来。</p>
+        <form action={loginAction} className="panel" style={{ marginTop: "1.2rem" }}>
+          <div className="field">
+            <label htmlFor="password">密码</label>
+            <input id="password" name="password" type="password" autoComplete="current-password" required />
+          </div>
+          {error && <p className="error" role="alert">密码不正确。</p>}
+          <button className="button" type="submit">
+            进入后台
+          </button>
+        </form>
+      </div>
+    </section>
+  );
 
   return (
     <section className="admin-login">

@@ -34,7 +34,7 @@ const LANG_MAP: Record<string, string> = {
 /**
  * 为正文代码块挂载出版级题头栏与复制动作。
  */
-export default function CodeCopyButtons() {
+export default function CodeCopyButtons({ ink }: { ink: boolean }) {
   useEffect(() => {
     const cleanups: Array<() => void> = [];
 
@@ -42,7 +42,7 @@ export default function CodeCopyButtons() {
       if (pre.parentElement?.classList.contains("code-block")) continue;
 
       const rawLang = pre.getAttribute("data-lang") || "";
-      const displayLang = LANG_MAP[rawLang] || (rawLang ? rawLang.toUpperCase() : "TEXT");
+      const displayLang = LANG_MAP[rawLang] || (rawLang ? rawLang.toUpperCase() : ink ? "CODE" : "TEXT");
 
       const wrapper = document.createElement("div");
       wrapper.className = "code-block";
@@ -105,7 +105,18 @@ export default function CodeCopyButtons() {
 
       button.addEventListener("click", onClick);
 
-      header.appendChild(langSpan);
+      if (ink) {
+        const meta = document.createElement("div");
+        meta.className = "code-block__meta";
+        const dots = document.createElement("span");
+        dots.className = "code-block__dots";
+        dots.setAttribute("aria-hidden", "true");
+        dots.append(...Array.from({ length: 3 }, () => document.createElement("i")));
+        meta.append(dots, langSpan);
+        header.appendChild(meta);
+      } else {
+        header.appendChild(langSpan);
+      }
       header.appendChild(button);
 
       pre.replaceWith(wrapper);
@@ -120,7 +131,7 @@ export default function CodeCopyButtons() {
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [ink]);
 
   return null;
 }
