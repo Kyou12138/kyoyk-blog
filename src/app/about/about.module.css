@@ -1,0 +1,275 @@
+.introSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: stretch;
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.introText {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.75rem;
+  padding-top: 0.15rem;
+}
+
+.lead {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.18rem, 1.5vw, 1.42rem);
+  line-height: 1.62;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.epithets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.epithets li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding: 0.72rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.epithetIdx {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Museum Lithographic Plate */
+.plate {
+  margin: 0;
+  border: 1px solid var(--border);
+  padding: clamp(0.35rem, 0.9vw, 0.75rem);
+  background: var(--surface);
+}
+
+.artFrame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #100f0d;
+}
+
+.artImage {
+  object-fit: cover;
+  transition: transform 900ms var(--ease-out-expo);
+}
+
+.plate:hover .artImage {
+  transform: scale(1.025);
+}
+
+.artVignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(16, 15, 13, 0.42) 100%);
+  pointer-events: none;
+}
+
+.reticle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: rgba(250, 248, 244, 0.36);
+  pointer-events: none;
+}
+
+.orbitOuter,
+.orbitInner {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.orbitOuter {
+  animation: plateOrbit 38s linear infinite;
+}
+
+.orbitInner {
+  animation: plateOrbit 26s linear infinite reverse;
+}
+
+@keyframes plateOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.plateCaption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.68rem 0.2rem 0.15rem;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.plateFig {
+  color: var(--primary);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+/* Chapters */
+.chapter {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding-block: clamp(2.25rem, 4.5vw, 3.5rem);
+  border-top: 1px solid var(--border);
+}
+
+.chapterRail {
+  position: sticky;
+  top: 88px;
+  height: max-content;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.chapterCode {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.06em;
+}
+
+.chapterTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.chapterBody {
+  display: grid;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+.proseText {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.82;
+  color: var(--text-secondary);
+  max-width: 66ch;
+}
+
+.triptych {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
+
+.triptychCell {
+  display: grid;
+  align-content: start;
+  gap: 0.45rem;
+  padding: 1.35rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  transition: background-color var(--dur-fast) ease;
+}
+
+.triptychCell:hover {
+  background: var(--surface);
+}
+
+.cellCode {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.cellTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.cellDesc {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.directiveGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.directiveCopy {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.pullQuote {
+  margin: 0;
+  padding: 0.25rem 0 0.25rem 1.15rem;
+  border-left: 2px solid var(--primary);
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+@media (max-width: 920px) {
+  .introSplit,
+  .chapter,
+  .directiveGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .chapterRail {
+    position: static;
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+
+  .triptych {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbitOuter,
+  .orbitInner {
+    animation: none;
+  }
+
+  .artImage {
+    transition: none;
+  }
+
+  .plate:hover .artImage {
+    transform: none;
+  }
+}

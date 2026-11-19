@@ -1,0 +1,15 @@
+# Build from application sources only, including when /opt/blog holds runtime credentials.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!next.config.mjs
+!tsconfig.json
+!src/
+!src/**
+!public/
+!public/**
+!db/
+!db/**
+!scripts/
+!scripts/**

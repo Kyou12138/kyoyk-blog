@@ -1,0 +1,286 @@
+/* Editorial Monograph Frontispiece — Asymmetric Typography + Lithographic Atlas */
+.heroSection {
+  padding-top: clamp(1rem, 2.2vw, 1.75rem);
+  padding-bottom: clamp(2.5rem, 5vw, 4.25rem);
+}
+
+.datumBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  margin-bottom: clamp(1.75rem, 3.8vw, 3rem);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: center;
+  gap: clamp(2rem, 4.8vw, 4.5rem);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.08em;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 5.6vw, 4.85rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.038em;
+}
+
+.kicker {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.56em;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+  margin-bottom: 0.14em;
+}
+
+.headline {
+  display: block;
+}
+
+.reelBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.18em;
+  margin: 0.04em 0 0;
+  padding: 0 0 0.08em;
+  border: none;
+  border-bottom: 2px solid var(--primary);
+  background: transparent;
+  font: inherit;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.reelBtn:hover {
+  color: var(--primary-hover);
+  border-bottom-color: var(--border-strong);
+}
+
+.reelWord {
+  display: inline-block;
+  animation: splitRoll 460ms var(--ease-out-expo) both;
+}
+
+.reelIndex {
+  font-family: var(--font-mono);
+  font-size: 0.22em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  transform: translateY(0.35em);
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes splitRoll {
+  from {
+    opacity: 0;
+    transform: translateY(68%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: clamp(2rem, 3.6vw, 2.85rem);
+}
+
+/* ===== Lithographic Knowledge Atlas Plate ===== */
+.graph {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.graphWrap {
+  position: relative;
+  aspect-ratio: 1 / 0.94;
+  max-height: min(620px, calc(100vh - 140px));
+  width: 100%;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-hover);
+  background:
+    linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
+  overflow: hidden;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.graphCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 制图版四角十字规矩线 */
+.reticleTL,
+.reticleTR,
+.reticleBL,
+.reticleBR {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  pointer-events: none;
+  z-index: 2;
+  border-color: var(--border-hover);
+}
+
+.reticleTL {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.reticleTR {
+  top: 10px;
+  right: 10px;
+  border-top: 1px solid;
+  border-right: 1px solid;
+}
+
+.reticleBL {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 1px solid;
+  border-left: 1px solid;
+}
+
+.reticleBR {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.plateMarkTop,
+.plateMarkBottom {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.plateMarkTop {
+  top: 0.75rem;
+  left: 1.35rem;
+}
+
+.plateMarkBottom {
+  bottom: 0.75rem;
+  right: 1.35rem;
+}
+
+.plateDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+/* 墨印标本悬停签 */
+.graphTooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 10;
+  width: max-content;
+  min-width: 148px;
+  max-width: min(240px, calc(100% - 24px));
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--border-strong);
+  border-left: 2.5px solid var(--primary);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  animation: tooltipIn 120ms var(--ease-out-expo) both;
+}
+
+@keyframes tooltipIn {
+  from {
+    opacity: 0;
+    transform: translate(12px, 16px);
+  }
+}
+
+.tooltipTitle {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.38;
+  word-break: break-word;
+}
+
+.tooltipMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.3rem;
+  padding-top: 0.28rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 920px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+
+  .graphWrap {
+    aspect-ratio: 1 / 0.88;
+    max-height: 430px;
+  }
+}
+
+@media (max-width: 520px) {
+  .graphWrap {
+    aspect-ratio: 1 / 0.96;
+    max-height: 360px;
+  }
+}
