@@ -94,6 +94,18 @@ const kgraphFile = readFileSync("src/components/KnowledgeGraph.tsx", "utf8");
 assert.match(kgraphFile, /new IntersectionObserver/);
 assert.match(kgraphFile, /observer\.disconnect/);
 
+// 皮肤守卫：每套皮肤都有 token 覆盖，代码块在暗色皮肤下仍可读，画布跟随皮肤重绘
+const globalsCss = readFileSync("src/app/globals.css", "utf8");
+assert.match(globalsCss, /html\[data-skin="gold"\]/);
+assert.match(globalsCss, /html\[data-skin="ink"\] \{/);
+assert.match(globalsCss, /html\[data-skin="ink"\] \.hljs \{/);
+assert.match(headerSource, /className="skin-toggle"/);
+assert.match(layoutSource, /SKIN_BOOT/);
+const skinsSource = readFileSync("src/lib/skins.ts", "utf8");
+assert.match(skinsSource, /dataset\.skin/);
+assert.match(skinsSource, /DEFAULT_SKIN: SkinId = "gold"/);
+assert.match(kgraphFile, /attributeFilter: \["data-skin"\]/);
+
 // 数据库连接层握手优化守卫
 const dbSource = readFileSync("src/lib/db.ts", "utf8");
 assert.match(dbSource, /sslVerified/);

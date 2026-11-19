@@ -40,10 +40,32 @@ type TooltipState = {
   ch: number;
 };
 
-const INK = "#141311";
-const INK_SOFT = "#3d3a34";
-const PAPER = "#faf8f4";
-const VERMILION = "#d13b27";
+const rgbTriple = (hex: string): string => {
+  const raw = hex.replace("#", "").trim();
+  const full = raw.length === 3 ? raw.replace(/./g, (c) => c + c) : raw;
+  const n = Number.parseInt(full, 16);
+  return `${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}`;
+};
+
+// 画布用不了 CSS 变量：切换皮肤时重读一次再重绘，布局与物理状态保持不变。
+const readPalette = () => {
+  const css = getComputedStyle(document.documentElement);
+  const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+  const ink = token("--text", "#141311");
+  const paper = token("--surface", "#faf8f4");
+  const accent = token("--primary", "#d13b27");
+  return {
+    ink,
+    inkSoft: token("--text-secondary", "#3d3a34"),
+    paper,
+    accent,
+    inkRgb: rgbTriple(ink),
+    paperRgb: rgbTriple(paper),
+    accentRgb: rgbTriple(accent),
+  };
+};
+
+type Palette = ReturnType<typeof readPalette>;
 
 export default function KnowledgeGraph({
   posts,
@@ -62,6 +84,8 @@ export default function KnowledgeGraph({
     const container = containerRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !container || !ctx) return;
+
+    let P: Palette = readPalette();
 
     // 1. 构建拓扑节点（黄金角螺旋初值，保证每次渲染平面展开均匀无缠结）
     const tagCounts = new Map<string, number>();
@@ -246,13 +270,13 @@ export default function KnowledgeGraph({
 
       // (A) 暖棉纸心微晕与十字基准线
       const wash = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
-      wash.addColorStop(0, "rgba(209, 59, 39, 0.032)");
-      wash.addColorStop(0.7, "rgba(20, 19, 17, 0.012)");
+      wash.addColorStop(0, `rgba(${P.accentRgb}, 0.032)`);
+      wash.addColorStop(0.7, `rgba(${P.inkRgb}, 0.012)`);
       wash.addColorStop(1, "transparent");
       ctx.fillStyle = wash;
       ctx.fillRect(0, 0, w, h);
 
-      ctx.strokeStyle = "rgba(20, 19, 17, 0.05)";
+      ctx.strokeStyle = `rgba(${P.inkRgb}, 0.05)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(cx - maxR * 0.96, cy);
@@ -262,20 +286,20 @@ export default function KnowledgeGraph({
       ctx.stroke();
 
       // (B) 精密罗盘刻度环与内层测绘虚线圈
-      ctx.strokeStyle = "rgba(20, 19, 17, 0.075)";
+      ctx.strokeStyle = `rgba(${P.inkRgb}, 0.075)`;
       ctx.beginPath();
       ctx.arc(cx, cy, maxR * 0.88, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.setLineDash([2, 6]);
-      ctx.strokeStyle = "rgba(20, 19, 17, 0.065)";
+      ctx.strokeStyle = `rgba(${P.inkRgb}, 0.065)`;
       ctx.beginPath();
       ctx.arc(cx, cy, maxR * 0.48, 0, Math.PI * 2);
       ctx.stroke();
       ctx.setLineDash([]);
 
       // 罗盘度数短刻线（每 15° 一刻，每 45° 主刻）
-      ctx.strokeStyle = "rgba(20, 19, 17, 0.14)";
+      ctx.strokeStyle = `rgba(${P.inkRgb}, 0.14)`;
       ctx.beginPath();
       for (let deg = 0; deg < 360; deg += 15) {
         const rad = (deg * Math.PI) / 180;
@@ -303,7 +327,7 @@ export default function KnowledgeGraph({
         const b = pos(tg);
 
         if (isConnected) {
-          ctx.strokeStyle = "rgba(209, 59, 39, 0.78)";
+          ctx.strokeStyle = `rgba(${P.accentRgb}, 0.78)`;
           ctx.lineWidth = 1.35;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -311,7 +335,7 @@ export default function KnowledgeGraph({
           ctx.stroke();
         } else {
           const idleAlpha = activeSet ? 0.035 : 0.125;
-          ctx.strokeStyle = `rgba(20, 19, 17, ${idleAlpha})`;
+          ctx.strokeStyle = `rgba(${P.inkRgb}, ${idleAlpha})`;
           ctx.lineWidth = 0.85;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -326,7 +350,7 @@ export default function KnowledgeGraph({
           const px = a.x + (b.x - a.x) * progress;
           const py = a.y + (b.y - a.y) * progress;
 
-          ctx.fillStyle = isConnected ? VERMILION : "rgba(209, 59, 39, 0.42)";
+          ctx.fillStyle = isConnected ? P.accent : `rgba(${P.accentRgb}, 0.42)`;
           ctx.beginPath();
           ctx.arc(px, py, isConnected ? 2 : 1.35, 0, Math.PI * 2);
           ctx.fill();
@@ -343,21 +367,21 @@ export default function KnowledgeGraph({
         ctx.globalAlpha = n.visAlpha;
 
         // 纸底留白断线环（制图法留空）
-        ctx.fillStyle = PAPER;
+        ctx.fillStyle = P.paper;
         ctx.beginPath();
         ctx.arc(x, y, n.r + 2.2, 0, Math.PI * 2);
         ctx.fill();
 
         // 核心墨点 / 朱砂靶点
         const dotR = isHovered ? n.r + 1.8 : isLit ? n.r + 0.7 : n.r;
-        ctx.fillStyle = isHovered || isLit ? VERMILION : INK_SOFT;
+        ctx.fillStyle = isHovered || isLit ? P.accent : P.inkSoft;
         ctx.beginPath();
         ctx.arc(x, y, dotR, 0, Math.PI * 2);
         ctx.fill();
 
         // 悬停精密游标外环与十字丝
         if (isHovered) {
-          ctx.strokeStyle = VERMILION;
+          ctx.strokeStyle = P.accent;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.arc(x, y, dotR + 4.5, 0, Math.PI * 2);
@@ -395,7 +419,7 @@ export default function KnowledgeGraph({
           ctx.translate(x, y);
           ctx.rotate(t * n.orbitSpeed * 12);
           ctx.strokeStyle =
-            isHovered || isLit ? "rgba(209, 59, 39, 0.55)" : "rgba(20, 19, 17, 0.18)";
+            isHovered || isLit ? `rgba(${P.accentRgb}, 0.55)` : `rgba(${P.inkRgb}, 0.18)`;
           ctx.lineWidth = 1;
           ctx.setLineDash([2, 4]);
           ctx.beginPath();
@@ -406,8 +430,8 @@ export default function KnowledgeGraph({
 
         // 实体印章圆环
         const ringR = isHovered ? n.r + 1.5 : n.r;
-        ctx.fillStyle = isHovered ? VERMILION : PAPER;
-        ctx.strokeStyle = isHovered || isLit ? VERMILION : INK;
+        ctx.fillStyle = isHovered ? P.accent : P.paper;
+        ctx.strokeStyle = isHovered || isLit ? P.accent : P.ink;
         ctx.lineWidth = isHovered ? 1.8 : 1.35;
         ctx.beginPath();
         ctx.arc(x, y, ringR, 0, Math.PI * 2);
@@ -415,7 +439,7 @@ export default function KnowledgeGraph({
         ctx.stroke();
 
         // 中心针孔墨心
-        ctx.fillStyle = isHovered ? PAPER : isLit ? VERMILION : INK;
+        ctx.fillStyle = isHovered ? P.paper : isLit ? P.accent : P.ink;
         ctx.beginPath();
         ctx.arc(x, y, 2.1, 0, Math.PI * 2);
         ctx.fill();
@@ -450,12 +474,12 @@ export default function KnowledgeGraph({
           if (isHovered || (!collidesPill && !collidesOtherRing)) {
             placedPills.push(box);
 
-            ctx.fillStyle = isHovered ? INK : "rgba(250, 248, 244, 0.94)";
+            ctx.fillStyle = isHovered ? P.ink : `rgba(${P.paperRgb}, 0.94)`;
             ctx.strokeStyle = isHovered
-              ? INK
+              ? P.ink
               : isLit
-                ? "rgba(209, 59, 39, 0.55)"
-                : "rgba(20, 19, 17, 0.18)";
+                ? `rgba(${P.accentRgb}, 0.55)`
+                : `rgba(${P.inkRgb}, 0.18)`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.roundRect(capX, capY, capW, capH, 2);
@@ -464,10 +488,10 @@ export default function KnowledgeGraph({
 
             ctx.textAlign = "left";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = isHovered ? PAPER : INK;
+            ctx.fillStyle = isHovered ? P.paper : P.ink;
             ctx.fillText(n.label, capX + 6.5, capY + capH / 2 + 0.5);
 
-            ctx.fillStyle = isHovered ? "#f28b7d" : VERMILION;
+            ctx.fillStyle = isHovered ? `rgba(${P.paperRgb}, 0.72)` : P.accent;
             ctx.fillText(countStr, capX + textW + 11, capY + capH / 2 + 0.5);
           }
         }
@@ -615,9 +639,19 @@ export default function KnowledgeGraph({
     const onVisible = () => updateLoop();
     document.addEventListener("visibilitychange", onVisible);
 
+    const skinObserver = new MutationObserver(() => {
+      P = readPalette();
+      draw();
+    });
+    skinObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-skin"],
+    });
+
     return () => {
       cancelAnimationFrame(raf);
       observer.disconnect();
+      skinObserver.disconnect();
       canvas.removeEventListener("pointermove", handlePointerMove);
       canvas.removeEventListener("pointerdown", handlePointerDown);
       canvas.removeEventListener("pointerup", handlePointerUp);

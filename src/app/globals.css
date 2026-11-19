@@ -62,6 +62,8 @@
   --dur-fast: 150ms;
   --dur-base: 280ms;
   --dur-slow: 520ms;
+
+  --shadow-soft: 0 10px 28px rgba(20, 19, 17, 0.1);
 }
 
 *,
@@ -295,6 +297,33 @@ img {
   color: var(--text-muted);
 }
 
+.skin-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
+}
+
+.skin-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--surface);
+}
+
+.skin-toggle svg {
+  display: block;
+}
+
 @media (max-width: 720px) {
   .site-header__inner {
     height: 56px;
@@ -303,6 +332,19 @@ img {
 
   .nav {
     gap: 0.3rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header__right {
+    flex: none;
+    gap: 0.4rem;
   }
 
   .nav__idx,
@@ -320,6 +362,23 @@ img {
     height: 34px;
     padding: 0;
     justify-content: center;
+  }
+
+  .skin-toggle {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 430px) {
+  /* 四个入口在 375px 上要一次排开：靠字距和左右留白换空间 */
+  .nav {
+    gap: 0.1rem;
+  }
+
+  .nav a {
+    font-size: 0.76rem;
+    padding: 0.45rem 0.3rem;
   }
 }
 
@@ -3089,4 +3148,182 @@ main:has(.not-found) + .site-footer {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== Skins · 只换配色、圆角与字面，布局与排版尺度不动 =====
+   「纸墨」是 :root 的默认值（文件顶部）；其余皮肤在这里覆盖 token。
+   新增一套皮肤 = 这里加一段覆盖 + src/lib/skins.ts 加一项。 */
+
+/* 原版 · 雾蓝白纸 + 金（迁移到 Next.js 之前的 Docusaurus 主题） */
+html[data-skin="gold"] {
+  color-scheme: light;
+
+  --bg: #f4f6fa;
+  --bg-subtle: #e9edf4;
+  --surface: #ffffff;
+  --surface-2: #f0f3f8;
+  --surface-3: #e3e8f1;
+  --surface-hover: #eaeff7;
+  --ink-solid: #1b2330;
+
+  --border: rgba(147, 125, 94, 0.22);
+  --border-subtle: rgba(27, 35, 48, 0.08);
+  --border-hover: rgba(147, 125, 94, 0.42);
+  --border-strong: #1b2330;
+
+  --text: #1b2330;
+  --text-secondary: #4e5d73;
+  --text-muted: #5c6b80;
+  --text-dim: #5c6b80;
+
+  --primary: #90631f;
+  --primary-hover: #7a5319;
+  --primary-soft: rgba(204, 143, 47, 0.13);
+  --primary-line: rgba(204, 143, 47, 0.42);
+  --cyan: #90631f;
+  --green: #1d7a4c;
+  --red: #c83220;
+
+  --radius-xs: 4px;
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 16px;
+
+  --font-sans: "Avenir Next", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  --font-display: var(--font-bricolage), "Avenir Next", "Source Han Sans SC", "Noto Sans SC", "PingFang SC", sans-serif;
+
+  --shadow-soft: 0 18px 44px rgba(26, 18, 11, 0.08);
+}
+
+html[data-skin="gold"] body {
+  background-image: radial-gradient(ellipse 90% 55% at 50% -18%, rgba(204, 143, 47, 0.07), transparent 72%);
+  background-repeat: no-repeat;
+}
+
+html[data-skin="gold"] ::selection {
+  background: rgba(204, 143, 47, 0.24);
+}
+
+html[data-skin="gold"] .site-header {
+  background: rgba(244, 246, 250, 0.88);
+}
+
+html[data-skin="gold"] .palette::backdrop {
+  background: rgba(244, 246, 250, 0.82);
+}
+
+html[data-skin="gold"] .palette__panel {
+  box-shadow: 0 28px 70px rgba(26, 18, 11, 0.14);
+}
+
+/* 曜石 · 墨黑底 + 琥珀（迁移后那版 Linear 风格暗色站） */
+html[data-skin="ink"] {
+  color-scheme: dark;
+
+  --bg: #0a0b0e;
+  --bg-subtle: #101218;
+  --surface: #121419;
+  --surface-2: #171a21;
+  --surface-3: #1e222b;
+  --surface-hover: #1a1e26;
+  --ink-solid: #f1efe9;
+
+  --border: rgba(241, 239, 233, 0.13);
+  --border-subtle: rgba(241, 239, 233, 0.07);
+  --border-hover: rgba(241, 239, 233, 0.32);
+  --border-strong: #e9e5db;
+
+  --text: #f4f2ec;
+  --text-secondary: #cdc8bb;
+  --text-muted: #a09a8c;
+  --text-dim: #8d877a;
+
+  --primary: #e5a742;
+  --primary-hover: #f2ba5e;
+  --primary-soft: rgba(229, 167, 66, 0.1);
+  --primary-line: rgba(229, 167, 66, 0.34);
+  --cyan: #e5a742;
+  --green: #45c88c;
+  --red: #ef6f5b;
+
+  --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.5);
+}
+
+html[data-skin="ink"] body {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(229, 167, 66, 0.07), transparent 70%);
+  background-repeat: no-repeat;
+}
+
+html[data-skin="ink"] ::selection {
+  background: rgba(229, 167, 66, 0.22);
+}
+
+html[data-skin="ink"] .site-header {
+  background: rgba(10, 11, 14, 0.86);
+}
+
+html[data-skin="ink"] .palette::backdrop {
+  background: rgba(8, 9, 12, 0.82);
+}
+
+html[data-skin="ink"] .palette__panel {
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.66);
+}
+
+/* 琥珀底上的深字：反色按钮与选中标签 */
+html[data-skin="ink"] .button--primary:hover,
+html[data-skin="ink"] .ledger-tag.is-active:hover,
+html[data-skin="ink"] .tag--active:hover {
+  color: #17130a;
+}
+
+html[data-skin="ink"] .prose :not(pre) > code {
+  color: #f0a894;
+}
+
+html[data-skin="ink"] .hljs {
+  color: #e7e2d6;
+}
+
+html[data-skin="ink"] .hljs-comment,
+html[data-skin="ink"] .hljs-quote {
+  color: #8f8878;
+}
+
+html[data-skin="ink"] .hljs-keyword,
+html[data-skin="ink"] .hljs-selector-tag,
+html[data-skin="ink"] .hljs-meta .hljs-keyword,
+html[data-skin="ink"] .hljs-doctag,
+html[data-skin="ink"] .hljs-section {
+  color: #f2775c;
+}
+
+html[data-skin="ink"] .hljs-string,
+html[data-skin="ink"] .hljs-regexp,
+html[data-skin="ink"] .hljs-addition,
+html[data-skin="ink"] .hljs-attribute,
+html[data-skin="ink"] .hljs-meta .hljs-string {
+  color: #82c79b;
+}
+
+html[data-skin="ink"] .hljs-title,
+html[data-skin="ink"] .hljs-title.class_,
+html[data-skin="ink"] .hljs-title.function_,
+html[data-skin="ink"] .hljs-built_in,
+html[data-skin="ink"] .hljs-type {
+  color: #7db4e8;
+}
+
+html[data-skin="ink"] .hljs-number,
+html[data-skin="ink"] .hljs-literal,
+html[data-skin="ink"] .hljs-variable,
+html[data-skin="ink"] .hljs-template-variable,
+html[data-skin="ink"] .hljs-tag .hljs-attr,
+html[data-skin="ink"] .hljs-symbol {
+  color: #e5a742;
+}
+
+html[data-skin="ink"] .hljs-deletion {
+  color: #f2775c;
+  background: rgba(242, 119, 92, 0.12);
 }

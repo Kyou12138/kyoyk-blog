@@ -135,7 +135,7 @@
   border-radius: var(--radius-xs);
   border: 1px solid var(--border-hover);
   background:
-    linear-gradient(180deg, var(--surface) 0%, #f3efe6 100%);
+    linear-gradient(180deg, var(--surface) 0%, var(--surface-2) 100%);
   overflow: hidden;
   user-select: none;
   touch-action: pan-y;
@@ -232,8 +232,8 @@
   border-radius: var(--radius-xs);
   border: 1px solid var(--border-strong);
   border-left: 2.5px solid var(--primary);
-  background: rgba(250, 248, 244, 0.96);
-  box-shadow: 0 10px 28px rgba(20, 19, 17, 0.1);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
   animation: tooltipIn 120ms var(--ease-out-expo) both;
 }
 

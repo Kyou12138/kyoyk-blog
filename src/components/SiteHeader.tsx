@@ -4,9 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { NAV } from "@/lib/site";
+import { SKINS, SKIN_STORAGE_KEY, type SkinId } from "@/lib/skins";
 
 const isActive = (pathname: string, href: string): boolean =>
   href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+
+const nextSkin = (): SkinId => {
+  const current = document.documentElement.dataset.skin;
+  const idx = SKINS.findIndex((skin) => skin.id === current);
+  return SKINS[(idx + 1) % SKINS.length].id;
+};
 
 export default function SiteHeader() {
   const pathname = usePathname();
@@ -15,6 +22,16 @@ export default function SiteHeader() {
   useEffect(() => {
     setIsMac(/(Mac|iPhone|iPod|iPad)/i.test(navigator.userAgent));
   }, []);
+
+  const cycleSkin = () => {
+    const skin = nextSkin();
+    document.documentElement.dataset.skin = skin;
+    try {
+      localStorage.setItem(SKIN_STORAGE_KEY, skin);
+    } catch {
+      // ponytail: 无痕模式禁用存储时只当次生效，不值得再兜一层
+    }
+  };
 
   return (
     <header className="site-header">
@@ -44,6 +61,25 @@ export default function SiteHeader() {
         </nav>
 
         <div className="site-header__right">
+          <button
+            type="button"
+            className="skin-toggle"
+            onClick={cycleSkin}
+            aria-label="切换皮肤"
+            title="切换皮肤"
+          >
+            <svg width="15" height="15" viewBox="0 0 20 20" aria-hidden="true">
+              <circle
+                cx="10"
+                cy="10"
+                r="7.1"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+              />
+              <path d="M10 2.9a7.1 7.1 0 0 0 0 14.2z" fill="currentColor" />
+            </svg>
+          </button>
           <button
             type="button"
             className="search-trigger"

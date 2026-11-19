@@ -32,6 +32,18 @@ npm run auth:hash -- '你的密码'
 
 文章地址由发布时间推导：`/blog/YYYY/MM/DD/<slug>`，与迁移前的 Docusaurus 站完全一致。
 
+## 皮肤
+
+页头右侧的圆盘按钮在几套皮肤间轮换，选择记在 `localStorage` 的 `kyou-skin`，首屏由 `layout.tsx` 里的内联脚本在绘制前落定，不会先闪一下默认色。皮肤只换 token（配色、圆角、字面），不动布局与数据：
+
+| 皮肤 | 说明 |
+|---|---|
+| `gold` 原版 | 雾蓝白纸 + 金，迁移前 Docusaurus 站的配色（默认） |
+| `ink` 曜石 | 墨黑底 + 琥珀，迁移后那版 Linear 风格暗色站 |
+| `paper` 纸墨 | 暖棉纸 + 朱砂，Editorial 版式自带配色 |
+
+新增一套 = `src/lib/skins.ts` 加一项 + `globals.css` 末尾加一段 `html[data-skin="…"]` 覆盖。画布类组件（如 `KnowledgeGraph`）读不到 CSS 变量，需监听 `data-skin` 变化后重读 `getComputedStyle` 再重绘。
+
 ## 部署
 
 服务器上 `/opt/blog`：

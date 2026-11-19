@@ -6,6 +6,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SearchPalette from "@/components/SearchPalette";
 import MagneticPull from "@/components/MagneticPull";
 import { SITE_NAME, SITE_TAGLINE, SITE_URL } from "@/lib/site";
+import { DEFAULT_SKIN, SKIN_BOOT } from "@/lib/skins";
 
 // ponytail: 只放拉丁 700 一个字重（22KB），中文与衬线走系统原生高品质字体栈
 const bricolage = localFont({
@@ -45,7 +46,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hans" className={bricolage.variable}>
+    <html lang="zh-Hans" data-skin={DEFAULT_SKIN} className={bricolage.variable} suppressHydrationWarning>
+      <head>
+        {/* 皮肤在首帧前落定，避免切换历史读到时闪一下默认配色 */}
+        <script dangerouslySetInnerHTML={{ __html: SKIN_BOOT }} />
+      </head>
       <body>
         <SiteHeader />
         {children}
